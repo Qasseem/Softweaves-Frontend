@@ -359,6 +359,7 @@
                     formControlName="userType"
                     [label]="userType.nameEn"
                     [inputId]="userType?.inputId"
+                    (onClick)="userTypeChanged($event)"
                   >
                   </p-radioButton>
                 </div>
@@ -432,7 +433,10 @@
               </div>
             </div>
           </div>
-          <div class="col-12 p-20 mt-20 inputs-div">
+          <div
+            *ngIf="!hideLocationAndServiceTypeAction"
+            class="col-12 p-20 mt-20 inputs-div"
+          >
             <div class="details-text">
               <p class="font-bold fs-11">Location</p>
             </div>
@@ -522,6 +526,120 @@
                     >
                       Zones field is required
                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            *ngIf="!hideLocationAndServiceTypeAction"
+            class="col-12 p-20 mt-20 inputs-div"
+          >
+            <div class="details-text">
+              <p class="font-bold fs-11">Service Type</p>
+            </div>
+            <div>
+              <div>
+                <div class="errand-type-items" formArrayName="agentErrandTypes">
+                  <div
+                    class="col-12 p-0 flex"
+                    *ngFor="
+                      let item of form.get('agentErrandTypes')?.controls;
+                      let i = index;
+                      let first = first
+                    "
+                    [formGroupName]="i"
+                  >
+                    <!-- {{item.get('errandTypeId').value | json}} -->
+                    <div class="left-control col-4">
+                      <label
+                        for="quanityt"
+                        style="display: block; margin-bottom: 10px"
+                      >
+                        Category <span class="p-error"> * </span>
+                      </label>
+                      <p-dropdown
+                        [options]="categories"
+                        filter="true"
+                        [optionLabel]="'nameEn'"
+                        [optionValue]="'id'"
+                        [showClear]="true"
+                        [formControl]="item.get('categoryId')"
+                        placeholder="Select Errand Type"
+                        (onChange)="CategoryChanged($event, i)"
+                      ></p-dropdown>
+                      <div
+                        *ngIf="
+                          item.get('categoryId')?.errors &&
+                          (item.get('categoryId').dirty ||
+                            item.get('categoryId').touched)
+                        "
+                        class="invalid-feedback"
+                      >
+                        <div class="fs-10 color-red">
+                          <span *ngIf="item.get('categoryId')?.errors.required">
+                            Errand Type field is required
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="left-control col-7">
+                      <label
+                        for="quanityt"
+                        style="display: block; margin-bottom: 10px"
+                      >
+                        Errand Type <span class="p-error"> * </span>
+                      </label>
+                      <p-multiSelect
+                        [options]="getFillteredErrandTypes(i)"
+                        filter="true"
+                        [optionLabel]="'nameEn'"
+                        [optionValue]="'id'"
+                        [showClear]="true"
+                        [formControl]="item.get('errandTypes')"
+                        placeholder="Select Errand Type"
+                        (onClick)="errandTypeChange($event, i)"
+                      ></p-multiSelect>
+                      <div
+                        *ngIf="
+                          item.get('errandTypes')?.errors &&
+                          (item.get('errandTypes').dirty ||
+                            item.get('errandTypes').touched)
+                        "
+                        class="invalid-feedback"
+                      >
+                        <div class="fs-10 color-red">
+                          <span
+                            *ngIf="item.get('errandTypes')?.errors.required"
+                          >
+                            Errand Type field is required
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      class="trash-icon col-1"
+                      style="display: flex; align-items: center"
+                      *ngIf="!first"
+                    >
+                      <i
+                        class="pi pi-trash mt-3"
+                        (click)="removeErrandType(i)"
+                      ></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="addons col-12 mt-3">
+                  <div class="add-item" (click)="addErrandType()">
+                    <span class="add-btn">
+                      <i class="pi pi-plus-circle" style="font-size: 13px"></i>
+                    </span>
+                    <label for="add-item" class="ml-2" style="color: black"
+                      >Add Service Type</label
+                    >
                   </div>
                 </div>
               </div>

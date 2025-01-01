@@ -5,6 +5,7 @@ import { ActionsInterface } from 'src/app/core/shared/core/modules/table/models/
 import {
   SearchInputTypes,
   HTTPMethods,
+  TicketStatusEnum,
 } from 'src/app/core/shared/core/modules/table/models/enums';
 import { SearchInterface } from 'src/app/core/shared/core/modules/table/models/search-interface';
 import { TableButtonsExistanceInterface } from 'src/app/core/shared/core/modules/table/models/table-url.interface';
@@ -102,6 +103,10 @@ export function checkDates(
   styleUrls: ['./tickets-list.component.scss'],
 })
 export class TicketsListComponent implements OnInit, OnDestroy {
+  navigateToComplete(row: any): any {
+    let id = row?.ticketId;
+    this.router.navigate([`main/ticket/complete/${id}`]);
+  }
   alive = true;
   scheduleForm: FormGroup;
   scheduleDialogVisible = false;
@@ -215,6 +220,11 @@ export class TicketsListComponent implements OnInit, OnDestroy {
       header: 'Terminal ID',
     },
     {
+      field: 'createdDate',
+      header: 'Created At',
+      customCell: 'date',
+    },
+    {
       field: [
         { label: 'categoryNameEn', custom: 'default' },
         { label: 'categoryNameAr', custom: 'default' },
@@ -271,6 +281,21 @@ export class TicketsListComponent implements OnInit, OnDestroy {
       name: 'Schedule',
       icon: 'pi pi-calendar',
       call: (row: any) => this.showSchedule(row),
+    },
+    {
+      name: 'History',
+      icon: 'pi pi-history',
+      call: (row: any) => this.navigateToHistory(row),
+    },
+    {
+      name: 'Complete',
+      icon: 'pi pi-list-check',
+      customPermission: (row: any) =>
+        row.statusId == TicketStatusEnum.InProgress ||
+        row.statusId == TicketStatusEnum.AgentOnWay ||
+        row.statusId == TicketStatusEnum.Assigned,
+      permission: 'complete',
+      call: (row: any) => this.navigateToComplete(row),
     },
   ];
 
@@ -530,5 +555,9 @@ export class TicketsListComponent implements OnInit, OnDestroy {
       this.scheduleForm.errors;
       this.scheduleForm.markAllAsTouched();
     }
+  }
+  navigateToHistory(row) {
+    let id = row?.ticketId;
+    this.router.navigate([`main/ticket/history/${id}/${'Tickets'}`]);
   }
 }

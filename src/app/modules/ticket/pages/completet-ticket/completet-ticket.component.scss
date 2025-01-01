@@ -1,79 +1,83 @@
-::ng-deep .p-dropdown {
-  width: 100%;
-}
-
-::ng-deep .p-multiselect {
-  width: 100%;
-  height: 42px;
-}
-
-::ng-deep .p-button {
-  width: 100px;
-  border: 1px solid rgb(204, 230, 254);
-  .p-button-label {
-    font-weight: 400;
-  }
-}
-
 .header-left {
   float: left;
-  font-weight: 500;
+  font-weight: bolder;
 }
+
+.ticket-form {
+  padding: 20px;
+  background-color: white;
+  border-radius: 9px;
+  margin: 20px;
+}
+
+.summary {
+  border-radius: 15px;
+  border: 3px solid #f8f8f8;
+  padding: 10px;
+}
+.section {
+  height: 80%;
+  width: 7px;
+  border-radius: 3px;
+}
+
+.ring {
+  width: 25px;
+  height: 25px;
+  border: 5px solid red;
+  border-radius: 50%;
+  background-color: transparent;
+}
+.all-right {
+  align-items: end;
+  float: right;
+  margin: auto;
+}
+
+.save-btn {
+  background-color: #0080f9;
+  color: white;
+  border-radius: 5px;
+  width: 200px;
+  height: 35px;
+  border-color: transparent;
+  cursor: pointer;
+}
+
 .header-divider {
-  // width: 1px;
   margin: 12px 12px 12px 20px;
   border-color: rgba(237, 239, 241, 0.2);
 }
 
-::ng-deep .p-inputtext {
-  height: 40px;
+.upload-image {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 10px;
 }
-
-.merchants-form {
-  margin: 10px;
-  padding: 20px 0px;
-  width: 100%;
-  padding-left: 0px;
-  .inputs-div,
-  .details-form {
-    border-radius: 8px;
-    background-color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    label {
-      color: #798693;
-      font-size: 12px;
-    }
-  }
-  .upload-image {
+.userType-field {
+  padding: 0.5rem;
+  margin-bottom: 10px;
+  .radio-buttons {
     display: flex;
-    justify-content: center;
-    padding-bottom: 10px;
+    gap: 1rem;
   }
-  .userType-field {
-    padding: 0.5rem;
-    margin-bottom: 10px;
-    .radio-buttons {
-      display: flex;
-      gap: 1rem;
-    }
 
-    label {
-      color: rgba(121, 134, 147, 1);
-      font-size: 12px;
-      display: block;
-      margin-bottom: 0.5rem;
-    }
+  label {
+    color: rgba(121, 134, 147, 1);
+    font-size: 12px;
+    display: block;
+    margin-bottom: 0.5rem;
   }
-  .details-text {
-    border-bottom: 1px solid rgba(237, 239, 241, 1);
-    margin-bottom: 12px;
-    p {
-      margin-top: 0px;
-    }
+}
+.details-text {
+  border-bottom: 1px solid rgba(237, 239, 241, 1);
+  margin-bottom: 12px;
+  p {
+    margin-top: 0px;
   }
-  .p-20 {
-    padding: 20px;
-  }
+}
+.p-20 {
+  padding: 20px;
 }
 
 .upload-container {
@@ -228,10 +232,40 @@
   font-size: 12px;
 }
 
-.add-btn {
-  border-radius: 3px;
-  padding: 6px 8px;
-  background-color: #0080f9;
+.file-header {
+  padding: 10px;
+  background-color: #e6f2fe;
+  border-radius: 10px;
+}
+.image-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 5px;
+  border: 1px solid #d9d9d9;
+  display: flex;
+  align-items: center;
+}
+.small-rounded-button {
+  background-color: red;
   color: white;
-  width: 23px;
+  border: none;
+  border-radius: 50px; /* Fully rounded edges */
+  padding: 3px 5px; /* Adjust button size */
+  font-size: 11px; /* Small text size */
+  cursor: pointer;
+  transition: background-color 0.3s;
+  height: 18px;
+  margin-top: -0.5rem;
+  margin-left: -0.4rem;
+}
+
+.small-rounded-button:hover {
+  background-color: darkred; /* Darker red on hover */
+}
+
+.delete-button {
+  margin-left: auto;
+  color: red;
+  cursor: pointer;
+  margin-right: 15px;
 }

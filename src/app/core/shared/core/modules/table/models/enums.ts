@@ -48,3 +48,10 @@ export enum ServiceCategoryEnum {
   Cancellation = 3,
   AfterSales = 4,
 }
+
+export enum UserTypeEnum {
+  SystemAdmin = 1,
+  SysytemUser = 2,
+  ServiceAgent = 3,
+  SalesAgent,
+}

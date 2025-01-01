@@ -110,26 +110,26 @@ export class SearchBarComponent implements OnInit, OnChanges {
     }
   }
   ngOnInit() {
-    //check if there is any history for the activated page
-    if (this.tableCoreService.gridSearchHistory[this.router.url]) {
-      //assign the search ker if exist in history obj
-      this.inputTextHistoryValue =
-        this.tableCoreService.gridSearchHistory[this.router.url].searchKey;
-      //check if there is any toolTip data in search history obj
-      if (
-        this.tableCoreService.gridSearchHistory[this.router.url].search
-          .toolTipData
-      ) {
-        //assign the tool tip data if exist in history obj
-        this.formHistoryData = this.formValueDictionaryTooltip =
-          this.tableCoreService.gridSearchHistory[this.router.url].search;
-        this.formValueDictionaryTooltip =
-          this.tableCoreService.gridSearchHistory[
-            this.router.url
-          ].search.toolTipData;
-        this.convertObjToArray();
-      }
-    }
+    // //check if there is any history for the activated page
+    // if (this.tableCoreService.gridSearchHistory[this.router.url]) {
+    //   //assign the search ker if exist in history obj
+    //   this.inputTextHistoryValue =
+    //     this.tableCoreService.gridSearchHistory[this.router.url].searchKey;
+    //   //check if there is any toolTip data in search history obj
+    //   if (
+    //     this.tableCoreService.gridSearchHistory[this.router.url].search
+    //       .toolTipData
+    //   ) {
+    //     //assign the tool tip data if exist in history obj
+    //     this.formHistoryData = this.formValueDictionaryTooltip =
+    //       this.tableCoreService.gridSearchHistory[this.router.url].search;
+    //     this.formValueDictionaryTooltip =
+    //       this.tableCoreService.gridSearchHistory[
+    //         this.router.url
+    //       ].search.toolTipData;
+    //     this.convertObjToArray();
+    //   }
+    // }
 
     this.searchOnType();
   }
@@ -477,7 +477,7 @@ export class SearchBarComponent implements OnInit, OnChanges {
   inputText(event) {
     this.searchFilterTriggered.emit(true);
     if (event == null || event == '') {
-      delete this.tableCoreService.gridSearchHistory[this.router.url];
+      // delete this.tableCoreService.gridSearchHistory[this.router.url];
     }
   }
   navigateToAdd() {

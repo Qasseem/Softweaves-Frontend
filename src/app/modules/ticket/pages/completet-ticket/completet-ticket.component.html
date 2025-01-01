@@ -1,0 +1,460 @@
+<div>
+  <div class="p-grid ml-2 m-2">
+    <div class="p-col" style="text-align: right">
+      <span
+        (click)="backToList()"
+        class="mt-2 ml-3 header-left"
+        style="color: #0080f9; cursor: pointer"
+        >Ticket</span
+      >
+      <span class="mt-2 ml-2 mr-2 header-left">></span>
+      <span class="mt-2 header-left">{{ "Complete" }} Ticket</span>
+      <p-button
+        class="mr-3"
+        label="Cancel"
+        [text]="true"
+        [raised]="true"
+        (click)="backToList()"
+        size="small"
+      />
+    </div>
+  </div>
+  <hr class="header-divider" />
+
+  <div class="">
+    <form [formGroup]="form">
+      <div class="form-container ticket-form">
+        <div class="ticket-card">
+          <div class="service-container">
+            <div class="header">
+              <span>Tasks</span>
+            </div>
+            <p-divider></p-divider>
+            <div class="grid summary m-3" style="padding-bottom: 0px">
+              <div class="col-3" style="margin-top: -10px">
+                <p-chart
+                  *ngIf="showChart"
+                  type="doughnut"
+                  [width]="'80px'"
+                  [data]="data"
+                  [options]="options"
+                />
+              </div>
+              <div class="col-3" style="display: flex">
+                <div class="section" style="background-color: green"></div>
+                <div class="ml-2">
+                  <div>{{ details?.success }}</div>
+                  <div style="margin-top: 15px; color: grey">Succeeded</div>
+                </div>
+              </div>
+              <div class="col-3" style="display: flex">
+                <div class="section" style="background-color: red"></div>
+                <div class="ml-2">
+                  <div>{{ details?.failed }}</div>
+                  <div style="margin-top: 15px; color: grey">Failed</div>
+                </div>
+              </div>
+              <div class="col-3" style="display: flex">
+                <div class="section" style="background-color: #e3e7ee"></div>
+                <div class="ml-2">
+                  <div>{{ details?.pending }}</div>
+                  <div style="margin-top: 15px; color: grey">Pendeng</div>
+                </div>
+              </div>
+            </div>
+            <!-- ////////////// -->
+            <div *ngFor="let item of details?.tasks">
+              <div class="grid summary m-3" style="color: #697682">
+                <div class="col-6" style="display: flex">
+                  <div
+                    class="ring"
+                    [ngStyle]="{
+                      'border-color':
+                        item.statusId == 0
+                          ? '#E3E7EE'
+                          : item.statusId == 1
+                          ? 'green'
+                          : 'red'
+                    }"
+                  ></div>
+                  <span class="m-1">
+                    {{ item?.errandTypeEn }}
+                  </span>
+                </div>
+                <div class="col-4">QTY : {{ item?.quantity }}</div>
+                <div class="col-2">
+                  <div
+                    (click)="openCompleteTaskPopup(item)"
+                    class="grid all-right"
+                    style="cursor: pointer"
+                    *ngIf="item?.statusId == 0"
+                  >
+                    <span style="color: #005ce8; cursor: pointer">
+                      Complete
+                    </span>
+                    <i
+                      class="pi pi-angle-right"
+                      style="font-size: 1rem; color: #005ce8"
+                    ></i>
+                  </div>
+                </div>
+                <!-- <div class="col-12"></div> -->
+              </div>
+              <div class="grid"></div>
+            </div>
+            <div class="grid" style="margin-top: 50px">
+              <div class="flex justify-content-end gap-2" style="width: 100%">
+                <div style="margin-left: auto">
+                  <p-button
+                    severity="success"
+                    size="small"
+                    [style]="{ width: '200px', 'margin-left': 'auto' }"
+                    [disabled]="!isAllTasksStatusesDone"
+                    (click)="submit()"
+                    label="Complete"
+                    [raised]="true"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="header-divider" />
+    </form>
+  </div>
+</div>
+
+<p-dialog
+  header="Header"
+  [modal]="true"
+  [(visible)]="visible"
+  [closeIcon]="false"
+  [style]="{ width: '55rem' }"
+>
+  <ng-template pTemplate="header">
+    <div class="inline-flex align-items-center justify-content-center gap-2">
+      <span style="font-size: 12px">Feedback</span>
+    </div>
+  </ng-template>
+
+  <form [formGroup]="form">
+    <div>
+      <div class="grid">
+        <div class="col-12">
+          <div class="flex flex-wrap gap-3">
+            <div *ngFor="let category of statusOptions" class="field-checkbox">
+              <p-radioButton
+                [inputId]="category.key"
+                [value]="category.key"
+                formControlName="statusId"
+                (onClick)="statusChange($event)"
+              />
+              <label [for]="category.key" class="ml-2">
+                {{ category.name }}
+              </label>
+              <span style="margin-right: 150px"></span>
+            </div>
+          </div>
+          <hr class="header-divider" />
+
+          <!-- /////////////////////////// -->
+          <div class="grid" *ngIf="form.get('statusId').value == 2">
+            <div class="col-12">
+              <div class="flex flex-column gap-2">
+                <label for="failReasonId"
+                  >Reason
+                  <label for="failReasonId" style="color: red">*</label></label
+                >
+
+                <p-dropdown
+                  [style]="{ width: '100%' }"
+                  [options]="failReasons"
+                  formControlName="failReasonId"
+                  [optionValue]="'id'"
+                  optionLabel="nameEn"
+                  filter="true"
+                />
+                <div
+                  *ngIf="
+                    f.failReasonId.errors &&
+                    (f.failReasonId.dirty || f.failReasonId.touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.failReasonId.errors.required"
+                  >
+                    Fail reason field is required
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="flex flex-column gap-2">
+                <label for="failReasonId">Note </label>
+                <textarea
+                  rows="3"
+                  cols="30"
+                  pInputTextarea
+                  formControlName="notes"
+                >
+                </textarea>
+              </div>
+            </div>
+          </div>
+          <!-- ////////////////////// -->
+          <div *ngIf="form.get('statusId').value == 1" class="grid">
+            <div class="col-6">
+              <div class="flex flex-column gap-2">
+                <label for="terminalId"
+                  >Terminal ID <span class="p-error"> * </span></label
+                >
+                <input
+                  [ngClass]="{
+                    'ng-invalid ng-dirty': f.terminalId?.errors?.required
+                  }"
+                  pInputText
+                  type="number"
+                  formControlName="terminalId"
+                />
+
+                <div
+                  *ngIf="
+                    f.terminalId.errors &&
+                    (f.terminalId.dirty || f.terminalId.touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.terminalId.errors.required"
+                  >
+                    Terminal ID field is required
+                  </div>
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.terminalId.errors.pattern"
+                  >
+                    Terminal ID field length must be between(1,30)
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div class="flex flex-column gap-2">
+                <label for="posSerial"
+                  >POS Serial <span class="p-error"> * </span></label
+                >
+                <input
+                  [ngClass]="{
+                    'ng-invalid ng-dirty': f.posSerial?.errors?.required
+                  }"
+                  pInputText
+                  type="number"
+                  formControlName="posSerial"
+                />
+
+                <div
+                  *ngIf="
+                    f.posSerial.errors &&
+                    (f.posSerial.dirty || f.posSerial.touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.posSerial.errors.required"
+                  >
+                    Terminal ID field is required
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- ////////////////////////// -->
+          <div class="grid" *ngIf="form.get('statusId').value == 1">
+            <div class="col-6">
+              <div class="flex flex-column gap-2">
+                <label for="imei">IMEI <span class="p-error"> * </span></label>
+                <input
+                  [ngClass]="{
+                    'ng-invalid ng-dirty': f.imei?.errors?.required
+                  }"
+                  pInputText
+                  type="number"
+                  formControlName="imei"
+                />
+
+                <div
+                  *ngIf="f.imei.errors && (f.imei.dirty || f.imei.touched)"
+                  class="invalid-feedback"
+                >
+                  <div class="fs-10 color-red" *ngIf="f.imei.errors.required">
+                    Terminal ID field is required
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="flex flex-column gap-2">
+                <label for="simSerial"
+                  >SIM Serial <span class="p-error"> * </span></label
+                >
+                <input
+                  [ngClass]="{
+                    'ng-invalid ng-dirty': f.simSerial?.errors?.required
+                  }"
+                  pInputText
+                  type="number"
+                  formControlName="simSerial"
+                />
+
+                <div
+                  *ngIf="
+                    f.simSerial.errors &&
+                    (f.simSerial.dirty || f.simSerial.touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.simSerial.errors.required"
+                  >
+                    Terminal ID field is required
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr class="header-divider" />
+          <div class="grid">
+            <div class="col-12">
+              <h5 style="margin-top: 0; margin-bottom: 0">Attach Files</h5>
+            </div>
+          </div>
+          <div class="grid">
+            <div class="col-6">
+              <div>
+                <div class="upload-container file-header">
+                  <label for="file-upload" class="upload-label">
+                    <div class="upload-content">
+                      <!-- <i class="pi pi-cloud-upload"></i> -->
+                      <oc-icon
+                        [icon]="'upload-icon'"
+                        [width]="'25px'"
+                        [height]="'25px'"
+                      ></oc-icon>
+                      <div
+                        class="flex flex-row file-upload-text"
+                        style="width: 100%"
+                      >
+                        <span>Upload new file</span>
+
+                        <span
+                          style="margin-left: auto; color: #005ce8"
+                          class="browse-file"
+                          >Browse file</span
+                        >
+                      </div>
+                    </div>
+                  </label>
+                  <input
+                    id="file-upload"
+                    type="file"
+                    accept="*"
+                    (change)="onFileSelectedNationalId($event)"
+                    hidden
+                  />
+                </div>
+              </div>
+            </div>
+            <div *ngFor="let file of files" class="col-6">
+              <div
+                *ngIf="fileName"
+                class="file-info"
+                style="cursor: pointer; margin-top: 0"
+              >
+                <oc-icon
+                  [icon]="'files-icon'"
+                  [width]="'25px'"
+                  [height]="'25px'"
+                ></oc-icon>
+                <span class="file-info-text">
+                  {{ file?.name }}
+                </span>
+
+                <span (click)="deleteFile(file)" class="delete-button">
+                  X
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="grid mt-1">
+            <div class="col-12">
+              <h5 style="margin-top: 0; margin-bottom: 0">Images</h5>
+            </div>
+          </div>
+
+          <div class="grid">
+            <div class="col-1">
+              <div (click)="fileInput.click()" class="image-icon">
+                <oc-icon
+                  style="margin: auto"
+                  [icon]="'plus-icon'"
+                  [width]="'20px'"
+                  [height]="'20px'"
+                  [scale]="1.1"
+                ></oc-icon>
+
+                <input
+                  type="file"
+                  #fileInput
+                  (change)="onFileSelected($event)"
+                  accept="image/*"
+                  hidden
+                />
+              </div>
+            </div>
+            <div
+              *ngFor="let item of images"
+              class="col-1"
+              style="display: flex"
+            >
+              <img
+                style="width: 40px; height: 40px"
+                [src]="item?.data"
+                alt="Base64 Image"
+              />
+              <button (click)="removeImage(item)" class="small-rounded-button">
+                X
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="flex justify-content-end gap-2">
+    <p-button
+      size="small"
+      [style]="{ width: '200px' }"
+      [disabled]="
+        !(form.get('statusId').value == 2 && form.get('failReasonId').valid) &&
+        !(
+          form.get('statusId').value == 1 &&
+          form.get('terminalId').valid &&
+          form.get('posSerial').valid &&
+          form.get('simSerial').valid &&
+          form.get('imei').valid
+        )
+      "
+      (click)="compeletTask()"
+      label="Finish"
+      [raised]="true"
+    />
+  </div>
+</p-dialog>

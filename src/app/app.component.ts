@@ -30,6 +30,9 @@ export class AppComponent implements OnInit {
     private msalSerivce: MsalService,
     private spinner: SpinnerVisibilityService
   ) {
+    if (window.top !== window) {
+      window.top.location.href = window.location.href;
+    }
     // this.spinner.hide();
     this.getSilentToken();
     this.appTranslateService.changeLangage(this.storage.getLang());

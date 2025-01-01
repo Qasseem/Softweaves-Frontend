@@ -188,6 +188,20 @@
                   {{ details?.errandChannelEn }}
                 </div>
               </div>
+              <div
+                class="view-container--cards--details-card--info--container--left--item"
+              >
+                <div
+                  class="view-container--cards--details-card--info--container--left--item--label"
+                >
+                  <label for="requster-email">Requster Email</label>
+                </div>
+                <div
+                  class="view-container--cards--details-card--info--container--left--item--text"
+                >
+                  {{ details?.creatorEmail }}
+                </div>
+              </div>
             </div>
             <div
               class="view-container--cards--details-card--info--container--right"
@@ -269,6 +283,18 @@
           </div>
         </div>
         <p-divider></p-divider>
+        <div>
+          <div
+            class="view-container--cards--details-card--info--attachments--title"
+          >
+            Note
+          </div>
+          <div class="note">
+            <span style="color: #798693">
+              {{ details?.notes ? "details?.notes" : "No Notes Added!" }}
+            </span>
+          </div>
+        </div>
         <div class="view-container--cards--details-card--info--attachments">
           <div
             class="view-container--cards--details-card--info--attachments--title"

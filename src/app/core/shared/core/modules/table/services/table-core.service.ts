@@ -22,7 +22,6 @@ export class TableCoreService {
   public searchNew$: BehaviorSubject<{}> = new BehaviorSubject({});
   public filterClick$: BehaviorSubject<{}> = new BehaviorSubject({});
   //var to store search history to use it when redirect back to the same page
-  gridSearchHistory = {};
   public tableData: any[] = [];
   //activated page current url used to name the history property for each page
   currentRoute: string;
@@ -50,7 +49,7 @@ export class TableCoreService {
       delete options.refId;
     }
     options = { ...options, ...params };
-    options = this.getSearchHistory(options);
+    // options = this.getSearchHistory(options);
 
     return this.http.postReq(url, options).pipe(
       take(1),
@@ -137,7 +136,7 @@ export class TableCoreService {
    */
   exportTable(url: string): Observable<any> {
     let options = this.getRequestObject();
-    options = this.getSearchHistory(options);
+    // options = this.getSearchHistory(options);
     return this.http.postReq(url, options).pipe(
       take(1),
       map(({ success, data }) => !success || (window.location.href = data))
@@ -154,24 +153,24 @@ export class TableCoreService {
     return this.http.postReq('', { moduleId });
   }
 
-  getSearchHistory(options) {
-    //check if the activated page comes with empty search obj to assignee history to it if exist.
-    if (
-      this.pageOptions.isSearchFilter == false &&
-      (this.pageOptions.searchKey == '' ||
-        this.pageOptions.searchKey == null ||
-        this.pageOptions.searchKey == undefined)
-    ) {
-      //check if there is any history if exist assign it to search obj
-      if (this.currentRoute && this.gridSearchHistory[this.currentRoute]) {
-        options = this.gridSearchHistory[this.currentRoute];
-      }
-    } else {
-      //check if the search obj has value then add it to search history
-      this.gridSearchHistory[this.currentRoute] = options;
-    }
-    return options;
-  }
+  // getSearchHistory(options) {
+  //   //check if the activated page comes with empty search obj to assignee history to it if exist.
+  //   if (
+  //     this.pageOptions.isSearchFilter == false &&
+  //     (this.pageOptions.searchKey == '' ||
+  //       this.pageOptions.searchKey == null ||
+  //       this.pageOptions.searchKey == undefined)
+  //   ) {
+  //     //check if there is any history if exist assign it to search obj
+  //     if (this.currentRoute && this.gridSearchHistory[this.currentRoute]) {
+  //       options = this.gridSearchHistory[this.currentRoute];
+  //     }
+  //   } else {
+  //     //check if the search obj has value then add it to search history
+  //     this.gridSearchHistory[this.currentRoute] = options;
+  //   }
+  //   return options;
+  // }
   getRequestObject() {
     return {
       isSearchFilter: this.pageOptions.isSearchFilter,

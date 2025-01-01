@@ -37,6 +37,7 @@ import { ChartModule } from 'primeng/chart';
 import { PanelModule } from 'primeng/panel';
 import { HideMissingDirective } from './directives/hide-missing.directive';
 import { OcDdlComponent } from 'src/app/core/shared/components/oc-ddl/oc-ddl.component';
+import { HistoryLogComponent } from './components/history-log/history-log.component';
 const ANGULAR_MODULES = [
   CommonModule,
   FormModule,
@@ -87,6 +88,7 @@ const CUSTOM_DIRECTIVES = [
     LeafletMapComponent,
     ViewCardComponent,
     ConfirmDialogComponent,
+    HistoryLogComponent,
   ],
   imports: [
     ...ANGULAR_MODULES,
@@ -106,6 +108,7 @@ const CUSTOM_DIRECTIVES = [
     ViewCardComponent,
     OcDdlComponent,
     ConfirmDialogComponent,
+    HistoryLogComponent,
   ],
   providers: [ConfirmationService],
 })

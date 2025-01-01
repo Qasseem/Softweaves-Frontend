@@ -142,19 +142,26 @@ export class TicketFormComponent implements OnInit {
     });
   }
   zoneValueChange() {
-    combineLatest([
-      this.ticketForm.get('categoryId').valueChanges,
-      this.ticketForm.get('zoneId').valueChanges,
-    ]).subscribe({
-      next: ([categoryId, zoneId]) => {
-        if (categoryId && zoneId) {
-          this.service.getZoneAgents(zoneId, categoryId).subscribe({
-            next: (res) => {
+    let errandTypeIds = [];
+    let errandChannel = this.ticketForm.get('errandTypes').value;
+
+    if (errandChannel) {
+      errandTypeIds = errandChannel.map((x) => x.errandTypeId);
+    }
+    let categoryId = this.ticketForm.get('categoryId').value;
+    let zoneId = this.ticketForm.get('zoneId').value;
+    if (categoryId && zoneId && errandTypeIds.length) {
+      this.service
+        .getZoneAgents({
+          zoneId,
+          categoryId,
+          errandTypeIds: errandTypeIds,
+        })
+        .subscribe({
+          next: (res) => {
+            if (res.data?.length > 0) {
               this.assignees = res.data;
-              // if (this.assignees.length) {
-              //   this.ticketForm.get('assigneeId').enable();
-              //   this.ticketForm.get('assigneeId').updateValueAndValidity();
-              // } else {
+
               if (this.formType == 'add') {
                 this.ticketForm
                   .get('assigneeId')
@@ -164,13 +171,12 @@ export class TicketFormComponent implements OnInit {
                 this.ticketForm.get('assigneeId').disable();
                 this.ticketForm.get('assigneeId').updateValueAndValidity();
               }
+            }
 
-              // }
-            },
-          });
-        }
-      },
-    });
+            // }
+          },
+        });
+    }
   }
   handleAddress(resp: any) {
     this.coordinates = {
@@ -219,6 +225,7 @@ export class TicketFormComponent implements OnInit {
                   .get('posTypeId')
                   .patchValue(this.details.posTypeId);
                 this.handleAddress(this.details);
+                this.zoneValueChange();
               }
             },
           });
@@ -268,6 +275,9 @@ export class TicketFormComponent implements OnInit {
         .get('quantity')
         .updateValueAndValidity();
     }
+
+    this.zoneValueChange();
+
     // this.ticketForm.get('')
   }
   categoryValueChange() {
@@ -374,8 +384,10 @@ export class TicketFormComponent implements OnInit {
       errandChannelId: [null, Validators.required],
       regionId: [null, Validators.required],
       cityId: [null, Validators.required],
-      latitude: [null, Validators.required],
-      longitude: [null, Validators.required],
+      latitude: [null],
+      longitude: [null],
+      latitudeInput: [null],
+      longitudeInput: [null],
       address: [null, Validators.required],
       landMark: [null],
       attachmentsBase64: this.fb.array([]),
@@ -399,6 +411,7 @@ export class TicketFormComponent implements OnInit {
   }
   removeErrandType(index) {
     (this.ticketForm.get('errandTypes') as FormArray).removeAt(index);
+    this.zoneValueChange();
   }
   cityChanged(event) {
     this.ticketForm.controls.zoneId.setValue(null);
@@ -502,5 +515,21 @@ export class TicketFormComponent implements OnInit {
   }
   removeImage(index) {
     (this.ticketForm.get('attachmentsBase64') as FormArray).removeAt(index);
+  }
+
+  pinLocation() {
+    let lng = this.ticketForm?.get('longitudeInput').value;
+    let lat = this.ticketForm?.get('latitudeInput').value;
+
+    this.ticketForm?.get('latitude').setValue(lat);
+    this.ticketForm?.get('longitude').setValue(lng);
+
+    this.coordinates = {
+      lat: lat,
+      lng: lng,
+    };
+  }
+  get f() {
+    return this.ticketForm.controls;
   }
 }

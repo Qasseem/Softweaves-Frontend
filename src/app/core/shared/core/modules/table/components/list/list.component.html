@@ -29,7 +29,7 @@
         class="col-header"
         *ngFor="let col of columns"
         pResizableColumn
-        style="color: #969696; font-size: 14px; line-height: 7px"
+        style="color: #969696; font-size: 14px; line-height: 7px; padding: 5px"
         [style.width]="col.width ? col.width : '250px'"
       >
         {{ col.header }}
@@ -264,7 +264,7 @@
             </div>
 
             <div *ngIf="col.customCell === 'date'" style="font-size: 14px">
-              {{ rowData[col.field] | dateFixer | date : "dd-MM-yyyy" }}
+              {{ rowData[col.field] | dateFixer | date : "yyyy-MM-dd HH:mm" }}
             </div>
             <div
               *ngIf="col.customCell === 'dateWithoutPipe'"

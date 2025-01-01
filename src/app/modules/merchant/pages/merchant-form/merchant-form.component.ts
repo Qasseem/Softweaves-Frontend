@@ -50,6 +50,8 @@ export class MerchantFormComponent implements OnInit, OnDestroy {
       phoneNumber: [null, [Validators.minLength(11), Validators.maxLength(11)]],
       latitude: [null],
       longitude: [null],
+      latitudeInput: [null],
+      longitudeInput: [null],
       regionId: [null, Validators.required],
       cityId: [null, Validators.required],
       zoneId: [null, Validators.required],
@@ -221,10 +223,21 @@ export class MerchantFormComponent implements OnInit, OnDestroy {
       );
     }
   }
-  formatLngLat(string) {
-    return string !== null ? parseInt(string).toFixed(6).toString() : '-';
-  }
+
   ngOnDestroy() {
     this.alive = false;
+  }
+
+  pinLocation() {
+    let lng = this.form?.get('longitudeInput').value;
+    let lat = this.form?.get('latitudeInput').value;
+
+    this.form?.get('latitude').setValue(lat);
+    this.form?.get('longitude').setValue(lng);
+
+    this.coordinates = {
+      lat: lat,
+      lng: lng,
+    };
   }
 }

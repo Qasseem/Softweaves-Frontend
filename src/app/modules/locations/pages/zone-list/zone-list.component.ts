@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ActionsInterface } from 'src/app/core/shared/core/modules/table/models/actions.interface';
-import { SearchInputTypes } from 'src/app/core/shared/core/modules/table/models/enums';
+import {
+  HTTPMethods,
+  SearchInputTypes,
+} from 'src/app/core/shared/core/modules/table/models/enums';
 import { SearchInterface } from 'src/app/core/shared/core/modules/table/models/search-interface';
 import { TableButtonsExistanceInterface } from 'src/app/core/shared/core/modules/table/models/table-url.interface';
 import { ColumnsInterface } from 'src/app/core/shared/models/Interfaces';
@@ -18,7 +21,7 @@ export class ZoneListComponent {
     showAllButtons: true,
     showAdd: true,
     showExport: true,
-    showFilter: false,
+    showFilter: true,
     showImport: true,
   };
   public columns: ColumnsInterface[] = [
@@ -65,19 +68,23 @@ export class ZoneListComponent {
 
   filters: SearchInterface[] = [
     {
-      type: SearchInputTypes.text,
-      field: 'nameEn',
+      isMultiple: false,
+      type: SearchInputTypes.select,
+      field: 'region',
       isFixed: true,
+      url: '/Terminal/GetAllRegions', // Replaced with direct URL
+      method: HTTPMethods.getReq,
+      propValueName: 'id',
     },
     {
-      type: SearchInputTypes.text,
-      field: 'nameAR',
+      isMultiple: true,
+      type: SearchInputTypes.select,
+      field: 'city',
       isFixed: true,
-    },
-    {
-      type: SearchInputTypes.date,
-      field: 'createDate',
-      isFixed: true,
+      url: '/Terminal/GetAllCities', // Replaced with direct URL
+      method: HTTPMethods.getReq,
+      propValueName: 'id',
+      header: '0',
     },
   ];
   showBlock = true;

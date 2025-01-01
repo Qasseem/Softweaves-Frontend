@@ -1,10 +1,13 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../../services/user.service';
 import { TerminalService } from 'src/app/modules/terminal/services/terminal.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { startWith, takeWhile } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { TicketService } from 'src/app/modules/ticket/services/ticket.service';
+import { ToastService } from 'src/app/core/services/toaster.service';
+import { UserTypeEnum } from 'src/app/core/shared/core/modules/table/models/enums';
 
 @Component({
   selector: 'oc-user-form',
@@ -30,14 +33,19 @@ export class UserFormComponent {
   userTypes = [];
   profileImage: string | ArrayBuffer | null = null;
   fileName: string | null = null;
-
+  categories = [];
+  errandTypes = [];
+  serviceTypeData = [];
+  hideLocationAndServiceTypeAction: boolean;
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
     private terminalService: TerminalService,
     private router: Router,
     private route: ActivatedRoute,
-    private http: HttpClient
+    private http: HttpClient,
+    private service: TicketService,
+    public toaster: ToastService
   ) {
     this.formType = this.route.snapshot.data.type;
     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{1,4}$/i;
@@ -72,6 +80,7 @@ export class UserFormComponent {
         regionId: [null, Validators.required],
         cityId: [null, Validators.required],
         zoneId: [null, Validators.required],
+        agentErrandTypes: this.fb.array([]),
         // password: [
         //   '',
         //   [
@@ -121,6 +130,8 @@ export class UserFormComponent {
   }
 
   ngOnInit() {
+    this.getAllCategories();
+    this.getAllErrandTypes();
     this.GetUsersDropdownValues();
     if (this.formType == 'edit') {
       this.id = this.route.snapshot.params.id || null;
@@ -128,6 +139,7 @@ export class UserFormComponent {
         this.getItemDetails();
       }
     }
+
     this.form
       .get('userType')
       .valueChanges.pipe(startWith(null))
@@ -275,6 +287,7 @@ export class UserFormComponent {
           if (resp.success) {
             this.details = resp.data;
             if (this.details) {
+              this.prepareagentErrandTypesForm();
               this.form.patchValue(this.details);
               this.form.get('userId').patchValue(this.details.userId);
               if (resp.data.rolesIds) {
@@ -286,26 +299,16 @@ export class UserFormComponent {
               this.form
                 .get('nationalIdBase64String')
                 .patchValue(resp.data.nationalIdUrl);
-              // this.form.get('password').clearValidators();
-              // this.form.get('password').updateValueAndValidity();
-              // this.form.get('confirmPassword').clearValidators();
-              // this.form.get('confirmPassword').updateValueAndValidity();
-              // this.form.updateValueAndValidity();
             }
           }
         },
       });
   }
+
   get f() {
     return this.form.controls;
   }
   submit() {
-    let obj = this.form.value;
-    if (!this.id) {
-      delete obj.userId;
-    }
-    obj = this.refactorObjectBeforeSubmit(obj);
-
     if (this.formType == 'add') {
       this.userService
         .Save(this.form.value)
@@ -349,5 +352,119 @@ export class UserFormComponent {
 
   ngOnDestroy() {
     this.alive = false;
+  }
+
+  addErrandType() {
+    let index = (this.form.get('agentErrandTypes') as FormArray).length;
+    let ifIndexExists = this.serviceTypeData.find((x) => x.index == index);
+    if (ifIndexExists) {
+      this.serviceTypeData = this.serviceTypeData.filter(
+        (x) => x.index != index
+      );
+    }
+    let item = {
+      index: index,
+      data: this.errandTypes,
+    };
+    this.serviceTypeData.push(item);
+
+    const group = this.fb.group({
+      categoryId: this.fb.control(null, Validators.required),
+      errandTypes: this.fb.control([], [Validators.required]),
+    });
+    (this.form.get('agentErrandTypes') as FormArray).push(group);
+  }
+
+  getAllCategories() {
+    this.service.getTicketCategory().subscribe({
+      next: (res) => {
+        res.data.map((item) => {
+          item.inputId = `category-${item.nameEn}`;
+        });
+        this.categories = res.data;
+      },
+    });
+    // thi
+  }
+  CategoryChanged(event, index) {
+    let formArray = this.form.get('agentErrandTypes') as FormArray;
+
+    let selectedCategories = this.form.value.agentErrandTypes.map(
+      (item) => item.categoryId
+    ) as [];
+
+    if (new Set(selectedCategories).size !== selectedCategories.length) {
+      this.toaster.showError('Please select unique categories');
+      formArray['controls'][index]['controls']['categoryId'].setValue(null);
+    }
+
+    formArray['controls'][index]['controls']['errandTypes'].setValue(null);
+    const categoryData = this.serviceTypeData.find((x) => x.index === index);
+    categoryData.data = this.errandTypes.filter(
+      (x) => x.categoryId === event.value
+    );
+  }
+
+  errandTypeChange(event, i) {}
+  getAllErrandTypes() {
+    this.service.GetErrandTypeDropDown().subscribe({
+      next: (res) => {
+        this.errandTypes = res.data;
+        if (!this.id) {
+          this.addErrandType();
+        }
+      },
+    });
+  }
+
+  getFillteredErrandTypes(i) {
+    if (i > -1) {
+      return this.serviceTypeData.find((x) => x.index == i)?.data;
+    }
+  }
+  removeErrandType(index) {
+    (this.form.get('agentErrandTypes') as FormArray).removeAt(index);
+    this.serviceTypeData = this.serviceTypeData.filter((x) => x.index != index);
+    for (let i = 0; i < this.serviceTypeData.length; i++) {
+      this.serviceTypeData[i].index = i;
+    }
+  }
+
+  prepareagentErrandTypesForm() {
+    if (this.details.agentErrandTypes) {
+      this.details.agentErrandTypes.map((item) => {
+        this.addErrandType();
+        this.serviceTypeData[this.serviceTypeData.length - 1].data =
+          this.errandTypes.filter((x) => x.categoryId === item.categoryId);
+      });
+    }
+  }
+
+  userTypeChanged(event) {
+    if (event?.value == UserTypeEnum.SysytemUser) {
+      this.hideLocationAndServiceTypeAction = true;
+      this.form.get('cityId').clearValidators();
+      this.form.get('cityId').updateValueAndValidity();
+      this.form.get('zoneId').clearValidators();
+      this.form.get('zoneId').updateValueAndValidity();
+      this.form.get('regionId').clearValidators();
+      this.form.get('regionId').updateValueAndValidity();
+      this.clearagentErrandTypesItems();
+    } else {
+      this.hideLocationAndServiceTypeAction = false;
+      this.form.controls.cityId.setValidators([Validators.required]);
+      this.form.controls.zoneId.setValidators([Validators.required]);
+      this.form.controls.regionId.setValidators([Validators.required]);
+      let items = this.form.get('agentErrandTypes') as FormArray;
+      if (!items.length) {
+        this.addErrandType();
+      }
+    }
+    this.form.updateValueAndValidity();
+  }
+
+  clearagentErrandTypesItems() {
+    let items = this.form.get('agentErrandTypes') as FormArray;
+    items.clear();
   }
 }

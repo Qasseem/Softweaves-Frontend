@@ -280,6 +280,51 @@
             <div class="location-text">
               <p class="font-bold fs-11">Location</p>
             </div>
+            <div class="grid">
+              <div class="col-5">
+                <div class="flex flex-column gap-2">
+                  <label for="longitudeInput"
+                    >Long
+                    <label *ngIf="false" for="" style="color: red !important"
+                      >*</label
+                    ></label
+                  >
+                  <input
+                    [ngClass]="{
+                      'ng-invalid ng-dirty': f.longitudeInput?.errors?.required
+                    }"
+                    type="text"
+                    pInputText
+                    formControlName="longitudeInput"
+                  />
+                </div>
+              </div>
+              <div class="col-5">
+                <div class="flex flex-column gap-2">
+                  <label for="latitudeInput"
+                    >Lat
+                    <label for="" *ngIf="false" style="color: red !important"
+                      >*</label
+                    >
+                  </label>
+                  <input
+                    [ngClass]="{
+                      'ng-invalid ng-dirty': f.latitudeInput?.errors?.required
+                    }"
+                    type="text"
+                    pInputText
+                    formControlName="latitudeInput"
+                  />
+                </div>
+              </div>
+              <div class="col-2">
+                <div class="add-item mt-5" (click)="pinLocation()">
+                  <span class="add-btn">
+                    <i class="pi pi-map-marker" style="font-size: 13px"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
             <div>
               <div class="map-container">
                 <oc-map [mode]="formType" [coordinates]="coordinates"></oc-map>
@@ -289,13 +334,14 @@
                 <div class="col-6 coordinate">
                   <span class="mt-2"
                     >Long:
-                    {{ formatLngLat(form?.get("longitude").value) }}</span
+                    {{ form?.get("longitude").value | strLimit : 10 }}</span
                   >
                 </div>
                 <p-divider class="divider" />
                 <div class="col-6 coordinate">
                   <span class="mt-2"
-                    >Lat: {{ formatLngLat(form?.get("latitude").value) }}</span
+                    >Lat:
+                    {{ form?.get("latitude").value | strLimit : 10 }}</span
                   >
                 </div>
               </div>

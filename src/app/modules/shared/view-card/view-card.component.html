@@ -90,6 +90,14 @@
               details?.terminalNumber ? details?.terminalNumber : "-"
             }}</span>
           </div>
+
+          <div
+            class="view-container--card--header-custom-container--header--text-label"
+            *ngIf="details?.categoryNameEn != 'Deployment'"
+          >
+            <label for="merchantId">Phone Number:</label>
+            <span>{{ details?.phoneNumber ? details?.phoneNumber : "-" }}</span>
+          </div>
         </div>
         <div
           class="view-container--card--header-custom-container--header--card-divider"
@@ -130,6 +138,13 @@
             <div class="color-info">Service Agent</div>
             <div class="">
               {{ details?.serviceAgent }}
+            </div>
+          </div>
+
+          <div class="view-container--card--details--item">
+            <div class="color-info">Phone Number</div>
+            <div class="">
+              {{ details?.phoneNumber ? details?.phoneNumber : "-" }}
             </div>
           </div>
 

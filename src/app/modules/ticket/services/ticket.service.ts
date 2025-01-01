@@ -11,6 +11,13 @@ export class TicketService {
     private dialogService: DialogService
   ) {}
 
+  CompleteTicket(value: any) {
+    return this.http.postReq('/Ticket/SubmitTaskDecision', value);
+  }
+
+  forceComplete(value: any) {
+    return this.http.postReq('/Ticket/ForceComplete', value);
+  }
   // Favorite(data) {
   //   return this.http.postReq(APIURL.Terminal.Favorite, data);
   // }
@@ -29,15 +36,22 @@ export class TicketService {
   getById(id) {
     return this.http.getReq('/Ticket/GetById/' + id);
   }
+  getFailReasons() {
+    return this.http.getReq('/Ticket/GetFailReasons');
+  }
 
+  getDeploymentStatus(id) {
+    return this.http.getReq('/Ticket/GetDeploymentStatus/' + id);
+  }
   getCategoryErrandTypes(categoryId) {
     return this.http.getReq('/Ticket/GetCategoryErrandTypes/' + categoryId);
   }
 
-  getZoneAgents(zoneId, categoryId) {
-    return this.http.getReq(
-      '/Ticket/GetZoneAgents/' + zoneId + '/' + categoryId
-    );
+  GetErrandTypeDropDown() {
+    return this.http.postReq('/ErrandType/GetErrandTypeDropDown', null);
+  }
+  getZoneAgents(data) {
+    return this.http.postReq('/Ticket/V2/GetZoneAgents ', data);
   }
 
   getTerminalDetails(terminalId) {
