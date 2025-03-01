@@ -189,11 +189,15 @@ export class TransferCustodyListComponent implements OnInit {
     {
       name: 'Add Serials',
       icon: 'pi pi-server',
-      call: (row: any) => this.blockItem(row),
+      call: (row: any) => this.addSerials(row),
       customPermission: (row: any) => this.showBlock,
     },
   ];
 
+  addSerials(row: any): any {
+    const URL = `main/inventory/transfercustody/serials/${row?.id}`;
+    this.router.navigate([URL]);
+  }
   bulkAdd(row: any): any {}
   showBlock = true;
   showEdit = true;

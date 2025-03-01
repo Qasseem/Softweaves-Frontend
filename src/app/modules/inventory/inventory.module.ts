@@ -22,6 +22,7 @@ import { ShipmentDetailsComponent } from './pages/shipment-details/shipment-deta
 import { ShipmentFormComponent } from './pages/shipment-form/shipment-form.component';
 import { ShipmentListComponent } from './pages/shipment-list/shipment-list.component';
 import { TransferCustodyDetailsComponent } from './pages/transfer-custody-details/transfer-custody-details.component';
+import { TransferCustodySerialsComponent } from './pages/transfer-custody-serials/transfer-custody-serials.component';
 
 @NgModule({
   imports: [CommonModule, InventoryRoutingModule, SharedModule],
@@ -46,6 +47,7 @@ import { TransferCustodyDetailsComponent } from './pages/transfer-custody-detail
     ShipmentFormComponent,
     ShipmentListComponent,
     TransferCustodyDetailsComponent,
+    TransferCustodySerialsComponent,
   ],
 })
 export class InventoryModule {}

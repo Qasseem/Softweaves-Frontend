@@ -21,6 +21,7 @@ import { ShipmentListComponent } from './pages/shipment-list/shipment-list.compo
 import { ShipmentFormComponent } from './pages/shipment-form/shipment-form.component';
 import { ShipmentDetailsComponent } from './pages/shipment-details/shipment-details.component';
 import { TransferCustodyDetailsComponent } from './pages/transfer-custody-details/transfer-custody-details.component';
+import { TransferCustodySerialsComponent } from './pages/transfer-custody-serials/transfer-custody-serials.component';
 
 const routes: Routes = [
   {
@@ -192,6 +193,13 @@ const routes: Routes = [
         component: TransferCustodyDetailsComponent,
         data: {
           type: 'edit',
+        },
+      },
+      {
+        path: 'transfercustody/serials/:id',
+        component: TransferCustodySerialsComponent,
+        data: {
+          type: 'serials',
         },
       },
       { path: '', redirectTo: 'devices/list', pathMatch: 'full' },
