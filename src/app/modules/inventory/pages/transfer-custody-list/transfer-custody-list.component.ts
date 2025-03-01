@@ -62,6 +62,12 @@ export class TransferCustodyListComponent implements OnInit {
 
   filters: SearchInterface[] = [
     {
+      isMultiple: true,
+      type: SearchInputTypes.date,
+      field: 'createDate',
+      isFixed: true,
+    },
+    {
       type: SearchInputTypes.text,
       field: 'transferId',
       isFixed: true,

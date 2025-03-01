@@ -229,6 +229,13 @@
     "shipmentId": "Shipment ID",
     "shipmentDate": "Shipment Date",
     "simIMEI": "SIM IMEI",
+    "fromEmployee": "From Employee",
+    "toEmployee": "To Employee",
+    "toWarehouse": "To Warehouse",
+    "fromWarehouse": "From Warehouse",
+    "transferId": "Transfer ID",
+    "": "",
+    "": "",
     "": ""
   },
   "merchants": {

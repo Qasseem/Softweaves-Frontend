@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TransferCustodyService } from '../../services/transfer-custody.service';
-import { take } from 'rxjs';
+import { concatMap, take, tap } from 'rxjs';
 import { WarehousesService } from '../../services/warehouses.service';
 import { ExportExcelService } from 'src/app/modules/shared/Services/export-excel.service';
 import { ColumnsInterface } from 'src/app/core/shared/models/Interfaces';
@@ -102,23 +102,23 @@ export class TransferCustodyFormComponent implements OnInit {
 
   public columns: ColumnsInterface[] = [
     {
-      field: 'index',
+      field: 'id',
       header: 'NO.',
       width: '50px',
     },
 
     {
-      field: 'family',
+      field: 'modelFamily',
       header: 'Inventory Family',
       width: '200px',
     },
     {
-      field: 'category',
+      field: 'modelCategory',
       header: 'Category',
       width: '200px',
     },
     {
-      field: 'modeltype',
+      field: 'modelType',
       header: 'Device/Item',
       width: '200px',
     },
@@ -130,13 +130,6 @@ export class TransferCustodyFormComponent implements OnInit {
   ];
 
   ngOnInit() {
-    if (this.formType == 'edit') {
-      this.id = this.route.snapshot.params.id || null;
-      if (this.id) {
-        this.getItemDetails();
-      }
-    }
-
     this.form = this.fb.group({
       source: [null],
       destination: [null],
@@ -159,10 +152,34 @@ export class TransferCustodyFormComponent implements OnInit {
     this.getLookupsDropdowns();
   }
   getLookupsDropdowns() {
-    this.getWarehouseDropDown();
+    this.callApisSequentially();
     this.getFamilyDropDown();
-    this.getAgentWarehouseDropDown();
-    this.getAllServiceAgents();
+  }
+  getDetails() {
+    if (this.formType == 'edit') {
+      this.id = this.route.snapshot.params.id || null;
+      if (this.id) {
+        this.getItemDetails();
+      }
+    }
+  }
+  callApisSequentially() {
+    this.warehousesService
+      .getAgentWarehouseDropDown()
+      .pipe(
+        tap((data1) => (this.agentWarehousesList = data1.data)),
+        concatMap(() => this.warehousesService.getWarehouseDropDown()),
+        tap((data2) => (this.warehousesList = data2.data)),
+        concatMap(() => this.userService.getAllServiceAgents()),
+        tap((data3) => {
+          this.usersList = [...data3.data];
+          this.getDetails();
+        })
+      )
+      .subscribe({
+        next: () => {},
+        error: (error) => {},
+      });
   }
 
   async getCategoryDropDownByFamilyId(id) {
@@ -225,39 +242,6 @@ export class TransferCustodyFormComponent implements OnInit {
       });
   }
 
-  getAgentWarehouseDropDown() {
-    this.warehousesService
-      .getAgentWarehouseDropDown()
-      .pipe(take(1))
-      .subscribe((resp) => {
-        if (resp.success) {
-          this.agentWarehousesList = resp.data;
-        }
-      });
-  }
-
-  getWarehouseDropDown() {
-    this.warehousesService
-      .getWarehouseDropDown()
-      .pipe(take(1))
-      .subscribe((resp) => {
-        if (resp.success) {
-          this.warehousesList = resp.data;
-        }
-      });
-  }
-
-  getAllServiceAgents() {
-    this.userService
-      .getAllServiceAgents()
-      .pipe(take(1))
-      .subscribe((resp) => {
-        if (resp.success) {
-          this.usersList = resp.data;
-        }
-      });
-  }
-
   getItemDetails() {
     this.service
       .getDetailsById(this.id)
@@ -266,11 +250,40 @@ export class TransferCustodyFormComponent implements OnInit {
         if (resp.success) {
           this.details = resp.data;
           if (this.details) {
-            this.form.patchValue(this.details);
+            this.distributeDetails(this.details);
             // this.form.get('modelCategoryId').setValue(this.details.categoryId);
           }
         }
       });
+  }
+  distributeDetails(transferCustodyDetails) {
+    const { details, isFromWarehouse, isToWarehouse } = transferCustodyDetails;
+    this.modeltypesFormList = details;
+
+    this.form.controls.source.setValue(
+      isFromWarehouse ? DDLControlType.Warehouse : DDLControlType.Custody
+    );
+    this.form.controls.destination.setValue(
+      isToWarehouse ? DDLControlType.Warehouse : DDLControlType.Employee
+    );
+
+    const sourceOption = {
+      value: isFromWarehouse
+        ? DDLControlType.Warehouse
+        : DDLControlType.Custody,
+    };
+    this.custodySourcesChanged(sourceOption, DDLControlType.Source);
+
+    const destinationOption = {
+      value: isToWarehouse ? DDLControlType.Warehouse : DDLControlType.Employee,
+    };
+    this.custodySourcesChanged(destinationOption, DDLControlType.Destination);
+
+    this.form.patchValue(transferCustodyDetails);
+    this.form.controls.source.disable();
+    this.form.controls.destination.disable();
+    this.form.controls.fromId.disable();
+    this.form.controls.toId.disable();
   }
 
   onSelectOption(selectedOption: any, controlName: DDLControlType) {
@@ -341,15 +354,14 @@ export class TransferCustodyFormComponent implements OnInit {
   }
 
   submit() {
-    let obj = this.form.value;
+    let obj = this.form.getRawValue();
+    obj.details = this.modeltypesFormList;
     if (!this.id) {
       delete obj.id;
     }
     if (this.formType == 'add') {
-      let obj = this.form.value;
-      obj.details = this.modeltypesFormList;
       this.service
-        .add(this.form.value)
+        .add(obj)
         .pipe(take(1))
         .subscribe({
           next: (resp) => {
@@ -359,8 +371,9 @@ export class TransferCustodyFormComponent implements OnInit {
           },
         });
     } else {
+      obj.details = this.modeltypesFormList;
       this.service
-        .update(this.form.value)
+        .update(obj)
         .pipe(take(1))
         .subscribe({
           next: (resp) => {
@@ -376,9 +389,9 @@ export class TransferCustodyFormComponent implements OnInit {
   }
   addToModelTypes() {
     this.modeltypesFormList.push({
-      family: this.selectedFamily?.nameEn,
-      category: this.selectedCategory?.nameEn,
-      modeltype: this.selectedModelType?.nameEn,
+      modelFamily: this.selectedFamily?.nameEn,
+      modelCategory: this.selectedCategory?.nameEn,
+      modelType: this.selectedModelType?.nameEn,
       quantity: this.modelsForm.get('quantity').value,
       familyId: this.selectedFamily?.id,
       categoryId: this.selectedCategory?.id,
@@ -387,11 +400,11 @@ export class TransferCustodyFormComponent implements OnInit {
     this.modelsForm.reset();
     this.itemsFormControlsList[1].data = [];
     this.itemsFormControlsList[2].data = [];
-    this.resolveModeltypesFormListIndex();
+    // this.resolveModeltypesFormListIndex();
   }
   resolveModeltypesFormListIndex() {
     this.modeltypesFormList.forEach((element, index) => {
-      element.index = index + 1;
+      element.id = index + 1;
     });
   }
   editmodel(model) {}
@@ -425,9 +438,9 @@ export class TransferCustodyFormComponent implements OnInit {
   export() {
     let obj = this.modeltypesFormList.map((item) => {
       return {
-        ID: item.index,
-        Family: item.family,
-        Category: item.category,
+        ID: item.id,
+        Family: item.modelFamily,
+        Category: item.modelCategory,
         Modeltype: item.modeltype,
         Quantity: item.quantity,
       };
