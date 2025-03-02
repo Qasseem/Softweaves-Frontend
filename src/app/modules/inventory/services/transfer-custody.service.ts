@@ -43,4 +43,8 @@ export class TransferCustodyService {
   getModelFamilyDropDown() {
     return this.http.getReq(this.controllerName + '/GetModelFamilyDropDown');
   }
+
+  addSerialManually(data) {
+    return this.http.postReq(this.controllerName + '/AddSerialManually', data);
+  }
 }

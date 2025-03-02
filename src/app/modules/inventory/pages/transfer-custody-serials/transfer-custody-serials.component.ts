@@ -9,6 +9,7 @@ import { ColumnsInterface } from 'src/app/core/shared/models/Interfaces';
 import { UserService } from 'src/app/modules/user-management/services/user.service';
 import { ShipmentsService } from '../../services/shipments.service';
 import { StorageService } from 'src/app/core/services/storage.service';
+import { ToastService } from 'src/app/core/services/toaster.service';
 
 @Component({
   selector: 'app-transfer-custody-serials',
@@ -28,6 +29,7 @@ export class TransferCustodySerialsComponent implements OnInit {
   familiesList = [];
   modeltypeList = [];
   modeltypesFormList = [];
+  serlialList = [];
   serial;
   custodySourceFormControlsList = [
     {
@@ -67,6 +69,8 @@ export class TransferCustodySerialsComponent implements OnInit {
   agentWarehousesList = [];
   usersList = [];
   userId: string;
+  summaryList = [];
+  isAllAddesd: boolean;
   constructor(
     private fb: FormBuilder,
     private service: TransferCustodyService,
@@ -76,7 +80,8 @@ export class TransferCustodySerialsComponent implements OnInit {
     private exportExcelService: ExportExcelService,
     private userService: UserService,
     private shipmentService: ShipmentsService,
-    public storage: StorageService
+    public storage: StorageService,
+    private toaster: ToastService
   ) {
     this.formType = this.route.snapshot.data.type;
     this.userId = this.storage.getStringItem('userId');
@@ -119,12 +124,12 @@ export class TransferCustodySerialsComponent implements OnInit {
     },
 
     {
-      field: 'modelFamily',
+      field: 'family',
       header: 'Inventory Family',
       width: '200px',
     },
     {
-      field: 'modelCategory',
+      field: 'category',
       header: 'Category',
       width: '200px',
     },
@@ -139,13 +144,8 @@ export class TransferCustodySerialsComponent implements OnInit {
       width: '200px',
     },
     {
-      field: 'IMEI',
-      header: 'imei',
-      width: '200px',
-    },
-    {
-      field: 'quantity',
-      header: 'QTY',
+      field: 'imei',
+      header: 'IMEI',
       width: '200px',
     },
   ];
@@ -230,7 +230,10 @@ export class TransferCustodySerialsComponent implements OnInit {
       value: isToWarehouse ? DDLControlType.Warehouse : DDLControlType.Employee,
     };
     this.custodySourcesChanged(destinationOption, DDLControlType.Destination);
-
+    this.summaryList = transferCustodyDetails.details.filter(
+      (item) => item.requireSerial
+    );
+    this.summaryList.map((item) => (item.added = 0));
     this.form.patchValue(transferCustodyDetails);
     this.form.controls.source.disable();
     this.form.controls.destination.disable();
@@ -318,7 +321,78 @@ export class TransferCustodySerialsComponent implements OnInit {
       element.id = index + 1;
     });
   }
-  addSerialModelTypes() {}
+
+  addSerialModelTypes() {
+    if (
+      this.serlialList.findIndex((item) => item.serialNumber == this.serial) !=
+      -1
+    ) {
+      this.toaster.showError('Serial already added');
+      return;
+    }
+
+    let obj = {
+      transferId: this.id,
+      searchKey: this.serial,
+    };
+    this.service
+      .addSerialManually(obj)
+      .pipe(take(1))
+      .subscribe((resp) => {
+        if (resp.success) {
+          if (resp.data.errorMessage) {
+            this.toaster.showError(resp.data.errorMessage);
+          } else {
+            // this.serlialList.push(resp.data);
+            this.addSerialToList(resp.data);
+          }
+        }
+      });
+  }
+  addSerialToList(data: any) {
+    if (
+      this.serlialList.findIndex(
+        (item) => item.serialNumber == data.serialNumber
+      ) != -1
+    ) {
+      this.toaster.showError('Serial already added');
+      return;
+    }
+
+    let index = this.summaryList.findIndex(
+      (item) =>
+        item.categoryId == data.categoryId &&
+        item.familyId == data.familyId &&
+        item.modelTypeId == data.modelTypeId
+    );
+
+    if (index !== -1) {
+      if (
+        +this.summaryList[index]?.added < +this.summaryList[index]?.quantity
+      ) {
+        this.summaryList[index].added = +this.summaryList[index]?.added + 1;
+        this.serlialList.push(data);
+      } else {
+        this.toaster.showError('Serials for this model type already added');
+      }
+    }
+    this.checkIfAllAdded();
+  }
+  checkIfAllAdded() {
+    ////Check if all model types quantity is equla to added quantity
+    if (
+      this.summaryList.findIndex((item) => +item.added < +item.quantity) == -1
+    ) {
+      this.summaryList.forEach((item) => {
+        item.added = item.quantity;
+      });
+      this.toaster.showSuccess(
+        'All serials for this transfer are added successfully'
+      );
+      this.isAllAddesd = true;
+    }
+  }
+
   editmodel(model) {}
   async rowClickedAction(event) {
     const index = this.modeltypesFormList.findIndex(

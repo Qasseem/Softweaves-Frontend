@@ -21,7 +21,7 @@
 
       <p-button
         (click)="submit()"
-        [disabled]="!form?.valid"
+        [disabled]="!isAllAddesd"
         label="{{ formType == 'add' ? 'Add' : 'Save' }}"
         size="small"
       >
@@ -121,7 +121,6 @@
             <div class="flex flex-column gap-2">
               <label for="qty">QTY<span class="p-error"> * </span> </label>
               <input
-                type="number"
                 [ngModelOptions]="{ standalone: true }"
                 pInputText
                 [(ngModel)]="serial"
@@ -159,7 +158,7 @@
             </div>
             <oc-list
               [clientSide]="true"
-              [data]="modeltypesFormList"
+              [data]="serlialList"
               [columnsI]="serialColumns"
               [options]="{
                 check: false,
@@ -174,13 +173,37 @@
             </oc-list>
           </div>
           <div class="col-2">
-            <div
-              style="
-                background-color: #0080f9;
-                height: 500px;
-                border-radius: 10px;
-              "
-            ></div>
+            <div class="summary">
+              <div class="p-3">
+                <span style="color: white; font-size: 16px">Summary</span>
+              </div>
+              <div class="container">
+                <img
+                  style="width: 100px; height: 100px"
+                  src="../../../../../assets/iamges/serial.png"
+                  alt="Base64 Image"
+                />
+              </div>
+              <div class="mt-2"></div>
+              <div
+                *ngFor="let item of summaryList"
+                class="pl-3 pr-3 pt-2"
+                style="color: white"
+              >
+                <span>{{ item?.modelType }}</span>
+                <div class="grid mt-1">
+                  <div class="col-6 color-grey">QTY</div>
+                  <div class="col-6">{{ item?.quantity }}</div>
+                </div>
+                <div class="grid">
+                  <div class="col-6 color-grey">Added</div>
+                  <div class="col-6" style="color: #ffd400">
+                    {{ item?.added ? item?.added : 0 }}
+                  </div>
+                </div>
+                <hr style="margin-top: 0px" />
+              </div>
+            </div>
           </div>
         </div>
       </div>
