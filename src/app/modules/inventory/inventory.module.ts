@@ -21,6 +21,8 @@ import { SimcardsDetailsComponent } from './pages/simcards-details/simcards-deta
 import { ShipmentDetailsComponent } from './pages/shipment-details/shipment-details.component';
 import { ShipmentFormComponent } from './pages/shipment-form/shipment-form.component';
 import { ShipmentListComponent } from './pages/shipment-list/shipment-list.component';
+import { TransferCustodyDetailsComponent } from './pages/transfer-custody-details/transfer-custody-details.component';
+import { TransferCustodySerialsComponent } from './pages/transfer-custody-serials/transfer-custody-serials.component';
 
 @NgModule({
   imports: [CommonModule, InventoryRoutingModule, SharedModule],
@@ -44,6 +46,8 @@ import { ShipmentListComponent } from './pages/shipment-list/shipment-list.compo
     ShipmentDetailsComponent,
     ShipmentFormComponent,
     ShipmentListComponent,
+    TransferCustodyDetailsComponent,
+    TransferCustodySerialsComponent,
   ],
 })
 export class InventoryModule {}

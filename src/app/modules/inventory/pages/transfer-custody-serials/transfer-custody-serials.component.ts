@@ -12,13 +12,12 @@ import { StorageService } from 'src/app/core/services/storage.service';
 import { ToastService } from 'src/app/core/services/toaster.service';
 
 @Component({
-  selector: 'app-transfer-custody-form',
-  templateUrl: './transfer-custody-form.component.html',
-  styleUrls: ['./transfer-custody-form.component.scss'],
+  selector: 'app-transfer-custody-serials',
+  templateUrl: './transfer-custody-serials.component.html',
+  styleUrls: ['./transfer-custody-serials.component.css'],
 })
-export class TransferCustodyFormComponent implements OnInit {
+export class TransferCustodySerialsComponent implements OnInit {
   form: FormGroup;
-  modelsForm: FormGroup;
   details: any;
   id;
   formType = 'add';
@@ -30,24 +29,8 @@ export class TransferCustodyFormComponent implements OnInit {
   familiesList = [];
   modeltypeList = [];
   modeltypesFormList = [];
-  itemsFormControlsList = [
-    {
-      name: 'familyId',
-      header: 'Inventory Family',
-      data: this.familiesList,
-    },
-    {
-      name: 'categoryId',
-      header: 'Model Category',
-      data: this.modelCategories,
-    },
-    {
-      name: 'modelTypeId',
-      header: 'Model Type',
-      data: this.modeltypeList,
-    },
-  ];
-
+  serlialList = [];
+  serial;
   custodySourceFormControlsList = [
     {
       name: 'source',
@@ -86,6 +69,9 @@ export class TransferCustodyFormComponent implements OnInit {
   agentWarehousesList = [];
   usersList = [];
   userId: string;
+  summaryList = [];
+  isAllAddesd: boolean;
+  selectedFile: File;
   constructor(
     private fb: FormBuilder,
     private service: TransferCustodyService,
@@ -131,6 +117,40 @@ export class TransferCustodyFormComponent implements OnInit {
     },
   ];
 
+  public serialColumns: ColumnsInterface[] = [
+    {
+      field: 'id',
+      header: 'NO.',
+      width: '50px',
+    },
+
+    {
+      field: 'family',
+      header: 'Inventory Family',
+      width: '200px',
+    },
+    {
+      field: 'category',
+      header: 'Category',
+      width: '200px',
+    },
+    {
+      field: 'modelType',
+      header: 'Device/Item',
+      width: '200px',
+    },
+    {
+      field: 'serialNumber',
+      header: 'Serial Number',
+      width: '200px',
+    },
+    {
+      field: 'imei',
+      header: 'IMEI',
+      width: '200px',
+    },
+  ];
+
   ngOnInit() {
     this.form = this.fb.group({
       source: [null],
@@ -143,22 +163,13 @@ export class TransferCustodyFormComponent implements OnInit {
       id: [null],
     });
 
-    this.modelsForm = this.fb.group({
-      familyId: [null, [Validators.required]],
-      categoryId: [null, [Validators.required]],
-      modelTypeId: [null, [Validators.required]],
-      quantity: [null, [Validators.required]],
-      availableQuantity: [null, [Validators.required]],
-      id: [null],
-    });
     this.getLookupsDropdowns();
   }
   getLookupsDropdowns() {
     this.callApisSequentially();
-    this.getFamilyDropDown();
   }
   getDetails() {
-    if (this.formType == 'edit') {
+    if (this.formType == 'serials') {
       this.id = this.route.snapshot.params.id || null;
       if (this.id) {
         this.getItemDetails();
@@ -181,66 +192,6 @@ export class TransferCustodyFormComponent implements OnInit {
       .subscribe({
         next: () => {},
         error: (error) => {},
-      });
-  }
-
-  async getCategoryDropDownByFamilyId(id) {
-    await this.service
-      .getCategoryDropDown(id)
-      .pipe(take(1))
-      .subscribe((resp) => {
-        if (resp.success) {
-          this.modelCategories = resp.data;
-          this.itemsFormControlsList[1].data = [...this.modelCategories];
-          this.itemsFormControlsList[2].data = [];
-        }
-      });
-  }
-
-  getFamilyDropDown() {
-    this.shipmentService
-      .getFamilyDropDown()
-      .pipe(take(1))
-      .subscribe((resp) => {
-        if (resp.success) {
-          this.familiesList = resp.data;
-          this.itemsFormControlsList[0].data = [...this.familiesList];
-          this.itemsFormControlsList[1].data = [];
-          this.itemsFormControlsList[2].data = [];
-        }
-      });
-  }
-  getModelTypeDropDownByCategoryId(id: number) {
-    this.service
-      .getModelTypeDropDown(id)
-      .pipe(take(1))
-      .subscribe((resp) => {
-        if (resp.success) {
-          this.modeltypeList = resp.data;
-          this.itemsFormControlsList[2].data = [...this.modeltypeList];
-        }
-      });
-  }
-
-  getModelTypeDetails(id: number) {
-    let obj = {
-      modelTypeId: id,
-      isFromWarehouse:
-        this.form.controls['source'].value == DDLControlType.Warehouse
-          ? true
-          : false,
-      formId: this.form.controls['fromId'].value,
-    };
-
-    this.service
-      .getModelTypeDetails(obj)
-      .pipe(take(1))
-      .subscribe((resp) => {
-        if (resp.success) {
-          this.modelsForm.controls['availableQuantity'].setValue(
-            resp.data.quantity
-          );
-        }
       });
   }
 
@@ -280,36 +231,15 @@ export class TransferCustodyFormComponent implements OnInit {
       value: isToWarehouse ? DDLControlType.Warehouse : DDLControlType.Employee,
     };
     this.custodySourcesChanged(destinationOption, DDLControlType.Destination);
-
+    this.summaryList = transferCustodyDetails.details.filter(
+      (item) => item.requireSerial
+    );
+    this.summaryList.map((item) => (item.added = 0));
     this.form.patchValue(transferCustodyDetails);
     this.form.controls.source.disable();
     this.form.controls.destination.disable();
     this.form.controls.fromId.disable();
     this.form.controls.toId.disable();
-  }
-
-  onSelectOption(selectedOption: any, controlName: DDLControlType) {
-    if (!selectedOption) return;
-    switch (controlName) {
-      case DDLControlType.Family:
-        this.getCategoryDropDownByFamilyId(selectedOption?.value);
-        this.selectedFamily = this.familiesList.find(
-          (family) => family.id === selectedOption?.value
-        );
-        break;
-      case DDLControlType.Category:
-        this.getModelTypeDropDownByCategoryId(selectedOption?.value);
-        this.selectedCategory = this.modelCategories.find(
-          (category) => category.id === selectedOption?.value
-        );
-        break;
-      case DDLControlType.ModelType:
-        this.getModelTypeDetails(selectedOption?.value);
-        this.selectedModelType = this.modeltypeList.find(
-          (modelType) => modelType.id === selectedOption?.value
-        );
-        break;
-    }
   }
 
   custodySourcesChanged(selectedOption: any, controlName: DDLControlType) {
@@ -351,101 +281,125 @@ export class TransferCustodyFormComponent implements OnInit {
   get f() {
     return this.form.controls;
   }
-  get mf() {
-    return this.modelsForm.controls;
-  }
 
   submit() {
     let obj = this.form.getRawValue();
-    obj.details = this.modeltypesFormList;
-    if (!this.id) {
-      delete obj.id;
-    }
-    if (this.formType == 'add') {
-      this.service
-        .add(obj)
-        .pipe(take(1))
-        .subscribe({
-          next: (resp) => {
-            if (resp.success) {
-              this.backToList();
-            }
-          },
-        });
-    } else {
-      obj.details = this.modeltypesFormList;
-      this.service
-        .update(obj)
-        .pipe(take(1))
-        .subscribe({
-          next: (resp) => {
-            if (resp.success) {
-              this.backToList();
-            }
-          },
-        });
-    }
+    obj.serials = this.serlialList;
+    obj.transferId = +this.id;
+    this.service
+      .completeData(obj)
+      .pipe(take(1))
+      .subscribe((resp) => {
+        if (resp.success) {
+          this.backToList();
+        }
+      });
   }
   backToList() {
     this.router.navigate(['main/inventory/transfercustody/list']);
   }
-  addToModelTypes() {
-    if (this.modelsForm.get('quantity').value == 0) {
-      this.toaster.showError('Quantity should be greater than 0');
-      return;
-    }
-    if (
-      this.modelsForm.get('quantity').value >
-      this.modelsForm.get('availableQuantity').value
-    ) {
-      this.toaster.showError('Quantity should be less than available quantity');
-      return;
-    }
-    this.modeltypesFormList.push({
-      modelFamily: this.selectedFamily?.nameEn,
-      modelCategory: this.selectedCategory?.nameEn,
-      modelType: this.selectedModelType?.nameEn,
-      quantity: this.modelsForm.get('quantity').value,
-      familyId: this.selectedFamily?.id,
-      categoryId: this.selectedCategory?.id,
-      modelTypeId: this.selectedModelType?.id,
-    });
-    this.modelsForm.reset();
-    this.itemsFormControlsList[1].data = [];
-    this.itemsFormControlsList[2].data = [];
-    // this.resolveModeltypesFormListIndex();
-  }
+
   resolveModeltypesFormListIndex() {
-    this.modeltypesFormList.forEach((element, index) => {
+    this.serlialList.forEach((element, index) => {
       element.id = index + 1;
     });
   }
+
+  addSerialModelTypes() {
+    if (
+      this.serlialList.findIndex((item) => item.serialNumber == this.serial) !=
+      -1
+    ) {
+      this.toaster.showError('Serial already added');
+      return;
+    }
+
+    let obj = {
+      transferId: this.id,
+      searchKey: this.serial,
+    };
+    this.service
+      .addSerialManually(obj)
+      .pipe(take(1))
+      .subscribe((resp) => {
+        if (resp.success) {
+          if (resp.data.errorMessage) {
+            this.toaster.showError(resp.data.errorMessage);
+          } else {
+            // this.serlialList.push(resp.data);
+            this.addSerialToList(resp.data);
+          }
+        }
+      });
+  }
+  addSerialToList(data: any) {
+    if (
+      this.serlialList.findIndex(
+        (item) => item.serialNumber == data.serialNumber
+      ) != -1
+    ) {
+      this.toaster.showError('Serial already added');
+      return;
+    }
+
+    let index = this.summaryList.findIndex(
+      (item) =>
+        item.categoryId == data.categoryId &&
+        item.familyId == data.familyId &&
+        item.modelTypeId == data.modelTypeId
+    );
+
+    if (index !== -1) {
+      if (
+        +this.summaryList[index]?.added < +this.summaryList[index]?.quantity
+      ) {
+        this.summaryList[index].added = +this.summaryList[index]?.added + 1;
+        this.serlialList.push(data);
+      } else {
+        this.toaster.showError('Serials for this model type already added');
+        return;
+      }
+    }
+    this.resolveModeltypesFormListIndex();
+    this.checkIfAllAdded();
+  }
+  checkIfAllAdded() {
+    ////Check if all model types quantity is equla to added quantity
+    if (
+      this.summaryList.findIndex((item) => +item.added < +item.quantity) == -1
+    ) {
+      this.summaryList.forEach((item) => {
+        item.added = item.quantity;
+      });
+      this.toaster.showSuccess(
+        'All serials for this transfer are added successfully'
+      );
+      this.isAllAddesd = true;
+    }
+  }
+
   editmodel(model) {}
   async rowClickedAction(event) {
-    const index = this.modeltypesFormList.findIndex(
+    const itemIndex = this.serlialList.findIndex(
       (item) =>
         item.modelTypeId == event.rowData.modelTypeId &&
         item.familyId == event.rowData.familyId &&
         item.categoryId == event.rowData.categoryId &&
         item.quantity == event.rowData.quantity
     );
-    if (index !== -1) {
-      this.modeltypesFormList.splice(index, 1);
-    }
-    if (event.action == 'editForm') {
-      await this.getCategoryDropDownByFamilyId(event.rowData.familyId);
-      this.getModelTypeDropDownByCategoryId(event.rowData.categoryId);
-      this.getModelTypeDetails(event.rowData.modelTypeId);
-      this.selectedFamily = this.familiesList.find(
-        (family) => family.id === event.rowData.familyId
+    if (itemIndex !== -1) {
+      this.serlialList.splice(itemIndex, 1);
+
+      let index = this.summaryList.findIndex(
+        (item) =>
+          item.categoryId == event.rowData.categoryId &&
+          item.familyId == event.rowData.familyId &&
+          item.modelTypeId == event.rowData.modelTypeId
       );
-      this.selectedCategory = this.modelCategories.find(
-        (category) => category.id === event.rowData.categoryId
-      );
-      this.selectedModelType = this.modeltypeList.find(
-        (modelType) => modelType.id === event.rowData.modelTypeId
-      );
-      this.modelsForm.patchValue(event.rowData);
+
+      if (index !== -1) {
+        this.summaryList[index].added = +this.summaryList[index]?.added - 1;
+      }
     }
   }
   export() {
@@ -454,11 +408,60 @@ export class TransferCustodyFormComponent implements OnInit {
         ID: item.id,
         Family: item.modelFamily,
         Category: item.modelCategory,
-        Modeltype: item.modeltype,
+        Modeltype: item.modelType,
         Quantity: item.quantity,
       };
     });
     this.exportExcelService.exportAsExcelFile(obj, 'Units');
+  }
+
+  exportSerials() {
+    let obj = this.serlialList.map((item) => {
+      return {
+        ID: item.id,
+        Family: item.family,
+        Category: item.category,
+        Modeltype: item.modelType,
+        serialNumber: item.serialNumber,
+        IMEI: item.imei,
+        Quantity: item.quantity,
+      };
+    });
+    this.exportExcelService.exportAsExcelFile(obj, 'Units');
+  }
+
+  import() {}
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0];
+      this.uploadFile();
+    }
+  }
+
+  uploadFile(): void {
+    if (!this.selectedFile) {
+      this.toaster.showError('Please select a file first!');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', this.selectedFile);
+    formData.append('id', this.id);
+    formData.append('items', JSON.stringify(this.serlialList)); // Convert array to JSON string
+
+    this.service
+      .import(formData)
+      .pipe(take(1))
+      .subscribe((response) => {
+        response.data?.successData?.forEach((item: any) => {
+          this.addSerialToList(item);
+        });
+        if (response.data.failureData?.length > 0) {
+          this.toaster.showWarning('Some serials are not imported');
+        }
+      });
   }
 }
 

@@ -66,12 +66,12 @@ export class SimcardsListComponent implements OnInit {
   filters: SearchInterface[] = [
     {
       type: SearchInputTypes.text,
-      field: 'serialNumber',
+      field: 'simSerial',
       isFixed: true,
     },
     {
       type: SearchInputTypes.text,
-      field: 'imei',
+      field: 'simIMEI',
       isFixed: true,
     },
     {

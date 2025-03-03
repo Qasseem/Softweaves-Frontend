@@ -1,4 +1,3 @@
-<p>transfer-custody-form works!</p>
 <div [formGroup]="form">
   <div class="p-grid ml-2 m-2">
     <div class="p-col" style="text-align: right">
@@ -6,7 +5,7 @@
         (click)="backToList()"
         class="mt-2 ml-3 header-left"
         style="color: #0080f9; cursor: pointer"
-        >Inventory</span
+        >Transfer Custody</span
       >
       <span class="mt-2 ml-2 mr-2 header-left">></span>
       <span class="mt-2 header-left"
@@ -35,40 +34,195 @@
   <div class="add-form">
     <form [formGroup]="form">
       <div class="grid d-flex inputs-div">
+        <div style="width: 100%" class="pl-4 pr-4 mt-3">
+          <span style="font-size: 13px">Details</span>
+          <div style="border-bottom: 1px solid #d9d9d9" class="mt-2"></div>
+        </div>
         <div class="col-12 p-0">
           <div class="p-20 flex flex-wrap">
-            <div class="col-6">
-              <div class="flex flex-column gap-2">
-                <label for="nameEn"
-                  >Name EN<span class="p-error"> * </span>
+            <div
+              *ngFor="let ctrl of custodySourceFormControlsList"
+              class="col-6"
+            >
+              <div *ngIf="ctrl?.showCtrl" class="flex flex-column gap-2">
+                <label [for]="ctrl?.name"
+                  >{{ ctrl?.header }} <span class="p-error"> * </span>
                 </label>
+                <p-dropdown
+                  [options]="ctrl?.data"
+                  [formControlName]="ctrl?.name"
+                  [optionValue]="'id'"
+                  optionLabel="nameEn"
+                  (onChange)="custodySourcesChanged($event, ctrl?.name)"
+                  filter="true"
+                />
+                <div
+                  *ngIf="
+                    f[ctrl?.name].errors &&
+                    (f[ctrl?.name].dirty || f[ctrl?.name].touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f[ctrl?.name]?.errors?.required"
+                  >
+                    {{ ctrl?.header }} Date field is required
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="add-form" style="margin-top: -20px">
+    <form [formGroup]="modelsForm">
+      <div class="grid d-flex inputs-div">
+        <div class="col-12 p-0">
+          <div
+            class="p-20 flex flex-wrap"
+            style="padding-right: 0px !important"
+          >
+            <div *ngFor="let ctrl of itemsFormControlsList" class="col-4">
+              <div class="flex flex-column gap-2">
+                <label [for]="ctrl?.name"
+                  >{{ ctrl?.header }} <span class="p-error"> * </span>
+                </label>
+                <p-dropdown
+                  [options]="ctrl?.data"
+                  [formControlName]="ctrl?.name"
+                  [optionValue]="'id'"
+                  optionLabel="nameEn"
+                  (onChange)="onSelectOption($event, ctrl?.name)"
+                  filter="true"
+                />
+                <div
+                  *ngIf="
+                    mf[ctrl?.name].errors &&
+                    (mf[ctrl?.name].dirty || mf[ctrl?.name].touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="mf[ctrl?.name]?.errors?.required"
+                  >
+                    {{ ctrl?.header }} Date field is required
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="flex flex-column gap-2">
+                <label for="qty">QTY<span class="p-error"> * </span> </label>
                 <input
                   [ngClass]="{
                     'ng-invalid ng-dirty':
-                      f.nameEn?.errors?.required || f.nameEn?.errors?.pattern
+                      mf.quantity?.errors?.required ||
+                      mf.quantity?.errors?.pattern
                   }"
-                  type="text"
+                  type="number"
                   pInputText
-                  formControlName="nameEn"
+                  formControlName="quantity"
                 />
-
                 <div
                   *ngIf="
-                    f.nameEn.errors && (f.nameEn.dirty || f.nameEn.touched)
+                    mf.quantity.errors &&
+                    (mf.quantity.dirty || mf.quantity.touched)
                   "
                   class="invalid-feedback"
                 >
                   <div class="fs-10 color-red">
-                    <span *ngIf="f.nameEn.errors.required">
-                      Name EN field is required
+                    <span *ngIf="mf.quantity.errors.required">
+                      QTY ID field is required
                     </span>
-                    <span *ngIf="f.nameEn.errors.pattern">
+                    <span *ngIf="mf.quantity.errors.pattern">
                       Only English letters are allowed.
                     </span>
                   </div>
                 </div>
               </div>
             </div>
+
+            <div class="col-3">
+              <div class="flex flex-column gap-2">
+                <label for="qty"
+                  >Avaliable QTY<span class="p-error"> * </span>
+                </label>
+                <input
+                  [readOnly]="true"
+                  [ngClass]="{
+                    'ng-invalid ng-dirty':
+                      mf.availableQuantity?.errors?.required ||
+                      mf.availableQuantity?.errors?.pattern
+                  }"
+                  type="number"
+                  pInputText
+                  formControlName="availableQuantity"
+                />
+                <div
+                  *ngIf="
+                    mf.availableQuantity.errors &&
+                    (mf.availableQuantity.dirty || mf.availableQuantity.touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div class="fs-10 color-red">
+                    <span *ngIf="mf.availableQuantity.errors.required">
+                      QTY ID field is required
+                    </span>
+                    <span *ngIf="mf.availableQuantity.errors.pattern">
+                      Only English letters are allowed.
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-2" style="padding-top: 30px">
+              <p-button
+                [style]="{ width: '100px' }"
+                size="small"
+                label="Add"
+                (click)="addToModelTypes()"
+                icon="pi pi-plus"
+                [disabled]="!modelsForm.valid"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div style="width: 100%" class="pl-4 pr-4">
+          <span style="font-size: 13px">Model Types And Items</span>
+          <p-button
+            label="Export"
+            class="float-right ml-3"
+            icon="pi pi-download"
+            size="small"
+            badgeClass="p-badge-contrast"
+            (click)="export()"
+            outlined="true"
+          />
+        </div>
+        <div class="col-12 pl-4 pr-4">
+          <div class="mt-1">
+            <oc-list
+              [clientSide]="true"
+              [data]="modeltypesFormList"
+              [columnsI]="columns"
+              [options]="{
+                check: false,
+                viewDetails: false,
+                editForm: true,
+                deleteForm: true
+              }"
+              [actions]="[1]"
+              [modulePageName]="'Shipments'"
+              (rowClickedAction)="rowClickedAction($event)"
+            >
+            </oc-list>
           </div>
         </div>
       </div>

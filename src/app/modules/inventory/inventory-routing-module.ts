@@ -20,6 +20,8 @@ import { SimcardsDetailsComponent } from './pages/simcards-details/simcards-deta
 import { ShipmentListComponent } from './pages/shipment-list/shipment-list.component';
 import { ShipmentFormComponent } from './pages/shipment-form/shipment-form.component';
 import { ShipmentDetailsComponent } from './pages/shipment-details/shipment-details.component';
+import { TransferCustodyDetailsComponent } from './pages/transfer-custody-details/transfer-custody-details.component';
+import { TransferCustodySerialsComponent } from './pages/transfer-custody-serials/transfer-custody-serials.component';
 
 const routes: Routes = [
   {
@@ -184,6 +186,20 @@ const routes: Routes = [
         component: TransferCustodyFormComponent,
         data: {
           type: 'edit',
+        },
+      },
+      {
+        path: 'transfercustody/details/:id',
+        component: TransferCustodyDetailsComponent,
+        data: {
+          type: 'edit',
+        },
+      },
+      {
+        path: 'transfercustody/serials/:id',
+        component: TransferCustodySerialsComponent,
+        data: {
+          type: 'serials',
         },
       },
       { path: '', redirectTo: 'devices/list', pathMatch: 'full' },
