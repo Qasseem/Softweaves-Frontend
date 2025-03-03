@@ -9,6 +9,7 @@ import { ColumnsInterface } from 'src/app/core/shared/models/Interfaces';
 import { UserService } from 'src/app/modules/user-management/services/user.service';
 import { ShipmentsService } from '../../services/shipments.service';
 import { StorageService } from 'src/app/core/services/storage.service';
+import { ToastService } from 'src/app/core/services/toaster.service';
 
 @Component({
   selector: 'app-transfer-custody-form',
@@ -94,7 +95,8 @@ export class TransferCustodyFormComponent implements OnInit {
     private exportExcelService: ExportExcelService,
     private userService: UserService,
     private shipmentService: ShipmentsService,
-    public storage: StorageService
+    public storage: StorageService,
+    private toaster: ToastService
   ) {
     this.formType = this.route.snapshot.data.type;
     this.userId = this.storage.getStringItem('userId');
@@ -388,6 +390,17 @@ export class TransferCustodyFormComponent implements OnInit {
     this.router.navigate(['main/inventory/transfercustody/list']);
   }
   addToModelTypes() {
+    if (this.modelsForm.get('quantity').value == 0) {
+      this.toaster.showError('Quantity should be greater than 0');
+      return;
+    }
+    if (
+      this.modelsForm.get('quantity').value >
+      this.modelsForm.get('availableQuantity').value
+    ) {
+      this.toaster.showError('Quantity should be less than available quantity');
+      return;
+    }
     this.modeltypesFormList.push({
       modelFamily: this.selectedFamily?.nameEn,
       modelCategory: this.selectedCategory?.nameEn,

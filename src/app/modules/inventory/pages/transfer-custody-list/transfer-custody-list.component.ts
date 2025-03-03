@@ -7,9 +7,12 @@ import { SearchInterface } from 'src/app/core/shared/core/modules/table/models/s
 import {
   HTTPMethods,
   SearchInputTypes,
+  TransferStatusEnum,
 } from 'src/app/core/shared/core/modules/table/models/enums';
 import { ActionsInterface } from 'src/app/core/shared/core/modules/table/models/actions.interface';
 import { ColumnsInterface } from 'src/app/core/shared/models/Interfaces';
+import { ConfirmationService } from 'primeng/api';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-transfer-custody-list',
@@ -20,7 +23,8 @@ export class TransferCustodyListComponent implements OnInit {
   constructor(
     private router: Router,
     public authService: AuthService,
-    public service: TransferCustodyService
+    public service: TransferCustodyService,
+    private confirmationService: ConfirmationService
   ) {}
 
   ngOnInit() {
@@ -172,25 +176,30 @@ export class TransferCustodyListComponent implements OnInit {
       name: 'Block',
       icon: 'pi pi-ban',
       call: (row: any) => this.blockItem(row),
-      customPermission: (row: any) => this.showBlock,
+      customPermission: (row: any) =>
+        this.showBlock &&
+        row.statusId != TransferStatusEnum.Approved &&
+        row.statusId != TransferStatusEnum.Rejected,
     },
     {
       name: 'Approve',
       icon: 'pi pi-file-check',
-      call: (row: any) => this.blockItem(row),
-      customPermission: (row: any) => this.showBlock && row.allowToReceive,
+      call: (row: any) => this.ShowDialog(row, true),
+      customPermission: (row: any) =>
+        row.statusId == TransferStatusEnum.InProgress && row.allowToReceive,
     },
     {
       name: 'Reject',
       icon: 'pi pi-ban',
-      call: (row: any) => this.blockItem(row),
-      customPermission: (row: any) => this.showBlock,
+      call: (row: any) => this.ShowDialog(row, false),
+      customPermission: (row: any) =>
+        row.statusId == TransferStatusEnum.InProgress && row.allowToReceive,
     },
     {
       name: 'Add Serials',
       icon: 'pi pi-server',
       call: (row: any) => this.addSerials(row),
-      customPermission: (row: any) => this.showBlock,
+      customPermission: (row: any) => this.showEdit && row.allowToEdit,
     },
   ];
 
@@ -203,4 +212,46 @@ export class TransferCustodyListComponent implements OnInit {
   showEdit = true;
   viewDetails = true;
   blockItem(row: any): any {}
+
+  ShowDialog(rowData, isApproved) {
+    if (rowData) {
+      const isBlock = !rowData.isBlock;
+      let message =
+        'are you sure you want to ' +
+        (isApproved ? 'approve' : 'reject') +
+        ' this transfer?';
+      this.confirmationService.confirm({
+        header: isApproved ? 'Approve' : 'Reject',
+        message: message,
+        acceptIcon: 'pi pi-check mr-2',
+        rejectIcon: 'pi pi-times mr-2',
+        rejectButtonStyleClass: 'p-button-sm',
+        acceptButtonStyleClass: 'p-button-outlined p-button-sm',
+        accept: () => {
+          this.takeAction(rowData, isApproved);
+        },
+        reject: () => {},
+        key: 'myDialog',
+        acceptLabel: `Yes, ${isApproved ? 'Approve' : 'Reject'}`,
+        rejectLabel: 'No, Cancel',
+      });
+    }
+  }
+  takeAction(rowData, isApproved: boolean) {
+    let obj = {
+      transferId: rowData.id,
+      decisionId: isApproved ? 1 : 2,
+    };
+    this.service
+      .completeTransfer(obj)
+      .pipe(take(1))
+      .subscribe((resp) => {
+        if (resp.success) {
+          rowData.status = isApproved ? 'Approved' : 'Rejected';
+          rowData.statusId = isApproved
+            ? TransferStatusEnum.Approved
+            : TransferStatusEnum.Rejected;
+        }
+      });
+  }
 }

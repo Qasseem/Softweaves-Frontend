@@ -71,6 +71,7 @@ export class TransferCustodySerialsComponent implements OnInit {
   userId: string;
   summaryList = [];
   isAllAddesd: boolean;
+  selectedFile: File;
   constructor(
     private fb: FormBuilder,
     private service: TransferCustodyService,
@@ -283,41 +284,23 @@ export class TransferCustodySerialsComponent implements OnInit {
 
   submit() {
     let obj = this.form.getRawValue();
-    obj.details = this.modeltypesFormList;
-    if (!this.id) {
-      delete obj.id;
-    }
-    if (this.formType == 'add') {
-      this.service
-        .add(obj)
-        .pipe(take(1))
-        .subscribe({
-          next: (resp) => {
-            if (resp.success) {
-              this.backToList();
-            }
-          },
-        });
-    } else {
-      obj.details = this.modeltypesFormList;
-      this.service
-        .update(obj)
-        .pipe(take(1))
-        .subscribe({
-          next: (resp) => {
-            if (resp.success) {
-              this.backToList();
-            }
-          },
-        });
-    }
+    obj.serials = this.serlialList;
+    obj.transferId = +this.id;
+    this.service
+      .completeData(obj)
+      .pipe(take(1))
+      .subscribe((resp) => {
+        if (resp.success) {
+          this.backToList();
+        }
+      });
   }
   backToList() {
     this.router.navigate(['main/inventory/transfercustody/list']);
   }
 
   resolveModeltypesFormListIndex() {
-    this.modeltypesFormList.forEach((element, index) => {
+    this.serlialList.forEach((element, index) => {
       element.id = index + 1;
     });
   }
@@ -374,8 +357,10 @@ export class TransferCustodySerialsComponent implements OnInit {
         this.serlialList.push(data);
       } else {
         this.toaster.showError('Serials for this model type already added');
+        return;
       }
     }
+    this.resolveModeltypesFormListIndex();
     this.checkIfAllAdded();
   }
   checkIfAllAdded() {
@@ -395,15 +380,26 @@ export class TransferCustodySerialsComponent implements OnInit {
 
   editmodel(model) {}
   async rowClickedAction(event) {
-    const index = this.modeltypesFormList.findIndex(
+    const itemIndex = this.serlialList.findIndex(
       (item) =>
         item.modelTypeId == event.rowData.modelTypeId &&
         item.familyId == event.rowData.familyId &&
         item.categoryId == event.rowData.categoryId &&
         item.quantity == event.rowData.quantity
     );
-    if (index !== -1) {
-      this.modeltypesFormList.splice(index, 1);
+    if (itemIndex !== -1) {
+      this.serlialList.splice(itemIndex, 1);
+
+      let index = this.summaryList.findIndex(
+        (item) =>
+          item.categoryId == event.rowData.categoryId &&
+          item.familyId == event.rowData.familyId &&
+          item.modelTypeId == event.rowData.modelTypeId
+      );
+
+      if (index !== -1) {
+        this.summaryList[index].added = +this.summaryList[index]?.added - 1;
+      }
     }
   }
   export() {
@@ -412,11 +408,60 @@ export class TransferCustodySerialsComponent implements OnInit {
         ID: item.id,
         Family: item.modelFamily,
         Category: item.modelCategory,
-        Modeltype: item.modeltype,
+        Modeltype: item.modelType,
         Quantity: item.quantity,
       };
     });
     this.exportExcelService.exportAsExcelFile(obj, 'Units');
+  }
+
+  exportSerials() {
+    let obj = this.serlialList.map((item) => {
+      return {
+        ID: item.id,
+        Family: item.family,
+        Category: item.category,
+        Modeltype: item.modelType,
+        serialNumber: item.serialNumber,
+        IMEI: item.imei,
+        Quantity: item.quantity,
+      };
+    });
+    this.exportExcelService.exportAsExcelFile(obj, 'Units');
+  }
+
+  import() {}
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0];
+      this.uploadFile();
+    }
+  }
+
+  uploadFile(): void {
+    if (!this.selectedFile) {
+      this.toaster.showError('Please select a file first!');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', this.selectedFile);
+    formData.append('id', this.id);
+    formData.append('items', JSON.stringify(this.serlialList)); // Convert array to JSON string
+
+    this.service
+      .import(formData)
+      .pipe(take(1))
+      .subscribe((response) => {
+        response.data?.successData?.forEach((item: any) => {
+          this.addSerialToList(item);
+        });
+        if (response.data.failureData?.length > 0) {
+          this.toaster.showWarning('Some serials are not imported');
+        }
+      });
   }
 }
 

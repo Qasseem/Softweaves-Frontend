@@ -47,4 +47,14 @@ export class TransferCustodyService {
   addSerialManually(data) {
     return this.http.postReq(this.controllerName + '/AddSerialManually', data);
   }
+
+  import(data) {
+    return this.http.postReq(this.controllerName + '/import', data);
+  }
+  completeData(data) {
+    return this.http.postReq(this.controllerName + '/CompleteData', data);
+  }
+  completeTransfer(data) {
+    return this.http.postReq(this.controllerName + '/CompleteTransfer', data);
+  }
 }

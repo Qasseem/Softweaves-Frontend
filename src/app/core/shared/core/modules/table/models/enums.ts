@@ -55,3 +55,11 @@ export enum UserTypeEnum {
   ServiceAgent = 3,
   SalesAgent,
 }
+
+export enum TransferStatusEnum {
+  Draft = 1,
+  InProgress = 2,
+  Approved = 3,
+  Rejected = 4,
+  Blocked = 5,
+}
