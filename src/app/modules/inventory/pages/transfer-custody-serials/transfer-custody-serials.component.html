@@ -126,6 +126,7 @@
                 [ngModelOptions]="{ standalone: true }"
                 pInputText
                 [(ngModel)]="serial"
+                (keyup.enter)="onEnter($event)"
               />
             </div>
           </div>
@@ -144,15 +145,8 @@
               icon="pi pi-download"
               size="small"
               badgeClass="p-badge-contrast"
-              (click)="fileInput.click()"
+              (click)="showImportModal = true"
               outlined="true"
-            />
-            <input
-              #fileInput
-              type="file"
-              (change)="onFileSelected($event)"
-              accept=".xlsx, .xls"
-              hidden
             />
           </div>
         </div>
@@ -239,3 +233,36 @@
     </div>
   </div>
 </div>
+
+<p-dialog
+  [header]="'Import Serials'"
+  [modal]="true"
+  [(visible)]="showImportModal"
+  [style]="{ width: '40rem' }"
+>
+  <div style="margin-top: -20px">
+    <p-divider></p-divider>
+  </div>
+  <oc-file-upload
+    [sampleName]="'import-serials.xlsx'"
+    (filesSelectedEvent)="filesSelectedEvent($event)"
+  ></oc-file-upload>
+  <p-divider></p-divider>
+
+  <div>
+    <p-button
+      [outlined]="true"
+      size="small"
+      class="float-left"
+      label="Cancel"
+      (click)="showImportModal = false"
+    />
+    <p-button
+      [disabled]="!selectedFile"
+      (click)="importFromFile()"
+      size="small"
+      class="float-right"
+      label="Save"
+    />
+  </div>
+</p-dialog>
