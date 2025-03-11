@@ -231,8 +231,8 @@ export class DevicesListComponent implements OnInit {
       width: '100px',
     },
     {
-      field: 'warehouse',
-      header: 'Waehouse',
+      field: 'modelTypeName',
+      header: 'Model Type',
       width: '100px',
     },
 

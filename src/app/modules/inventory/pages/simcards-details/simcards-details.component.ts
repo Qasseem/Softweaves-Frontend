@@ -48,7 +48,7 @@ export class SimcardsDetailsComponent implements OnInit {
         { type: '', label: 'Provider', value: this.details?.providerName },
         { type: '', label: 'Qouta', value: this.details?.quota },
         { type: '', label: 'Status', value: this.details?.statusName },
-        { type: '', label: 'Device Type', value: this.details?.statusName },
+        { type: '', label: 'Warehouse', value: this.details?.warehouse },
         {
           type: '',
           label: 'Errand Channel',
