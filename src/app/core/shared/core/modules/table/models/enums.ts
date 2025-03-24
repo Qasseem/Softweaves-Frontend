@@ -63,3 +63,12 @@ export enum TransferStatusEnum {
   Rejected = 4,
   Blocked = 5,
 }
+
+export enum MerchantTicketStatusEnum {
+  Assigned = 1,
+  AgentOnWay = 2,
+  InProgress = 3,
+  Blocked = 4,
+  Postponed = 5,
+  Completed = 6,
+}
