@@ -1,0 +1,41 @@
+name: Deploy Angular to IIS on GoDaddy
+
+# Trigger the workflow when pushing to the specified branch
+on:
+  push:
+    branches:
+      - test # Replace with your desired branch (e.g., main)
+
+jobs:
+  build-and-deploy:
+    runs-on: windows-latest # Use a Windows runner to match your server environment
+
+    steps:
+      # Checkout the repository code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Set up Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18" # Use the Node.js version compatible with your Angular project
+
+      # Install dependencies
+      - name: Install Dependencies
+        run: npm install
+
+      # Build the Angular app
+      - name: Build Angular App
+        run: npm run build -- --configuration production # Adjust build command as needed
+
+      # Deploy to GoDaddy IIS via FTP
+      - name: Deploy to IIS via FTP
+        uses: SamKirkland/FTP-Deploy-Action@4.3.0
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./dist/oc/ # Replace 'your-app-name' with the folder name in /dist after build
+          server-dir: ${{ secrets.IIS_PATH }} # The IIS directory where your app is hosted
+          dangerous-clean-slate: false # Set to true to wipe the server directory before uploading (use with caution)
