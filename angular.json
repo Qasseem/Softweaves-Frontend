@@ -28,7 +28,8 @@
               "src/assets",
               "src/app-config.json",
               "src/favicon.png",
-              "src/arrow.png"
+              "src/arrow.png",
+              "src/web.config"
             ],
             "styles": [
               "src/styles.scss",
@@ -47,7 +48,7 @@
               "node_modules/primeflex/primeflex.css"
             ],
             "scripts": [],
-            "allowedCommonJsDependencies": ["leaflet","file-saver"]
+            "allowedCommonJsDependencies": ["leaflet", "file-saver"]
           },
           "configurations": {
             "production": {
