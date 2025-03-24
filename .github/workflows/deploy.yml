@@ -27,7 +27,7 @@ jobs:
 
       # Build the Angular app
       - name: Build Angular App
-        run: npm run build -- --configuration production # Adjust build command as needed
+        run: ng build --configuration production # Adjust build command as needed
 
       # Deploy to GoDaddy IIS via FTP
       - name: Deploy to IIS via FTP
