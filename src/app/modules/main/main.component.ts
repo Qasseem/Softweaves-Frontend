@@ -26,7 +26,7 @@ export class MainComponent implements OnInit {
     },
     {
       label: this.translateService.instant('Merchants'),
-      icon: 'users',
+      icon: 'merchants',
       expanded: false,
       routerLink: '/main/merchant/list',
       permission: [
@@ -102,6 +102,24 @@ export class MainComponent implements OnInit {
           permission: [],
         },
       ],
+    },
+    {
+      label: this.translateService.instant('Merchant Tickets'),
+      icon: 'merchanttickets',
+      expanded: false,
+      routerLink: '/main/merchanttickets/list',
+      active: false,
+      permission: ['tickets-merchant-tickets-view'],
+      // childs: [
+      //   {
+      //     label: this.translateService.instant('All Tickets'),
+      //     expanded: true,
+      //     routerLink: '/main/ticket/list',
+      //     active: false,
+      //     permission: ['tickets-all-tickets-view'],
+      //   },
+
+      // ],
     },
     {
       label: this.translateService.instant('Inventory'),

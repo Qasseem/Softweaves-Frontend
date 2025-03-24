@@ -1,0 +1,590 @@
+<div>
+  <div class="grid font-14 ml-2 m-2 mb-2">
+    <div class="p-col" style="text-align: right">
+      <span
+        (click)="backToList()"
+        class="mt-2 ml-3 header-left"
+        style="color: #0080f9; cursor: pointer"
+        >Ticket</span
+      >
+      <span class="mt-2 ml-2 mr-2 header-left">></span>
+      <span class="mt-2 header-left">{{ details?.id }}</span>
+    </div>
+  </div>
+  <p-divider class="header-divider" />
+
+  <div class="view-container">
+    <div class="view-container--card">
+      <oc-view-card
+        [details]="details"
+        [formType]="'view'"
+        [coordinates]="coordinates"
+        [cid]="'ticket'"
+      ></oc-view-card>
+    </div>
+    <!-- //////////////// -->
+    <div class="view-container--cards">
+      <div class="view-container--cards--details-card">
+        <div class="view-container--cards--details-card--title">
+          Ticket Details
+          <span class="ml-3" [ngStyle]="statusStyleObj">{{
+            details?.statusEn
+          }}</span>
+        </div>
+        <p-divider></p-divider>
+
+        <div class="view-container--cards--details-card--info">
+          <div class="view-container--cards--details-card--info--users">
+            <div class="view-container--cards--details-card--info--users--item">
+              <div
+                class="view-container--cards--details-card--info--users--item--title"
+              >
+                Requester
+              </div>
+              <div
+                class="view-container--cards--details-card--info--users--item--details"
+              >
+                <div
+                  class="view-container--cards--details-card--info--users--item--details--avatar"
+                >
+                  <p-avatar
+                    [label]="
+                      !details?.creatorImageUrl
+                        ? getInitials(details?.creator)
+                        : ''
+                    "
+                    [image]="
+                      details?.creatorImageUrl ? details?.creatorImageUrl : ''
+                    "
+                    size="medium"
+                    shape="circle"
+                  />
+                </div>
+                <div
+                  class="view-container--cards--details-card--info--users--item--details--info"
+                >
+                  <div
+                    class="view-container--cards--details-card--info--users--item--details--info--name"
+                  >
+                    {{ details?.creator }}
+                  </div>
+                  <div
+                    class="view-container--cards--details-card--info--users--item--details--info--number"
+                  >
+                    <oc-icon
+                      [icon]="'phone'"
+                      width="16px"
+                      height="16px"
+                    ></oc-icon>
+                    {{ details?.creatorContact }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="view-container--cards--details-card--info--users--item">
+              <div
+                class="view-container--cards--details-card--info--users--item--title"
+              >
+                Assignee
+              </div>
+              <div
+                class="view-container--cards--details-card--info--users--item--details"
+              >
+                <div
+                  class="view-container--cards--details-card--info--users--item--details--avatar"
+                >
+                  <p-avatar
+                    [label]="
+                      !details?.assigneeImageUrl
+                        ? getInitials(details?.assignee)
+                        : ''
+                    "
+                    [image]="
+                      details?.assigneeImageUrl ? details?.assigneeImageUrl : ''
+                    "
+                    size="medium"
+                    shape="circle"
+                  />
+                </div>
+                <div
+                  class="view-container--cards--details-card--info--users--item--details--info"
+                >
+                  <div
+                    class="view-container--cards--details-card--info--users--item--details--info--name"
+                  >
+                    {{ details?.assignee }}
+                  </div>
+                  <div
+                    class="view-container--cards--details-card--info--users--item--details--info--number"
+                  >
+                    <oc-icon
+                      [icon]="'phone'"
+                      width="16px"
+                      height="16px"
+                    ></oc-icon>
+                    {{ details?.assigneeContact }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="view-container--cards--details-card--info--container">
+            <div
+              class="view-container--cards--details-card--info--container--left"
+            >
+              <div
+                class="view-container--cards--details-card--info--container--left--item"
+              >
+                <div
+                  class="view-container--cards--details-card--info--container--left--item--label"
+                >
+                  <label for="username">Username</label>
+                </div>
+                <div
+                  class="view-container--cards--details-card--info--container--left--item--text"
+                >
+                  {{ details?.merchantUsername }}
+                </div>
+              </div>
+              <!-- <div
+              class="view-container--cards--details-card--info--container--left--item"
+            >
+              <div
+                class="view-container--cards--details-card--info--container--left--item--label"
+              >
+                <label for="assignee">Assignee</label>
+              </div>
+              <div
+                class="view-container--cards--details-card--info--container--left--item--text"
+              >
+                {{ details?.assignee }}
+              </div>
+            </div> -->
+              <div
+                class="view-container--cards--details-card--info--container--left--item"
+              >
+                <div
+                  class="view-container--cards--details-card--info--container--left--item--label"
+                >
+                  <label for="pos-type">POS type</label>
+                </div>
+                <div
+                  class="view-container--cards--details-card--info--container--left--item--text"
+                >
+                  {{ details?.posTypeEn }}
+                </div>
+              </div>
+              <div
+                class="view-container--cards--details-card--info--container--left--item"
+              >
+                <div
+                  class="view-container--cards--details-card--info--container--left--item--label"
+                >
+                  <label for="errand-channel">Errand Channel</label>
+                </div>
+                <div
+                  class="view-container--cards--details-card--info--container--left--item--text"
+                >
+                  {{ details?.errandChannelEn }}
+                </div>
+              </div>
+              <div
+                class="view-container--cards--details-card--info--container--left--item"
+              >
+                <div
+                  class="view-container--cards--details-card--info--container--left--item--label"
+                >
+                  <label for="requster-email">Requster Email</label>
+                </div>
+                <div
+                  class="view-container--cards--details-card--info--container--left--item--text"
+                >
+                  {{ details?.creatorEmail }}
+                </div>
+              </div>
+            </div>
+            <div
+              class="view-container--cards--details-card--info--container--right"
+            >
+              <!-- <div
+              class="view-container--cards--details-card--info--container--right--item"
+            >
+              <div
+                class="view-container--cards--details-card--info--container--right--item--label"
+              >
+                <label for="created-by">Created By</label>
+              </div>
+              <div
+                class="view-container--cards--details-card--info--container--right--item--container"
+              >
+                <div
+                  class="view-container--cards--details-card--info--container--right--item--container--image"
+                >
+                  <img
+                    src="{{
+                      details?.creatorImageUrl
+                        ? details?.creatorImageUrl
+                        : 'assets/iamges/default-avatar.png'
+                    }}"
+                    alt=""
+                  />
+                </div>
+                <div
+                  class="view-container--cards--details-card--info--container--right--item--container--text"
+                >
+                  {{ details?.creator }}
+                </div>
+              </div>
+            </div> -->
+              <div
+                class="view-container--cards--details-card--info--container--right--item"
+              >
+                <div
+                  class="view-container--cards--details-card--info--container--right--item--label"
+                >
+                  <label for="created-at">Created At</label>
+                </div>
+                <div
+                  class="view-container--cards--details-card--info--container--right--item--text"
+                >
+                  {{ details?.createDate | date : "YYYY-MM-dd" }}
+                </div>
+              </div>
+              <div
+                class="view-container--cards--details-card--info--container--right--item"
+              >
+                <div
+                  class="view-container--cards--details-card--info--container--right--item--label"
+                >
+                  <label for="created-at">Due At</label>
+                </div>
+                <div
+                  class="view-container--cards--details-card--info--container--right--item--text"
+                >
+                  {{ details?.dueDate | date : "YYYY-MM-dd" }}
+                </div>
+              </div>
+              <div
+                class="view-container--cards--details-card--info--container--right--item"
+                *ngIf="details?.postponeDate"
+              >
+                <div
+                  class="view-container--cards--details-card--info--container--right--item--label"
+                >
+                  <label for="created-at">Postponed At</label>
+                </div>
+                <div
+                  class="view-container--cards--details-card--info--container--right--item--text"
+                >
+                  {{ details?.postponeDate | date : "YYYY-MM-dd" }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p-divider></p-divider>
+        <div>
+          <div
+            class="view-container--cards--details-card--info--attachments--title"
+          >
+            Note
+          </div>
+          <div class="note">
+            <span style="color: #798693">
+              {{ details?.notes ? "details?.notes" : "No Notes Added!" }}
+            </span>
+          </div>
+        </div>
+        <div class="view-container--cards--details-card--info--attachments">
+          <div
+            class="view-container--cards--details-card--info--attachments--title"
+          >
+            Attached Files
+          </div>
+          <div
+            class="view-container--cards--details-card--info--attachments--items"
+            *ngIf="details?.attachments?.length"
+          >
+            <div
+              class="view-container--cards--details-card--info--attachments--items--item"
+              *ngFor="let item of details?.attachments; let i = index"
+            >
+              <div
+                class="view-container--cards--details-card--info--attachments--items--item--info"
+              >
+                <div
+                  class="view-container--cards--details-card--info--attachments--items-item--info--icon"
+                >
+                  <oc-icon
+                    [icon]="'attachment-icon'"
+                    width="24px"
+                    height="24px"
+                  ></oc-icon>
+                </div>
+                <div
+                  class="view-container--cards--details-card--info--attachments--items-item--info--text"
+                >
+                  {{ "Example File " + (i + 1) }}
+                </div>
+              </div>
+              <div
+                class="view-container--cards--details-card--info--attachments--items--item--download"
+                (click)="
+                  downloadImage(item?.attachmentUrl, 'Example File ' + (i + 1))
+                "
+              >
+                <oc-icon
+                  [icon]="'download-icon'"
+                  width="20px"
+                  height="20px"
+                ></oc-icon>
+              </div>
+            </div>
+          </div>
+          <div
+            class="view-container--cards--details-card--info--attachments--items-empty"
+            *ngIf="!details?.attachments?.length"
+          >
+            No Files Uploaded!
+          </div>
+        </div>
+      </div>
+      <div class="view-container--cards--feedback-card">
+        <div class="view-container--cards--feedback-card--title">
+          {{ details?.categoryNameEn }} Details
+        </div>
+        <p-divider></p-divider>
+        <div
+          class="view-container--cards--feedback-card--cards"
+          *ngIf="details?.feedbacks?.length"
+        >
+          <p-panel
+            [toggleable]="true"
+            *ngFor="let panel of details?.feedbacks"
+            toggler="header"
+          >
+            <ng-template pTemplate="header">
+              <div class="header">
+                <div class="title">
+                  <div class="bullet">
+                    <div class="inner-bullet"></div>
+                  </div>
+                  <span class="text">{{ panel?.nameEn }}</span>
+                </div>
+                <div
+                  class="status"
+                  [ngClass]="{
+                    success: panel?.statusEn?.toLowerCase() == 'success',
+                    fail: panel?.statusEn?.toLowerCase() == 'failed'
+                  }"
+                >
+                  {{
+                    panel?.statusEn?.toLowerCase() == "success"
+                      ? "Succeeded"
+                      : panel?.statusEn
+                  }}
+                </div>
+              </div>
+            </ng-template>
+
+            <ng-container
+              [ngTemplateOutlet]="
+                panel?.statusEn.toLowerCase() == 'success'
+                  ? successTemplate
+                  : failTemplate
+              "
+            >
+              <ng-template #successTemplate>
+                <div
+                  class="view-container--cards--details-card--info--container"
+                >
+                  <div
+                    class="view-container--cards--details-card--info--container--left"
+                  >
+                    <div
+                      class="view-container--cards--details-card--info--container--left--item"
+                    >
+                      <div
+                        class="view-container--cards--details-card--info--container--left--item--label"
+                      >
+                        <label for="username">Terminal ID</label>
+                      </div>
+                      <div
+                        class="view-container--cards--details-card--info--container--left--item--text"
+                      >
+                        {{ panel?.terminalId }}
+                      </div>
+                    </div>
+
+                    <div
+                      class="view-container--cards--details-card--info--container--left--item"
+                    >
+                      <div
+                        class="view-container--cards--details-card--info--container--left--item--label"
+                      >
+                        <label for="pos-type">POS Serial</label>
+                      </div>
+                      <div
+                        class="view-container--cards--details-card--info--container--left--item--text"
+                      >
+                        {{ panel?.poS_Serial }}
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="view-container--cards--details-card--info--container--right"
+                  >
+                    <div
+                      class="view-container--cards--details-card--info--container--right--item"
+                    >
+                      <div
+                        class="view-container--cards--details-card--info--container--right--item--label"
+                      >
+                        <label for="created-at">IMEI</label>
+                      </div>
+                      <div
+                        class="view-container--cards--details-card--info--container--right--item--text"
+                      >
+                        {{ panel?.imei }}
+                      </div>
+                    </div>
+                    <div
+                      class="view-container--cards--details-card--info--container--right--item"
+                    >
+                      <div
+                        class="view-container--cards--details-card--info--container--right--item--label"
+                      >
+                        <label for="created-at">SIM Serial</label>
+                      </div>
+                      <div
+                        class="view-container--cards--details-card--info--container--right--item--text"
+                      >
+                        {{ panel?.siM_Serial }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+              <ng-template #failTemplate>
+                <div class="input-groups">
+                  <div class="input-group">
+                    <label for="reason">Reason:</label>
+                    <span>{{
+                      panel?.failReasonEn ? panel?.failReasonEn : "--"
+                    }}</span>
+                  </div>
+                  <div class="input-group">
+                    <label for="note">Note:</label>
+                    <span>{{ panel?.notes ? panel?.notes : "--" }}</span>
+                  </div>
+                </div>
+              </ng-template>
+            </ng-container>
+            <div class="view-container--cards--details-card--info--attachments">
+              <div
+                class="view-container--cards--details-card--info--attachments--title-feedback"
+              >
+                Attached Files
+              </div>
+              <div
+                class="view-container--cards--details-card--info--attachments--items"
+                *ngIf="panel?.files?.length"
+              >
+                <div
+                  class="view-container--cards--details-card--info--attachments--items--item"
+                  *ngFor="let item of panel?.files; let i = index"
+                >
+                  <div
+                    class="view-container--cards--details-card--info--attachments--items--item--info"
+                  >
+                    <div
+                      class="view-container--cards--details-card--info--attachments--items-item--info--icon"
+                    >
+                      <oc-icon
+                        [icon]="'attachment-icon'"
+                        width="24px"
+                        height="24px"
+                      ></oc-icon>
+                    </div>
+                    <div
+                      class="view-container--cards--details-card--info--attachments--items-item--info--text"
+                    >
+                      {{ "Example File " + (i + 1) }}
+                    </div>
+                  </div>
+                  <div
+                    class="view-container--cards--details-card--info--attachments--items--item--download"
+                    (click)="
+                      downloadImage(
+                        item?.attachmentUrl,
+                        'Example File ' + (i + 1)
+                      )
+                    "
+                  >
+                    <oc-icon
+                      [icon]="'download-icon'"
+                      width="20px"
+                      height="20px"
+                    ></oc-icon>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="view-container--cards--details-card--info--attachments--items-empty"
+                *ngIf="!panel?.files?.length"
+              >
+                No Files Uploaded!
+              </div>
+            </div>
+            <div class="upload-control">
+              <label for="upload">Attached Images</label>
+              <div class="upload-container">
+                <div class="uploaded-images" *ngIf="panel?.images?.length">
+                  <div
+                    class="uploaded-image"
+                    *ngFor="let base64String of panel?.images; let j = index"
+                    [style.cursor]="'pointer'"
+                    (click)="downloadImage(img.src, 'Example File ' + (j + 1))"
+                  >
+                    <img
+                      #img
+                      src="{{ base64String?.attachmentUrl }}"
+                      [pTooltip]="
+                        img?.src?.includes('missing') ? 'Missing Image' : ''
+                      "
+                      alt=""
+                      hideMissing
+                      [errorIconURL]="'assets/iamges/missing-image.svg'"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="view-container--cards--details-card--info--attachments--items-empty"
+                  *ngIf="!panel?.images?.length"
+                >
+                  No Images Uploaded!
+                </div>
+              </div>
+            </div>
+          </p-panel>
+        </div>
+        <div
+          class="view-container--cards--feedback-card--cards--empty"
+          *ngIf="!details?.feedbacks?.length"
+        >
+          <div class="view-container--cards--feedback-card--cards--empty--icon">
+            <oc-icon
+              [icon]="'feedbacks-empty'"
+              width="64px"
+              height="64px"
+            ></oc-icon>
+          </div>
+          <p class="view-container--cards--feedback-card--cards--empty--text">
+            We are currently awaiting the technician to start work on this
+            ticket. Once completed, his feedback will be provided here.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

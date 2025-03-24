@@ -72,6 +72,13 @@ const routes: Routes = [
           ),
         // canActivate: [AuthGuard],
       },
+      {
+        path: 'merchanttickets',
+        loadChildren: () =>
+          import('../merchant-ticktets/merchant-ticktets.module').then(
+            (m) => m.MerchantTicktetsModule
+          ),
+      },
     ],
   },
   {
