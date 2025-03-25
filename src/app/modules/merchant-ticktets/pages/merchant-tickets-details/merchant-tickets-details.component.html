@@ -34,100 +34,6 @@
         <p-divider></p-divider>
 
         <div class="view-container--cards--details-card--info">
-          <div class="view-container--cards--details-card--info--users">
-            <div class="view-container--cards--details-card--info--users--item">
-              <div
-                class="view-container--cards--details-card--info--users--item--title"
-              >
-                Requester
-              </div>
-              <div
-                class="view-container--cards--details-card--info--users--item--details"
-              >
-                <div
-                  class="view-container--cards--details-card--info--users--item--details--avatar"
-                >
-                  <p-avatar
-                    [label]="
-                      !details?.creatorImageUrl
-                        ? getInitials(details?.creator)
-                        : ''
-                    "
-                    [image]="
-                      details?.creatorImageUrl ? details?.creatorImageUrl : ''
-                    "
-                    size="medium"
-                    shape="circle"
-                  />
-                </div>
-                <div
-                  class="view-container--cards--details-card--info--users--item--details--info"
-                >
-                  <div
-                    class="view-container--cards--details-card--info--users--item--details--info--name"
-                  >
-                    {{ details?.creator }}
-                  </div>
-                  <div
-                    class="view-container--cards--details-card--info--users--item--details--info--number"
-                  >
-                    <oc-icon
-                      [icon]="'phone'"
-                      width="16px"
-                      height="16px"
-                    ></oc-icon>
-                    {{ details?.creatorContact }}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="view-container--cards--details-card--info--users--item">
-              <div
-                class="view-container--cards--details-card--info--users--item--title"
-              >
-                Assignee
-              </div>
-              <div
-                class="view-container--cards--details-card--info--users--item--details"
-              >
-                <div
-                  class="view-container--cards--details-card--info--users--item--details--avatar"
-                >
-                  <p-avatar
-                    [label]="
-                      !details?.assigneeImageUrl
-                        ? getInitials(details?.assignee)
-                        : ''
-                    "
-                    [image]="
-                      details?.assigneeImageUrl ? details?.assigneeImageUrl : ''
-                    "
-                    size="medium"
-                    shape="circle"
-                  />
-                </div>
-                <div
-                  class="view-container--cards--details-card--info--users--item--details--info"
-                >
-                  <div
-                    class="view-container--cards--details-card--info--users--item--details--info--name"
-                  >
-                    {{ details?.assignee }}
-                  </div>
-                  <div
-                    class="view-container--cards--details-card--info--users--item--details--info--number"
-                  >
-                    <oc-icon
-                      [icon]="'phone'"
-                      width="16px"
-                      height="16px"
-                    ></oc-icon>
-                    {{ details?.assigneeContact }}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
           <div class="view-container--cards--details-card--info--container">
             <div
               class="view-container--cards--details-card--info--container--left"
@@ -174,68 +80,10 @@
                   {{ details?.posTypeEn }}
                 </div>
               </div>
-              <div
-                class="view-container--cards--details-card--info--container--left--item"
-              >
-                <div
-                  class="view-container--cards--details-card--info--container--left--item--label"
-                >
-                  <label for="errand-channel">Errand Channel</label>
-                </div>
-                <div
-                  class="view-container--cards--details-card--info--container--left--item--text"
-                >
-                  {{ details?.errandChannelEn }}
-                </div>
-              </div>
-              <div
-                class="view-container--cards--details-card--info--container--left--item"
-              >
-                <div
-                  class="view-container--cards--details-card--info--container--left--item--label"
-                >
-                  <label for="requster-email">Requster Email</label>
-                </div>
-                <div
-                  class="view-container--cards--details-card--info--container--left--item--text"
-                >
-                  {{ details?.creatorEmail }}
-                </div>
-              </div>
             </div>
             <div
               class="view-container--cards--details-card--info--container--right"
             >
-              <!-- <div
-              class="view-container--cards--details-card--info--container--right--item"
-            >
-              <div
-                class="view-container--cards--details-card--info--container--right--item--label"
-              >
-                <label for="created-by">Created By</label>
-              </div>
-              <div
-                class="view-container--cards--details-card--info--container--right--item--container"
-              >
-                <div
-                  class="view-container--cards--details-card--info--container--right--item--container--image"
-                >
-                  <img
-                    src="{{
-                      details?.creatorImageUrl
-                        ? details?.creatorImageUrl
-                        : 'assets/iamges/default-avatar.png'
-                    }}"
-                    alt=""
-                  />
-                </div>
-                <div
-                  class="view-container--cards--details-card--info--container--right--item--container--text"
-                >
-                  {{ details?.creator }}
-                </div>
-              </div>
-            </div> -->
               <div
                 class="view-container--cards--details-card--info--container--right--item"
               >
@@ -291,11 +139,11 @@
           </div>
           <div class="note">
             <span style="color: #798693">
-              {{ details?.notes ? "details?.notes" : "No Notes Added!" }}
+              {{ details?.notes ? details?.notes : "No Notes Added!" }}
             </span>
           </div>
         </div>
-        <div class="view-container--cards--details-card--info--attachments">
+        <!-- <div class="view-container--cards--details-card--info--attachments">
           <div
             class="view-container--cards--details-card--info--attachments--title"
           >
@@ -347,9 +195,9 @@
           >
             No Files Uploaded!
           </div>
-        </div>
+        </div> -->
       </div>
-      <div class="view-container--cards--feedback-card">
+      <!-- <div class="view-container--cards--feedback-card">
         <div class="view-container--cards--feedback-card--title">
           {{ details?.categoryNameEn }} Details
         </div>
@@ -584,7 +432,7 @@
             ticket. Once completed, his feedback will be provided here.
           </p>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </div>
