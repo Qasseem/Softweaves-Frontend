@@ -1,0 +1,43 @@
+<div class="p-grid ml-2 m-2">
+  <div class="p-col" style="text-align: right">
+    <span class="mt-2" style="float: left; font-weight: bolder"
+      >Merchant Tickets</span
+    >
+    <!-- <p-button
+      (click)="navigateToAdd()"
+      label="Add Ticket"
+      size="small"
+      *secured="['tickets-all-tickets-add']"
+    >
+      <span class="ml-1 mr-1 add">
+        <i class="pi pi-plus add-icon"></i>
+      </span>
+    </p-button> -->
+  </div>
+</div>
+<br *ngIf="authService.hasPermission('tickets-all-tickets-add')" />
+<div class="mt-3">
+  <oc-table
+    [showSearchBar]="true"
+    [url]="{
+      getAll: '/MerchantTicketPortal/GetGrid',
+      export: '/MerchantTicketPortal/ExportGrid',
+      import: '/Ticket/ImportTickets',
+      exportDetails: '/Ticket/ExportTicketTasks',
+    }"
+    [addButtonLabel]="'Add Ticket'"
+    [columns]="columns"
+    [buttonsExistance]="tableBtns"
+    [actions]="actions"
+    [options]="{
+    check: false,
+    hasActionMenu: true,
+    viewDetails: viewDetails,
+    viewDetailsURL: '/main/merchanttickets/details/',
+  }"
+    [filters]="filters"
+    [uploadHeader]="'Upload Bulk Cancellation'"
+    [sampleName]="'ImportTicketCancellationTemplate.xlsx'"
+  >
+  </oc-table>
+</div>

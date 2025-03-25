@@ -23,9 +23,15 @@ import { ShipmentFormComponent } from './pages/shipment-form/shipment-form.compo
 import { ShipmentListComponent } from './pages/shipment-list/shipment-list.component';
 import { TransferCustodyDetailsComponent } from './pages/transfer-custody-details/transfer-custody-details.component';
 import { TransferCustodySerialsComponent } from './pages/transfer-custody-serials/transfer-custody-serials.component';
+import { FileUploadModule } from 'src/app/core/shared/core/modules/table/components/file-upload/file-upload.module';
 
 @NgModule({
-  imports: [CommonModule, InventoryRoutingModule, SharedModule],
+  imports: [
+    CommonModule,
+    InventoryRoutingModule,
+    SharedModule,
+    FileUploadModule,
+  ],
   declarations: [
     InventoryComponent,
     DevicesListComponent,

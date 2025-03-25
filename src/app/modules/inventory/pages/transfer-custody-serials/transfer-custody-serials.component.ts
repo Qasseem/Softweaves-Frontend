@@ -20,6 +20,7 @@ export class TransferCustodySerialsComponent implements OnInit {
   form: FormGroup;
   details: any;
   id;
+  showImportModal = false;
   formType = 'add';
   modelCategories = [];
   modelTypes = [];
@@ -306,6 +307,9 @@ export class TransferCustodySerialsComponent implements OnInit {
   }
 
   addSerialModelTypes() {
+    if (this.serial == '' || this.serial == null || this.serial == undefined) {
+      return;
+    }
     if (
       this.serlialList.findIndex((item) => item.serialNumber == this.serial) !=
       -1
@@ -331,6 +335,7 @@ export class TransferCustodySerialsComponent implements OnInit {
           }
         }
       });
+    this.serial = '';
   }
   addSerialToList(data: any) {
     if (
@@ -429,16 +434,10 @@ export class TransferCustodySerialsComponent implements OnInit {
     });
     this.exportExcelService.exportAsExcelFile(obj, 'Units');
   }
-
-  import() {}
-
-  onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      this.selectedFile = input.files[0];
-      this.uploadFile();
-    }
+  onEnter(event) {
+    this.addSerialModelTypes();
   }
+  import() {}
 
   uploadFile(): void {
     if (!this.selectedFile) {
@@ -455,14 +454,30 @@ export class TransferCustodySerialsComponent implements OnInit {
       .import(formData)
       .pipe(take(1))
       .subscribe((response) => {
-        response.data?.successData?.forEach((item: any) => {
-          this.addSerialToList(item);
-        });
-        if (response.data.failureData?.length > 0) {
-          this.toaster.showWarning('Some serials are not imported');
+        this.showImportModal = false;
+        this.selectedFile = null;
+        if (response.success) {
+          response.data?.successData?.forEach((item: any) => {
+            this.addSerialToList(item);
+          });
+          if (response.data.failureData?.length > 0) {
+            this.toaster.showWarning(
+              'Some serials are not imported a file has been downloaded'
+            );
+            this.exportExcelService.exportAsExcelFile(
+              response.data.failureData,
+              'Failure Data'
+            );
+          }
         }
       });
   }
+
+  filesSelectedEvent(event) {
+    this.selectedFile = event['0'];
+    this.uploadFile();
+  }
+  importFromFile() {}
 }
 
 export enum DDLControlType {
