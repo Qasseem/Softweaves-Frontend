@@ -15,6 +15,13 @@ export class MerchantTicketsDetailsComponent implements OnInit {
   details;
   id;
   statusStyleObj;
+  MerchantTicketStatusEnum = MerchantTicketStatusEnum;
+  showBlockDialog = false;
+  note = '';
+
+  showCompleteInfoDialog = false;
+  merchantId = '';
+  terminalId = '';
   constructor(
     private service: MerchantTicketsService,
     private route: ActivatedRoute,
@@ -52,7 +59,7 @@ export class MerchantTicketsDetailsComponent implements OnInit {
     };
 
     switch (this.details?.statusId) {
-      case MerchantTicketStatusEnum.Assigned:
+      case MerchantTicketStatusEnum.New:
         statusStyle['background-color'] = '#eff8ff';
         statusStyle.color = '#175cd3';
         break;
@@ -65,7 +72,7 @@ export class MerchantTicketsDetailsComponent implements OnInit {
         statusStyle['background-color'] = '#f2f4f7';
         statusStyle.color = '#344054';
         break;
-      case MerchantTicketStatusEnum.Postponed:
+      case MerchantTicketStatusEnum.NotRegistered:
         statusStyle['background-color'] = '#eff8ff';
         statusStyle.color = '#175cd3';
         break;
@@ -114,5 +121,40 @@ export class MerchantTicketsDetailsComponent implements OnInit {
       .split(' ')
       .map((word) => word.charAt(0))
       .join('');
+  }
+
+  onApprove() {
+    const URL = `main/ticket/addmerchantticket`;
+    this.router.navigate([URL], { state: { data: this.details } });
+  }
+
+  onReject() {
+    this.showBlockDialog = true;
+  }
+  onRejectTicket() {
+    this.service
+      .Reject({ ticketId: +this.id, note: this.note })
+      .subscribe((res) => {
+        if (res.success) {
+          this.showBlockDialog = false;
+          this.backToList();
+        }
+      });
+  }
+  onCompleteInfo() {
+    this.service
+      .CompleteInfo({
+        ticketId: +this.id,
+        terminalId: this.terminalId,
+        merchantId: this.merchantId,
+      })
+      .subscribe((res) => {
+        if (res.success) {
+          this.showCompleteInfoDialog = false;
+          this.terminalId = '';
+          this.merchantId = '';
+          this.getViewDetails(this.id);
+        }
+      });
   }
 }

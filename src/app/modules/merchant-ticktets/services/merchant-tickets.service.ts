@@ -25,7 +25,12 @@ export class MerchantTicketsService {
   Block(data) {
     return this.http.postReq(this.controllerName + '/Block', data);
   }
-
+  Reject(data) {
+    return this.http.postReq(this.controllerName + '/RejectTicket', data);
+  }
+  CompleteInfo(data) {
+    return this.http.postReq(this.controllerName + '/CompleteInfo', data);
+  }
   getStatusDropDown() {
     return this.http.getReq(this.controllerName + '/GetStatusDropDown');
   }

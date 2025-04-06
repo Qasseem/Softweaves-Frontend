@@ -65,10 +65,10 @@ export enum TransferStatusEnum {
 }
 
 export enum MerchantTicketStatusEnum {
-  Assigned = 1,
+  New = 1,
   AgentOnWay = 2,
   InProgress = 3,
   Blocked = 4,
-  Postponed = 5,
+  NotRegistered = 5,
   Completed = 6,
 }
