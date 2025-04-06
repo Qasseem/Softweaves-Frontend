@@ -80,6 +80,20 @@
                   {{ details?.posTypeEn }}
                 </div>
               </div>
+              <div
+                class="view-container--cards--details-card--info--container--left--item"
+              >
+                <div
+                  class="view-container--cards--details-card--info--container--left--item--label"
+                >
+                  <label for="pos-type">Linked Ticket</label>
+                </div>
+                <div
+                  class="view-container--cards--details-card--info--container--left--item--text"
+                >
+                  {{ details?.linkedTicketId }}
+                </div>
+              </div>
             </div>
             <div
               class="view-container--cards--details-card--info--container--right"
@@ -104,12 +118,12 @@
                 <div
                   class="view-container--cards--details-card--info--container--right--item--label"
                 >
-                  <label for="created-at">Due At</label>
+                  <label for="created-at">Updated By</label>
                 </div>
                 <div
                   class="view-container--cards--details-card--info--container--right--item--text"
                 >
-                  {{ details?.dueDate | date : "YYYY-MM-dd" }}
+                  {{ details?.updatedBy | date : "YYYY-MM-dd" }}
                 </div>
               </div>
               <div
@@ -142,297 +156,132 @@
               {{ details?.notes ? details?.notes : "No Notes Added!" }}
             </span>
           </div>
-        </div>
-        <!-- <div class="view-container--cards--details-card--info--attachments">
-          <div
-            class="view-container--cards--details-card--info--attachments--title"
-          >
-            Attached Files
-          </div>
-          <div
-            class="view-container--cards--details-card--info--attachments--items"
-            *ngIf="details?.attachments?.length"
-          >
-            <div
-              class="view-container--cards--details-card--info--attachments--items--item"
-              *ngFor="let item of details?.attachments; let i = index"
-            >
-              <div
-                class="view-container--cards--details-card--info--attachments--items--item--info"
-              >
-                <div
-                  class="view-container--cards--details-card--info--attachments--items-item--info--icon"
-                >
-                  <oc-icon
-                    [icon]="'attachment-icon'"
-                    width="24px"
-                    height="24px"
-                  ></oc-icon>
-                </div>
-                <div
-                  class="view-container--cards--details-card--info--attachments--items-item--info--text"
-                >
-                  {{ "Example File " + (i + 1) }}
-                </div>
-              </div>
-              <div
-                class="view-container--cards--details-card--info--attachments--items--item--download"
-                (click)="
-                  downloadImage(item?.attachmentUrl, 'Example File ' + (i + 1))
-                "
-              >
-                <oc-icon
-                  [icon]="'download-icon'"
-                  width="20px"
-                  height="20px"
-                ></oc-icon>
-              </div>
-            </div>
-          </div>
-          <div
-            class="view-container--cards--details-card--info--attachments--items-empty"
-            *ngIf="!details?.attachments?.length"
-          >
-            No Files Uploaded!
-          </div>
-        </div> -->
-      </div>
-      <!-- <div class="view-container--cards--feedback-card">
-        <div class="view-container--cards--feedback-card--title">
-          {{ details?.categoryNameEn }} Details
-        </div>
-        <p-divider></p-divider>
-        <div
-          class="view-container--cards--feedback-card--cards"
-          *ngIf="details?.feedbacks?.length"
-        >
-          <p-panel
-            [toggleable]="true"
-            *ngFor="let panel of details?.feedbacks"
-            toggler="header"
-          >
-            <ng-template pTemplate="header">
-              <div class="header">
-                <div class="title">
-                  <div class="bullet">
-                    <div class="inner-bullet"></div>
-                  </div>
-                  <span class="text">{{ panel?.nameEn }}</span>
-                </div>
-                <div
-                  class="status"
-                  [ngClass]="{
-                    success: panel?.statusEn?.toLowerCase() == 'success',
-                    fail: panel?.statusEn?.toLowerCase() == 'failed'
-                  }"
-                >
-                  {{
-                    panel?.statusEn?.toLowerCase() == "success"
-                      ? "Succeeded"
-                      : panel?.statusEn
-                  }}
-                </div>
-              </div>
-            </ng-template>
-
-            <ng-container
-              [ngTemplateOutlet]="
-                panel?.statusEn.toLowerCase() == 'success'
-                  ? successTemplate
-                  : failTemplate
+          <div class="button-container mt-4">
+            <button
+              *ngIf="
+                details?.statusId == MerchantTicketStatusEnum.New ||
+                details?.statusId == MerchantTicketStatusEnum.NotRegistered
               "
-            >
-              <ng-template #successTemplate>
-                <div
-                  class="view-container--cards--details-card--info--container"
-                >
-                  <div
-                    class="view-container--cards--details-card--info--container--left"
-                  >
-                    <div
-                      class="view-container--cards--details-card--info--container--left--item"
-                    >
-                      <div
-                        class="view-container--cards--details-card--info--container--left--item--label"
-                      >
-                        <label for="username">Terminal ID</label>
-                      </div>
-                      <div
-                        class="view-container--cards--details-card--info--container--left--item--text"
-                      >
-                        {{ panel?.terminalId }}
-                      </div>
-                    </div>
+              pButton
+              size="small"
+              type="button"
+              label="Reject"
+              class="p-button-sm p-button-danger"
+              (click)="onReject()"
+            ></button>
 
-                    <div
-                      class="view-container--cards--details-card--info--container--left--item"
-                    >
-                      <div
-                        class="view-container--cards--details-card--info--container--left--item--label"
-                      >
-                        <label for="pos-type">POS Serial</label>
-                      </div>
-                      <div
-                        class="view-container--cards--details-card--info--container--left--item--text"
-                      >
-                        {{ panel?.poS_Serial }}
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="view-container--cards--details-card--info--container--right"
-                  >
-                    <div
-                      class="view-container--cards--details-card--info--container--right--item"
-                    >
-                      <div
-                        class="view-container--cards--details-card--info--container--right--item--label"
-                      >
-                        <label for="created-at">IMEI</label>
-                      </div>
-                      <div
-                        class="view-container--cards--details-card--info--container--right--item--text"
-                      >
-                        {{ panel?.imei }}
-                      </div>
-                    </div>
-                    <div
-                      class="view-container--cards--details-card--info--container--right--item"
-                    >
-                      <div
-                        class="view-container--cards--details-card--info--container--right--item--label"
-                      >
-                        <label for="created-at">SIM Serial</label>
-                      </div>
-                      <div
-                        class="view-container--cards--details-card--info--container--right--item--text"
-                      >
-                        {{ panel?.siM_Serial }}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </ng-template>
-              <ng-template #failTemplate>
-                <div class="input-groups">
-                  <div class="input-group">
-                    <label for="reason">Reason:</label>
-                    <span>{{
-                      panel?.failReasonEn ? panel?.failReasonEn : "--"
-                    }}</span>
-                  </div>
-                  <div class="input-group">
-                    <label for="note">Note:</label>
-                    <span>{{ panel?.notes ? panel?.notes : "--" }}</span>
-                  </div>
-                </div>
-              </ng-template>
-            </ng-container>
-            <div class="view-container--cards--details-card--info--attachments">
-              <div
-                class="view-container--cards--details-card--info--attachments--title-feedback"
-              >
-                Attached Files
-              </div>
-              <div
-                class="view-container--cards--details-card--info--attachments--items"
-                *ngIf="panel?.files?.length"
-              >
-                <div
-                  class="view-container--cards--details-card--info--attachments--items--item"
-                  *ngFor="let item of panel?.files; let i = index"
-                >
-                  <div
-                    class="view-container--cards--details-card--info--attachments--items--item--info"
-                  >
-                    <div
-                      class="view-container--cards--details-card--info--attachments--items-item--info--icon"
-                    >
-                      <oc-icon
-                        [icon]="'attachment-icon'"
-                        width="24px"
-                        height="24px"
-                      ></oc-icon>
-                    </div>
-                    <div
-                      class="view-container--cards--details-card--info--attachments--items-item--info--text"
-                    >
-                      {{ "Example File " + (i + 1) }}
-                    </div>
-                  </div>
-                  <div
-                    class="view-container--cards--details-card--info--attachments--items--item--download"
-                    (click)="
-                      downloadImage(
-                        item?.attachmentUrl,
-                        'Example File ' + (i + 1)
-                      )
-                    "
-                  >
-                    <oc-icon
-                      [icon]="'download-icon'"
-                      width="20px"
-                      height="20px"
-                    ></oc-icon>
-                  </div>
-                </div>
-              </div>
-              <div
-                class="view-container--cards--details-card--info--attachments--items-empty"
-                *ngIf="!panel?.files?.length"
-              >
-                No Files Uploaded!
-              </div>
-            </div>
-            <div class="upload-control">
-              <label for="upload">Attached Images</label>
-              <div class="upload-container">
-                <div class="uploaded-images" *ngIf="panel?.images?.length">
-                  <div
-                    class="uploaded-image"
-                    *ngFor="let base64String of panel?.images; let j = index"
-                    [style.cursor]="'pointer'"
-                    (click)="downloadImage(img.src, 'Example File ' + (j + 1))"
-                  >
-                    <img
-                      #img
-                      src="{{ base64String?.attachmentUrl }}"
-                      [pTooltip]="
-                        img?.src?.includes('missing') ? 'Missing Image' : ''
-                      "
-                      alt=""
-                      hideMissing
-                      [errorIconURL]="'assets/iamges/missing-image.svg'"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="view-container--cards--details-card--info--attachments--items-empty"
-                  *ngIf="!panel?.images?.length"
-                >
-                  No Images Uploaded!
-                </div>
-              </div>
-            </div>
-          </p-panel>
-        </div>
-        <div
-          class="view-container--cards--feedback-card--cards--empty"
-          *ngIf="!details?.feedbacks?.length"
-        >
-          <div class="view-container--cards--feedback-card--cards--empty--icon">
-            <oc-icon
-              [icon]="'feedbacks-empty'"
-              width="64px"
-              height="64px"
-            ></oc-icon>
+            <button
+              *ngIf="details?.statusId == MerchantTicketStatusEnum.New"
+              pButton
+              type="button"
+              label="Approve"
+              class="p-button-sm p-button-success"
+              (click)="onApprove()"
+            ></button>
+            <button
+              *ngIf="
+                details?.statusId == MerchantTicketStatusEnum.NotRegistered
+              "
+              pButton
+              type="button"
+              label="Complete Info"
+              class="p-button-sm p-button-primary"
+              (click)="showCompleteInfoDialog = true"
+            ></button>
           </div>
-          <p class="view-container--cards--feedback-card--cards--empty--text">
-            We are currently awaiting the technician to start work on this
-            ticket. Once completed, his feedback will be provided here.
-          </p>
         </div>
-      </div> -->
+      </div>
     </div>
   </div>
 </div>
+
+<p-dialog
+  [contentStyle]="{ overflow: 'visible' }"
+  [modal]="true"
+  [(visible)]="showBlockDialog"
+  [style]="{ width: '35rem' }"
+>
+  <div class="reject-dialog-header">
+    <span>Reject Reason</span>
+  </div>
+  <div class="mb-3" style="width: 100%; margin-top: 30px">
+    <textarea rows="5" cols="54" pInputTextarea [(ngModel)]="note"></textarea>
+  </div>
+  <p-divider />
+  <div class="flex justify-content-end gap-2">
+    <p-button
+      label="Cancel"
+      size="small"
+      (onClick)="showBlockDialog = false"
+      [outlined]="true"
+    />
+    <p-button
+      label="Save"
+      size="small"
+      (onClick)="onRejectTicket()"
+      [disabled]="!note?.length"
+    />
+  </div>
+</p-dialog>
+
+<p-dialog
+  [contentStyle]="{ overflow: 'visible' }"
+  header="Complete Info"
+  [modal]="true"
+  [(visible)]="showCompleteInfoDialog"
+  [style]="{ width: '35rem' }"
+>
+  <div class="mb-3" style="width: 100%">
+    <div class="grid">
+      <div class="col-6">
+        <div>
+          <span
+            class="mb-2"
+            style="font-size: 12px; color: #798693; font-weight: bold"
+            >Merchant ID</span
+          >
+          <span style="color: red">*</span>
+          <div style="height: 10px"></div>
+          <input
+            pInputText
+            id="username"
+            aria-describedby="username-help"
+            [(ngModel)]="merchantId"
+          />
+        </div>
+      </div>
+      <div class="col-6">
+        <div>
+          <span
+            class="mb-2"
+            style="font-size: 12px; color: #798693; font-weight: bold"
+            >Terminal ID</span
+          >
+          <span style="color: red">*</span>
+          <div style="height: 10px"></div>
+          <input
+            pInputText
+            id="username"
+            aria-describedby="username-help"
+            [(ngModel)]="terminalId"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <p-divider />
+  <div class="flex justify-content-end gap-2">
+    <p-button
+      label="Cancel"
+      size="small"
+      (onClick)="showCompleteInfoDialog = false"
+      [outlined]="true"
+    />
+    <p-button
+      label="Save"
+      size="small"
+      (onClick)="onCompleteInfo()"
+      [disabled]="!(terminalId?.length && merchantId?.length)"
+    />
+  </div>
+</p-dialog>

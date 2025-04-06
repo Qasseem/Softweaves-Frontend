@@ -23,7 +23,7 @@ import { take, takeWhile } from 'rxjs';
 export class MerchantTicketsListComponent implements OnInit {
   navigateToComplete(row: any): any {
     let id = row?.ticketId;
-    this.router.navigate([`main/ticket/complete/${id}`]);
+    this.router.navigate([`main/merchanttickets/details/${id}`]);
   }
 
   editItem(row: any): any {
@@ -137,39 +137,12 @@ export class MerchantTicketsListComponent implements OnInit {
 
   public actions: ActionsInterface[] = [
     {
-      name: 'Edit',
-      icon: 'pi pi-file-edit',
-      call: (row: any) => this.editItem(row),
-      // customPermission: (row: any) => row.id > 3,
-    },
-    {
-      name: 'Block',
-      icon: 'pi pi-ban',
-      call: (row: any) => this.blockItem(row),
-    },
-    {
-      name: 'Clone',
-      icon: 'pi pi-clone',
-      call: (row: any) => this.cloneItem(row),
-    },
-    {
-      name: 'Schedule',
-      icon: 'pi pi-calendar',
-      call: (row: any) => this.navigateToHistory(row),
-    },
-    {
-      name: 'History',
-      icon: 'pi pi-history',
-      call: (row: any) => this.navigateToHistory(row),
-    },
-    {
-      name: 'Complete',
+      name: 'Review Ticket',
       icon: 'pi pi-list-check',
       customPermission: (row: any) =>
-        row.statusId == MerchantTicketStatusEnum.InProgress ||
-        row.statusId == MerchantTicketStatusEnum.AgentOnWay ||
-        row.statusId == MerchantTicketStatusEnum.Assigned,
-      permission: 'complete',
+        row.statusId == MerchantTicketStatusEnum.New ||
+        row.statusId == MerchantTicketStatusEnum.NotRegistered,
+      permission: 'review',
       call: (row: any) => this.navigateToComplete(row),
     },
   ];
