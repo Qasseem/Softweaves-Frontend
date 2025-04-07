@@ -516,7 +516,11 @@ export class TicketFormComponent implements OnInit {
     const formValue = structuredClone(this.ticketForm.getRawValue());
     delete formValue.regionId;
     delete formValue.cityId;
-    if (this.formType == 'add' || this.formType == 'clone') {
+    if (
+      this.formType == 'add' ||
+      this.formType == 'clone' ||
+      this.formType == 'addmerchantticket'
+    ) {
       delete formValue.id;
     }
     formValue.merchantTicketId = this.merchantTicketData?.id;
