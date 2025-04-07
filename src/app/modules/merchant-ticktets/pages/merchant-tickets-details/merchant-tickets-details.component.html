@@ -91,7 +91,17 @@
                 <div
                   class="view-container--cards--details-card--info--container--left--item--text"
                 >
-                  {{ details?.linkedTicketId }}
+                  <span
+                    (click)="goToLinkedTicket(details?.linkedTicketId)"
+                    class="mr-2"
+                    style="
+                      color: #007aff;
+                      text-decoration: underline;
+                      cursor: pointer;
+                    "
+                  >
+                    {{ details?.linkedTicketId }}
+                  </span>
                 </div>
               </div>
             </div>
