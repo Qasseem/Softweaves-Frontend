@@ -133,7 +133,7 @@ export class MerchantTicketsDetailsComponent implements OnInit {
   }
   onRejectTicket() {
     this.service
-      .Reject({ ticketId: +this.id, note: this.note })
+      .Reject({ ticketId: +this.id, notes: this.note })
       .subscribe((res) => {
         if (res.success) {
           this.showBlockDialog = false;
@@ -156,5 +156,11 @@ export class MerchantTicketsDetailsComponent implements OnInit {
           this.getViewDetails(this.id);
         }
       });
+  }
+  goToLinkedTicket(linkedTicketId) {
+    if (linkedTicketId) {
+      this.router.navigate([`main/ticket/details/${linkedTicketId}`]);
+      // this.router.navigate(['/main/ticket/details', linkedTicketId]);
+    }
   }
 }

@@ -519,6 +519,7 @@ export class TicketFormComponent implements OnInit {
     if (this.formType == 'add' || this.formType == 'clone') {
       delete formValue.id;
     }
+    formValue.merchantTicketId = this.merchantTicketData?.id;
     if (this.ticketForm.valid) {
       this.service.Save(formValue).subscribe({
         next: (res) => {
