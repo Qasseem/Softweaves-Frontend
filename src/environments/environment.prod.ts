@@ -4,7 +4,7 @@
 
 import { EnvironmentConfiguration } from '../app/models/environment-configuration';
 
-const serverUrl = 'https://oc.paymob.com';
+const serverUrl = 'https://oc-uae.paymob.com';
 
 // The list of file replacements can be found in `angular.json`.
 export const environment: EnvironmentConfiguration = {
@@ -22,7 +22,7 @@ export const environment: EnvironmentConfiguration = {
       'api://568ad5cb-038a-4157-a918-2a57dc508a72/Read',
       'api://568ad5cb-038a-4157-a918-2a57dc508a72/Write',
     ],
-    apiEndpointUrl: 'https://oc.paymob.com',
+    apiEndpointUrl: 'https://oc-uae.paymob.com',
     tenantId: '96bf2027-97ea-4dfc-8f5b-7121b770f292',
   },
   cacheTimeInMinutes: 15,
