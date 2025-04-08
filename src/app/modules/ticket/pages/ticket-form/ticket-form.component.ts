@@ -194,7 +194,10 @@ export class TicketFormComponent implements OnInit {
             if (res.data?.length > 0) {
               this.assignees = res.data;
 
-              if (this.formType == 'add') {
+              if (
+                this.formType == 'add' ||
+                this.formType == 'addmerchantticket'
+              ) {
                 this.ticketForm
                   .get('assigneeId')
                   .patchValue(
