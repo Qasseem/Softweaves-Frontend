@@ -1,0 +1,15 @@
+::ng-deep .p-dropdown {
+  width: 100%;
+}
+
+::ng-deep .p-button {
+  width: 100px;
+  border: 1px solid rgb(204, 230, 254);
+  .p-button-label {
+    font-weight: 400;
+  }
+}
+
+::ng-deep .p-inputtext {
+  height: 40px;
+}

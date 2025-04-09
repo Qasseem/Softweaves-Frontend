@@ -1,0 +1,40 @@
+<div class="p-grid ml-2 m-2">
+  <div class="p-col" style="text-align: right">
+    <span
+      class="mt-2"
+      style="float: left; font-weight: 600; font-family: 'public-sans'"
+      >Devices</span
+    >
+    <p-button (click)="navigateToAdd()" label="Add Device" size="small">
+      <span class="ml-1 mr-1 add">
+        <i class="pi pi-plus add-icon"></i>
+      </span>
+    </p-button>
+  </div>
+</div>
+<div class="mt-3">
+  <oc-table
+    [showSearchBar]="true"
+    [url]="{
+      getAll: '/device/GetGrid',
+      export: '/device/Export',
+    }"
+    [addButtonLabel]="'Add Device'"
+    [columns]="columns"
+    [buttonsExistance]="tableBtns"
+    [actions]="actions"
+    [filters]="filters"
+    [options]="{
+      check: false,
+      hasActionMenu: true,
+      viewDetails: viewDetails,
+      viewDetailsURL: '/main/inventory/devices/details',
+    }"
+    [uploadHeader]="'Upload Bulk Devices'"
+    [sampleName]="'ImportWarehouseTemplate.xlsx'"
+    [service]="service"
+    [modulePageName]="'Device'"
+    [gridActionsList]="gridActionsList"
+  >
+  </oc-table>
+</div>

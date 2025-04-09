@@ -41,6 +41,7 @@ export class TicketFormComponent implements OnInit {
   viewModel;
   terminalId: any;
   terminalData: any;
+  merchantTicketData: any;
   constructor(
     private fb: FormBuilder,
     private service: TicketService,
@@ -53,6 +54,20 @@ export class TicketFormComponent implements OnInit {
   ) {
     this.formType = this.route.snapshot.data.type;
     this.id = this.route.snapshot.params.id;
+  }
+  prepareMerchantTicketData() {
+    if (this.formType == 'addmerchantticket') {
+      this.merchantTicketData = history.state.data;
+      if (this.merchantTicketData) {
+        this.viewModel = this.merchantTicketData;
+        this.patchForm(this.merchantTicketData);
+        if (
+          this.merchantTicketData?.categoryId == ServiceCategoryEnum.Deployment
+        ) {
+          this.zoneValueChange();
+        }
+      }
+    }
   }
   getTerminalDetails() {
     if (this.terminalId) {
@@ -99,7 +114,11 @@ export class TicketFormComponent implements OnInit {
         this.ticketForm.get('assigneeId').updateValueAndValidity();
       }
     }
-
+    this.prepareMerchantTicketData();
+    if (this.formType == 'addmerchantticket') {
+      this.ticketForm.get('assigneeId').enable();
+      this.ticketForm.get('assigneeId').updateValueAndValidity();
+    }
     this.terminalId = this.route.snapshot.params.terminalId;
     this.getTerminalDetails();
   }
@@ -125,12 +144,12 @@ export class TicketFormComponent implements OnInit {
    */
   /******  5399026f-3f8c-41da-ba2d-399cac55dfd1  *******/
   patchForm(data) {
-    if (data.errandType.length) {
+    if (data.errandType?.length) {
       data.errandType.forEach((x) => {
         this.addErrandType(x);
       });
     }
-    if (data.attachments.length) {
+    if (data.attachments?.length) {
       data.attachments.forEach((base64String) => {
         (this.ticketForm.get('attachmentsBase64') as FormArray).push(
           this.fb.control(base64String.attachmentUrl)
@@ -138,7 +157,7 @@ export class TicketFormComponent implements OnInit {
       });
     }
     this.ticketForm.patchValue(data);
-    if (this.formType == 'edit') {
+    if (this.formType == 'edit' || this.formType == 'addmerchantticket') {
       this.ticketForm.get('categoryId').disable();
       this.ticketForm.get('categoryId').updateValueAndValidity();
     }
@@ -175,7 +194,10 @@ export class TicketFormComponent implements OnInit {
             if (res.data?.length > 0) {
               this.assignees = res.data;
 
-              if (this.formType == 'add') {
+              if (
+                this.formType == 'add' ||
+                this.formType == 'addmerchantticket'
+              ) {
                 this.ticketForm
                   .get('assigneeId')
                   .patchValue(
@@ -497,15 +519,23 @@ export class TicketFormComponent implements OnInit {
     const formValue = structuredClone(this.ticketForm.getRawValue());
     delete formValue.regionId;
     delete formValue.cityId;
-    if (this.formType == 'add' || this.formType == 'clone') {
+    if (
+      this.formType == 'add' ||
+      this.formType == 'clone' ||
+      this.formType == 'addmerchantticket'
+    ) {
       delete formValue.id;
     }
+    formValue.merchantTicketId = this.merchantTicketData?.id;
     if (this.ticketForm.valid) {
       this.service.Save(formValue).subscribe({
         next: (res) => {
           if (res.success) {
             let message = '';
-            if (this.formType == 'add') {
+            if (
+              this.formType == 'add' ||
+              this.formType == 'addmerchantticket'
+            ) {
               message = 'Ticket Added Successfully';
             } else if (this.formType == 'edit') {
               message = 'Ticket Updated Successfully';

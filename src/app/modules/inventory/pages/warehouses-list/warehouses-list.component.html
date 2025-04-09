@@ -1,0 +1,39 @@
+<div class="p-grid ml-2 m-2">
+  <div class="p-col" style="text-align: right">
+    <span
+      class="mt-2"
+      style="float: left; font-weight: 600; font-family: 'public-sans'"
+      >Warehouse</span
+    >
+    <p-button (click)="navigateToAdd()" label="Add Warehouse" size="small">
+      <span class="ml-1 mr-1 add">
+        <i class="pi pi-plus add-icon"></i>
+      </span>
+    </p-button>
+  </div>
+</div>
+<div class="mt-3">
+  <oc-table
+    [showSearchBar]="true"
+    [url]="{
+      getAll: '/warehouse/GetGrid',
+      export: '/warehouse/Export',
+    }"
+    [addButtonLabel]="'Add Warehouse'"
+    [columns]="columns"
+    [buttonsExistance]="tableBtns"
+    [options]="{
+      check: false,
+      viewDetails: false,
+      edit: showEdit,
+      editURL: '/main/inventory/warehouses/edit/',
+      block: showBlock
+    }"
+    [uploadHeader]="'Upload Bulk Warehouse'"
+    [sampleName]="'ImportWarehouseTemplate.xlsx'"
+    [service]="service"
+    [modulePageName]="'Warehouse'"
+    [gridActionsList]="gridActionsList"
+  >
+  </oc-table>
+</div>

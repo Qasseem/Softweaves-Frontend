@@ -298,7 +298,19 @@
                 {{ rowData[col.field] }}
               </a>
             </div>
-
+            <div *ngIf="col.customCell === 'navTo'">
+              <span
+                (click)="col.action(rowData)"
+                style="
+                  font-size: 14px;
+                  cursor: pointer;
+                  color: #2053a6;
+                  text-decoration: underline;
+                "
+              >
+                {{ rowData[col.field] }}
+              </span>
+            </div>
             <div style="font-size: 14px" *ngIf="col.customCell === 'percent'">
               {{ rowData[col.field] / 100 | percent }}
             </div>
@@ -633,13 +645,34 @@
               style="cursor: pointer; margin-bottom: 7px"
               type="button"
               class="menu-btn mb-0"
-              (click)="toggleActionBlock(rowData)"
+              (click)="ShowBlockDialog(rowData)"
             >
               <i
                 style="font-size: 1.5rem"
                 [class]="rowData?.isBlock ? 'pi pi-check' : 'pi pi-ban'"
               ></i>
               <!-- <oc-icon [icon]="'edit'" width="25px" height="25px"></oc-icon> -->
+            </button>
+            <button
+              *ngIf="options?.editForm"
+              style="cursor: pointer; margin-bottom: 7px"
+              type="button"
+              class="menu-btn mb-0"
+              (click)="rowActionClicked(rowData, 'editForm')"
+            >
+              <oc-icon [icon]="'edit'" width="25px" height="25px"></oc-icon>
+            </button>
+            <button
+              *ngIf="options?.deleteForm"
+              style="cursor: pointer; margin-bottom: 7px"
+              type="button"
+              class="menu-btn mb-0"
+              (click)="rowActionClicked(rowData, 'deleteForm')"
+            >
+              <i
+                style="font-size: 1.2rem; color: #708090"
+                [class]="'pi pi-trash'"
+              ></i>
             </button>
             <button
               *ngIf="options?.hasActionMenu"
@@ -689,6 +722,7 @@
         background-color: #fff;
         color: #344054;
         border: 1px solid #d0d5dd;
+        width: 120px;
       "
     >
       <i class="pi pi-arrow-left"></i>
@@ -765,4 +799,8 @@
       tableCore?.pageOptions?.count != -1 ? tableCore?.pageOptions?.count : 0
     }}</span
   >
+</div>
+
+<div class="card flex justify-content-center">
+  <p-confirmDialog> </p-confirmDialog>
 </div>

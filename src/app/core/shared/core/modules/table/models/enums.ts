@@ -55,3 +55,20 @@ export enum UserTypeEnum {
   ServiceAgent = 3,
   SalesAgent,
 }
+
+export enum TransferStatusEnum {
+  Draft = 1,
+  InProgress = 2,
+  Approved = 3,
+  Rejected = 4,
+  Blocked = 5,
+}
+
+export enum MerchantTicketStatusEnum {
+  New = 1,
+  AgentOnWay = 2,
+  InProgress = 3,
+  Blocked = 4,
+  NotRegistered = 5,
+  Completed = 6,
+}

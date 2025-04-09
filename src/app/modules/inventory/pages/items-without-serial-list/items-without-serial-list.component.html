@@ -1,0 +1,102 @@
+<div class="p-grid ml-2 m-2">
+  <div class="p-col" style="text-align: right">
+    <span
+      class="mt-2"
+      style="float: left; font-weight: 600; font-family: 'public-sans'"
+      >Items Without Serial</span
+    >
+    <p-button
+      (click)="navigateToAdd()"
+      label="Add Item Without Serial"
+      size="small"
+    >
+      <span class="ml-1 mr-1 add">
+        <i class="pi pi-plus add-icon"></i>
+      </span>
+    </p-button>
+  </div>
+</div>
+<div class="mt-3">
+  <oc-table
+    [showSearchBar]="true"
+    [url]="{
+      getAll: '/ItemWithoutSerial/GetGrid',
+      export: '/ItemWithoutSerial/Export',
+    }"
+    [addButtonLabel]="'Add Item Without Serial'"
+    [columns]="columns"
+    [buttonsExistance]="tableBtns"
+    [actions]="actions"
+    [filters]="filters"
+    [options]="{
+      check: false,
+      hasActionMenu: true,
+      details: false,
+      viewDetails: false,
+    }"
+    [uploadHeader]="'Upload Bulk Devices'"
+    [sampleName]="'ImportWarehouseTemplate.xlsx'"
+    [service]="service"
+    [modulePageName]="'Item Without Serial'"
+    [gridActionsList]="gridActionsList"
+  >
+  </oc-table>
+</div>
+
+<p-dialog
+  [contentStyle]="{ overflow: 'visible' }"
+  header="Adjust QTY"
+  [modal]="true"
+  [(visible)]="showStockDialog"
+  [style]="{ width: '35rem' }"
+>
+  <div class="mb-3" style="width: 100%">
+    <label for="username" class="font-semibold w-6rem">Shipment ID</label>
+    <input
+      class="mt-2"
+      pInputText
+      [(ngModel)]="shipmentId"
+      type="number"
+      mode="decimal"
+      inputId="withoutgrouping"
+    />
+  </div>
+  <div class="mb-3">
+    <label for="email" class="font-semibold w-6rem">Warehouse</label>
+    <div class="mt-2"></div>
+    <p-dropdown
+      [filter]="true"
+      filterBy="nameEn"
+      appendTo="body"
+      [options]="warehouses"
+      [(ngModel)]="warehouse"
+      optionLabel="nameEn"
+      placeholder="Select Warehouse"
+    />
+  </div>
+  <div class="mb-3">
+    <label for="username" class="font-semibold w-6rem">QTY</label>
+    <input
+      class="mt-2"
+      pInputText
+      type="number"
+      [(ngModel)]="quantity"
+      mode="decimal"
+      inputId="withoutgrouping"
+    />
+  </div>
+  <div class="flex justify-content-end gap-2">
+    <p-button
+      label="Cancel"
+      size="small"
+      (onClick)="showStockDialog = false"
+      [outlined]="true"
+    />
+    <p-button
+      label="Save"
+      size="small"
+      (onClick)="adjustQty()"
+      [disabled]="!(warehouse && quantity && shipmentId)"
+    />
+  </div>
+</p-dialog>

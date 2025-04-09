@@ -16,7 +16,8 @@ export class TableCoreService {
     searchKey: '',
     isSearchFilter: false,
   };
-
+  refId: number;
+  refScope = '';
   public search: string;
   public searchNew: {};
   public searchNew$: BehaviorSubject<{}> = new BehaviorSubject({});
@@ -48,6 +49,8 @@ export class TableCoreService {
     let options = this.getRequestObject();
     if (params && !Object.keys(params).includes('refId')) {
       delete options.refId;
+    } else if (this.refScope && this.refId) {
+      params = { ...params, id: this.refId };
     }
     options = { ...options, ...params };
     options = this.getSearchHistory(options);
