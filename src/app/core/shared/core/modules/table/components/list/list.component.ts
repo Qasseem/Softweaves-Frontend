@@ -37,6 +37,7 @@ import { TableOptionsInterface } from '../../models/options.interface';
 import { AppTranslateService } from 'src/app/core/shared/services/translate.service';
 import { TableCoreService } from '../../services/table-core.service';
 import { ToastService } from 'src/app/core/services/toaster.service';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'oc-list',
@@ -59,6 +60,8 @@ export class ListComponent implements OnInit, OnDestroy, OnChanges {
   @Input() noDataText = '';
   @Input() viewCustomPermission: ViewCustomPermission;
   @Input() service: any;
+  @Input() modulePageName = '';
+  @Output() rowClickedAction = new EventEmitter();
   alive = true;
 
   displayBasic = false;
@@ -96,7 +99,8 @@ export class ListComponent implements OnInit, OnDestroy, OnChanges {
     public lang: AppTranslateService,
     public tableCore: TableCoreService,
     private translateService: TranslateService,
-    private toaster: ToastService
+    private toaster: ToastService,
+    private confirmationService: ConfirmationService
   ) {}
   navToFilter() {
     this.tableCore.filterClick$.next(true);
@@ -108,7 +112,11 @@ export class ListComponent implements OnInit, OnDestroy, OnChanges {
   callAction(name) {
     let action = this.actions.find((x) => x.name == name);
     if (action) {
-      action.call(this.rowData);
+      if (action?.name == 'Block' || action?.name == 'Unblock') {
+        this.ShowBlockDialog(this.rowData);
+      } else {
+        action.call(this.rowData);
+      }
     }
   }
   filterArrayByValue(array: any, valuesToMatch: string[], key: string): any {
@@ -342,6 +350,20 @@ export class ListComponent implements OnInit, OnDestroy, OnChanges {
           const terminalParams = { terminalId: parseInt(this.url.refId) };
           this.tableCore
             .getAllData(this.url.getAll, terminalParams)
+            .pipe(
+              take(1),
+              map(() => {
+                this.data = this.tableCore.tableData;
+              }),
+              finalize(() => (this.firstInit = true))
+            )
+            .subscribe();
+          break;
+        }
+        default: {
+          const params = { id: parseInt(this.url.refId) };
+          this.tableCore
+            .getAllData(this.url.getAll, params)
             .pipe(
               take(1),
               map(() => {
@@ -800,5 +822,31 @@ export class ListComponent implements OnInit, OnDestroy, OnChanges {
   updateCurrentPage() {
     this.currentPage =
       Math.floor(this.first / this.tableCore.pageOptions.limit) + 1;
+  }
+
+  ShowBlockDialog(rowData) {
+    if (rowData) {
+      const isBlock = !rowData.isBlock;
+      let message = `Are you sure you want to ${
+        isBlock ? 'block' : 'unblock'
+      } this ${this.modulePageName ? this.modulePageName : 'item'}?`;
+      this.confirmationService.confirm({
+        header: `${isBlock ? 'Block' : 'Unblock'} ${this.modulePageName}`,
+        message: message,
+        acceptIcon: 'pi pi-check mr-2',
+        rejectIcon: 'pi pi-times mr-2',
+        rejectButtonStyleClass: 'p-button-sm',
+        acceptButtonStyleClass: 'p-button-outlined p-button-sm',
+        accept: () => {
+          this.toggleActionBlock(rowData);
+        },
+        reject: () => {},
+        acceptLabel: `Yes, ${isBlock ? 'Block' : 'Unblock'}`,
+        rejectLabel: 'No, Cancel',
+      });
+    }
+  }
+  rowActionClicked(rowData, action) {
+    this.rowClickedAction.emit({ rowData, action });
   }
 }

@@ -42,6 +42,30 @@
 
   <div *ngIf="buttonsExistance?.showAllButtons" class="mt-3 mr-3">
     <div style="width: 100%" class="float-right">
+      <div
+        *ngIf="gridActionsList.length"
+        class="float-right ml-3 actions-dialog"
+        (click)="opActions.toggle($event)"
+        style="user-select: none; caret-color: transparent"
+      >
+        <i class="pi pi-ellipsis-v" style="color: #708090"></i>
+      </div>
+      <!-- <p-button class="float-right ml-3" (onClick)="op.toggle($event)" /> -->
+      <p-overlayPanel #opActions>
+        <div class="flex flex-column gap-3 w-12rem">
+          <div
+            class="action-container"
+            *ngFor="let action of gridActionsList"
+            (click)="actionClicked(action)"
+          >
+            <div *ngIf="action?.showAction">
+              <i [class]="action.icon" style="margin-right: 5px"></i>
+              {{ action.name }}
+            </div>
+          </div>
+        </div>
+      </p-overlayPanel>
+
       <button
         *ngIf="buttonsExistance?.showFilter"
         (click)="op.toggle($event)"

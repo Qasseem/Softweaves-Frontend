@@ -49,6 +49,13 @@ const routes: Routes = [
         },
       },
       {
+        path: 'addmerchantticket',
+        component: TicketFormComponent,
+        data: {
+          type: 'addmerchantticket',
+        },
+      },
+      {
         path: 'clone/:id',
         component: TicketFormComponent,
         data: {

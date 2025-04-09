@@ -183,7 +183,7 @@ export class CompletetTicketComponent implements OnInit {
   }
   checkForNotCompleteTasks() {
     this.isAllTasksStatusesDone = this.details.tasks.every(
-      (x) => x.statusId != 0
+      (x) => x.statusId != 3
     );
   }
   submit() {

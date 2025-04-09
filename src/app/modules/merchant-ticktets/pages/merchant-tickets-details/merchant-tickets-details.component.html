@@ -1,0 +1,297 @@
+<div>
+  <div class="grid font-14 ml-2 m-2 mb-2">
+    <div class="p-col" style="text-align: right">
+      <span
+        (click)="backToList()"
+        class="mt-2 ml-3 header-left"
+        style="color: #0080f9; cursor: pointer"
+        >Ticket</span
+      >
+      <span class="mt-2 ml-2 mr-2 header-left">></span>
+      <span class="mt-2 header-left">{{ details?.id }}</span>
+    </div>
+  </div>
+  <p-divider class="header-divider" />
+
+  <div class="view-container">
+    <div class="view-container--card">
+      <oc-view-card
+        [details]="details"
+        [formType]="'view'"
+        [coordinates]="coordinates"
+        [cid]="'ticket'"
+      ></oc-view-card>
+    </div>
+    <!-- //////////////// -->
+    <div class="view-container--cards">
+      <div class="view-container--cards--details-card">
+        <div class="view-container--cards--details-card--title">
+          Ticket Details
+          <span class="ml-3" [ngStyle]="statusStyleObj">{{
+            details?.statusEn
+          }}</span>
+        </div>
+        <p-divider></p-divider>
+
+        <div class="view-container--cards--details-card--info">
+          <div class="view-container--cards--details-card--info--container">
+            <div
+              class="view-container--cards--details-card--info--container--left"
+            >
+              <div
+                class="view-container--cards--details-card--info--container--left--item"
+              >
+                <div
+                  class="view-container--cards--details-card--info--container--left--item--label"
+                >
+                  <label for="username">Username</label>
+                </div>
+                <div
+                  class="view-container--cards--details-card--info--container--left--item--text"
+                >
+                  {{ details?.merchantUsername }}
+                </div>
+              </div>
+              <!-- <div
+              class="view-container--cards--details-card--info--container--left--item"
+            >
+              <div
+                class="view-container--cards--details-card--info--container--left--item--label"
+              >
+                <label for="assignee">Assignee</label>
+              </div>
+              <div
+                class="view-container--cards--details-card--info--container--left--item--text"
+              >
+                {{ details?.assignee }}
+              </div>
+            </div> -->
+              <div
+                class="view-container--cards--details-card--info--container--left--item"
+              >
+                <div
+                  class="view-container--cards--details-card--info--container--left--item--label"
+                >
+                  <label for="pos-type">POS type</label>
+                </div>
+                <div
+                  class="view-container--cards--details-card--info--container--left--item--text"
+                >
+                  {{ details?.posTypeEn }}
+                </div>
+              </div>
+              <div
+                class="view-container--cards--details-card--info--container--left--item"
+              >
+                <div
+                  class="view-container--cards--details-card--info--container--left--item--label"
+                >
+                  <label for="pos-type">Linked Ticket</label>
+                </div>
+                <div
+                  class="view-container--cards--details-card--info--container--left--item--text"
+                >
+                  <span
+                    (click)="goToLinkedTicket(details?.linkedTicketId)"
+                    class="mr-2"
+                    style="
+                      color: #007aff;
+                      text-decoration: underline;
+                      cursor: pointer;
+                    "
+                  >
+                    {{ details?.linkedTicketId }}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div
+              class="view-container--cards--details-card--info--container--right"
+            >
+              <div
+                class="view-container--cards--details-card--info--container--right--item"
+              >
+                <div
+                  class="view-container--cards--details-card--info--container--right--item--label"
+                >
+                  <label for="created-at">Created At</label>
+                </div>
+                <div
+                  class="view-container--cards--details-card--info--container--right--item--text"
+                >
+                  {{ details?.createDate | date : "YYYY-MM-dd" }}
+                </div>
+              </div>
+              <div
+                class="view-container--cards--details-card--info--container--right--item"
+              >
+                <div
+                  class="view-container--cards--details-card--info--container--right--item--label"
+                >
+                  <label for="created-at">Updated By</label>
+                </div>
+                <div
+                  class="view-container--cards--details-card--info--container--right--item--text"
+                >
+                  {{ details?.updatedBy | date : "YYYY-MM-dd" }}
+                </div>
+              </div>
+              <div
+                class="view-container--cards--details-card--info--container--right--item"
+                *ngIf="details?.postponeDate"
+              >
+                <div
+                  class="view-container--cards--details-card--info--container--right--item--label"
+                >
+                  <label for="created-at">Postponed At</label>
+                </div>
+                <div
+                  class="view-container--cards--details-card--info--container--right--item--text"
+                >
+                  {{ details?.postponeDate | date : "YYYY-MM-dd" }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p-divider></p-divider>
+        <div>
+          <div
+            class="view-container--cards--details-card--info--attachments--title"
+          >
+            Note
+          </div>
+          <div class="note">
+            <span style="color: #798693">
+              {{ details?.notes ? details?.notes : "No Notes Added!" }}
+            </span>
+          </div>
+          <div class="button-container mt-4">
+            <button
+              *ngIf="
+                details?.statusId == MerchantTicketStatusEnum.New ||
+                details?.statusId == MerchantTicketStatusEnum.NotRegistered
+              "
+              pButton
+              size="small"
+              type="button"
+              label="Reject"
+              class="p-button-sm p-button-danger"
+              (click)="onReject()"
+            ></button>
+
+            <button
+              *ngIf="details?.statusId == MerchantTicketStatusEnum.New"
+              pButton
+              type="button"
+              label="Approve"
+              class="p-button-sm p-button-success"
+              (click)="onApprove()"
+            ></button>
+            <button
+              *ngIf="
+                details?.statusId == MerchantTicketStatusEnum.NotRegistered
+              "
+              pButton
+              type="button"
+              label="Complete Info"
+              class="p-button-sm p-button-primary"
+              (click)="showCompleteInfoDialog = true"
+            ></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p-dialog
+  [contentStyle]="{ overflow: 'visible' }"
+  [modal]="true"
+  [(visible)]="showBlockDialog"
+  [style]="{ width: '35rem' }"
+>
+  <div class="reject-dialog-header">
+    <span>Reject Reason</span>
+  </div>
+  <div class="mb-3" style="width: 100%; margin-top: 30px">
+    <textarea rows="5" cols="54" pInputTextarea [(ngModel)]="note"></textarea>
+  </div>
+  <p-divider />
+  <div class="flex justify-content-end gap-2">
+    <p-button
+      label="Cancel"
+      size="small"
+      (onClick)="showBlockDialog = false"
+      [outlined]="true"
+    />
+    <p-button
+      label="Save"
+      size="small"
+      (onClick)="onRejectTicket()"
+      [disabled]="!note?.length"
+    />
+  </div>
+</p-dialog>
+
+<p-dialog
+  [contentStyle]="{ overflow: 'visible' }"
+  header="Complete Info"
+  [modal]="true"
+  [(visible)]="showCompleteInfoDialog"
+  [style]="{ width: '35rem' }"
+>
+  <div class="mb-3" style="width: 100%">
+    <div class="grid">
+      <div class="col-6">
+        <div>
+          <span
+            class="mb-2"
+            style="font-size: 12px; color: #798693; font-weight: bold"
+            >Merchant ID</span
+          >
+          <span style="color: red">*</span>
+          <div style="height: 10px"></div>
+          <input
+            pInputText
+            id="username"
+            aria-describedby="username-help"
+            [(ngModel)]="merchantId"
+          />
+        </div>
+      </div>
+      <div class="col-6">
+        <div>
+          <span
+            class="mb-2"
+            style="font-size: 12px; color: #798693; font-weight: bold"
+            >Terminal ID</span
+          >
+          <span style="color: red">*</span>
+          <div style="height: 10px"></div>
+          <input
+            pInputText
+            id="username"
+            aria-describedby="username-help"
+            [(ngModel)]="terminalId"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <p-divider />
+  <div class="flex justify-content-end gap-2">
+    <p-button
+      label="Cancel"
+      size="small"
+      (onClick)="showCompleteInfoDialog = false"
+      [outlined]="true"
+    />
+    <p-button
+      label="Save"
+      size="small"
+      (onClick)="onCompleteInfo()"
+      [disabled]="!(terminalId?.length && merchantId?.length)"
+    />
+  </div>
+</p-dialog>

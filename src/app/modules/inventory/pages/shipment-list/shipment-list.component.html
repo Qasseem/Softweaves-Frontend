@@ -1,0 +1,38 @@
+<div class="p-grid ml-2 m-2">
+  <div class="p-col" style="text-align: right">
+    <span
+      class="mt-2"
+      style="float: left; font-weight: 600; font-family: 'public-sans'"
+      >Shipments</span
+    >
+    <p-button (click)="navigateToAdd()" label="Add Shipment" size="small">
+      <span class="ml-1 mr-1 add">
+        <i class="pi pi-plus add-icon"></i>
+      </span>
+    </p-button>
+  </div>
+</div>
+<div class="mt-3">
+  <oc-table
+    [showSearchBar]="true"
+    [url]="{
+      getAll: '/Shipment/GetGrid',
+      export: '/Shipment/Export',
+    }"
+    [addButtonLabel]="'Add Shipment'"
+    [columns]="columns"
+    [buttonsExistance]="tableBtns"
+    [filters]="filters"
+    [options]="{
+      check: false,
+      hasActionMenu: false,
+      viewDetails: viewDetails,
+      viewDetailsURL: '/main/inventory/shipments/details',
+    }"
+    [uploadHeader]="'Upload Bulk Shipments'"
+    [sampleName]="'ImportWarehouseTemplate.xlsx'"
+    [service]="service"
+    [modulePageName]="'Shipment'"
+  >
+  </oc-table>
+</div>

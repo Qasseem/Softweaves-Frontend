@@ -1,0 +1,29 @@
+::ng-deep .p-dropdown {
+  width: 100%;
+}
+
+::ng-deep .p-button {
+  border: 1px solid rgb(204, 230, 254);
+  .p-button-label {
+    font-weight: 400;
+  }
+}
+
+::ng-deep .p-inputtext {
+  height: 40px;
+}
+
+::ng-deep thead {
+  height: 40px !important;
+}
+.summary {
+  background-color: #0080f9;
+  min-height: 400px;
+  border-radius: 10px;
+  padding-bottom: 20px;
+}
+.container {
+  display: flex;
+  justify-content: center; /* Centers horizontally */
+  align-items: center; /* Centers vertically */
+}

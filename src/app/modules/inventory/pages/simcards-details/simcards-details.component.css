@@ -1,0 +1,24 @@
+.status {
+  float: right;
+  color: #007aff;
+  background: #eff8ff;
+  padding: 5px;
+  border-radius: 3px;
+  margin-top: -5px;
+}
+
+.center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-container {
+  background-color: #edeff1;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.label-primary {
+  color: #798693;
+}

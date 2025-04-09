@@ -1,0 +1,290 @@
+<div [formGroup]="form">
+  <div class="p-grid ml-2 m-2">
+    <div class="p-col" style="text-align: right">
+      <span
+        (click)="backToList()"
+        class="mt-2 ml-3 header-left"
+        style="color: #0080f9; cursor: pointer"
+        >Shipments</span
+      >
+      <span class="mt-2 ml-2 mr-2 header-left">></span>
+      <span class="mt-2 header-left"
+        >{{ formType == "add" ? "Add" : "Edit" }} Shipment</span
+      >
+      <p-button
+        class="mr-3 cancel-button"
+        label="Cancel"
+        [text]="true"
+        (click)="backToList()"
+        size="small"
+      />
+
+      <p-button
+        (click)="submit()"
+        [disabled]="!form?.valid"
+        label="{{ formType == 'add' ? 'Add' : 'Save' }}"
+        size="small"
+      >
+      </p-button>
+    </div>
+  </div>
+
+  <hr class="header-divider" />
+
+  <div class="add-form">
+    <form [formGroup]="form">
+      <div class="grid d-flex inputs-div">
+        <div class="col-12 p-0">
+          <div class="p-20 flex flex-wrap">
+            <div class="col-6">
+              <div class="flex flex-column gap-2">
+                <label for="supplier"
+                  >Supplier<span class="p-error"> * </span>
+                </label>
+                <input
+                  [ngClass]="{
+                    'ng-invalid ng-dirty':
+                      f.supplier?.errors?.required ||
+                      f.supplier?.errors?.pattern
+                  }"
+                  type="text"
+                  pInputText
+                  formControlName="supplier"
+                />
+
+                <div
+                  *ngIf="
+                    f.supplier.errors &&
+                    (f.supplier.dirty || f.supplier.touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div class="fs-10 color-red">
+                    <span *ngIf="f.supplier.errors.required">
+                      Supplier field is required
+                    </span>
+                    <span *ngIf="f.supplier.errors.pattern">
+                      Only English letters are allowed.
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div class="flex flex-column gap-2">
+                <label for="shipmentId"
+                  >Shipment ID<span class="p-error"> * </span>
+                </label>
+                <input
+                  [ngClass]="{
+                    'ng-invalid ng-dirty':
+                      f.shipmentId?.errors?.required ||
+                      f.shipmentId?.errors?.pattern
+                  }"
+                  type="number"
+                  pInputText
+                  formControlName="shipmentId"
+                />
+
+                <div
+                  *ngIf="
+                    f.shipmentId.errors &&
+                    (f.shipmentId.dirty || f.shipmentId.touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div class="fs-10 color-red">
+                    <span *ngIf="f.shipmentId.errors.required">
+                      Shipment ID field is required
+                    </span>
+                    <span *ngIf="f.shipmentId.errors.pattern">
+                      Only English letters are allowed.
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div class="flex flex-column gap-2">
+                <label for="shipmentDate"
+                  >Shipment Date <span class="p-error"> * </span>
+                </label>
+
+                <p-calendar
+                  formControlName="shipmentDate"
+                  [iconDisplay]="'input'"
+                  [showIcon]="true"
+                  inputId="icondisplay"
+                />
+
+                <div
+                  *ngIf="
+                    f.shipmentDate.errors &&
+                    (f.shipmentDate.dirty || f.shipmentDate.touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.shipmentDate.errors.required"
+                  >
+                    Shipment Date field is required
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div class="flex flex-column gap-2">
+                <label for="warehouseId"
+                  >Warehouse <span class="p-error"> * </span>
+                </label>
+                <p-dropdown
+                  [options]="warehousesList"
+                  formControlName="warehouseId"
+                  [optionValue]="'id'"
+                  optionLabel="nameEn"
+                  filter="true"
+                />
+                <div
+                  *ngIf="
+                    f.warehouseId.errors &&
+                    (f.warehouseId.dirty || f.warehouseId.touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.warehouseId.errors.required"
+                  >
+                    Warehouse field is required
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="add-form" style="margin-top: -20px">
+    <form [formGroup]="modelsForm">
+      <div class="grid d-flex inputs-div">
+        <div class="col-11 p-0">
+          <div
+            class="p-20 flex flex-wrap"
+            style="padding-right: 0px !important"
+          >
+            <div *ngFor="let ctrl of itemsFormControlsList" class="col-3">
+              <div class="flex flex-column gap-2">
+                <label [for]="ctrl?.name"
+                  >{{ ctrl?.header }} <span class="p-error"> * </span>
+                </label>
+                <p-dropdown
+                  [options]="ctrl?.data"
+                  [formControlName]="ctrl?.name"
+                  [optionValue]="'id'"
+                  optionLabel="nameEn"
+                  (onChange)="onSelectOption($event, ctrl?.name)"
+                  filter="true"
+                />
+                <div
+                  *ngIf="
+                    mf[ctrl?.name].errors &&
+                    (mf[ctrl?.name].dirty || mf[ctrl?.name].touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="mf[ctrl?.name]?.errors?.required"
+                  >
+                    {{ ctrl?.header }} Date field is required
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="flex flex-column gap-2">
+                <label for="qty">QTY<span class="p-error"> * </span> </label>
+                <input
+                  [ngClass]="{
+                    'ng-invalid ng-dirty':
+                      mf.quantity?.errors?.required ||
+                      mf.quantity?.errors?.pattern
+                  }"
+                  type="number"
+                  pInputText
+                  formControlName="quantity"
+                />
+                <div
+                  *ngIf="
+                    mf.quantity.errors &&
+                    (mf.quantity.dirty || mf.quantity.touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div class="fs-10 color-red">
+                    <span *ngIf="mf.quantity.errors.required">
+                      QTY ID field is required
+                    </span>
+                    <span *ngIf="mf.quantity.errors.pattern">
+                      Only English letters are allowed.
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="col-1"
+          style="display: flex; margin: auto; padding-top: 25px"
+        >
+          <p-button
+            [style]="{ width: '85px' }"
+            size="small"
+            label="Add"
+            (click)="addToModelTypes()"
+            icon="pi pi-plus"
+            [disabled]="!modelsForm.valid"
+          />
+        </div>
+        <div style="width: 100%" class="pl-4 pr-4">
+          <span style="font-size: 13px">Model Types And Items</span>
+          <p-button
+            label="Export"
+            class="float-right ml-3"
+            icon="pi pi-download"
+            size="small"
+            badgeClass="p-badge-contrast"
+            (click)="export()"
+            outlined="true"
+          />
+        </div>
+        <div class="col-12 pl-4 pr-4">
+          <div class="mt-1">
+            <oc-list
+              [clientSide]="true"
+              [data]="modeltypesFormList"
+              [columnsI]="columns"
+              [options]="{
+                check: false,
+                viewDetails: false,
+                editForm: true,
+                deleteForm: true
+              }"
+              [actions]="[1]"
+              [modulePageName]="'Shipments'"
+              (rowClickedAction)="rowClickedAction($event)"
+            >
+            </oc-list>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

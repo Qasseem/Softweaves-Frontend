@@ -36,6 +36,7 @@ export class TokenInterceptor implements HttpInterceptor {
       request.url.includes('ImportErrandType') ||
       request.url.includes('ImportErrandChannel') ||
       request.url.includes('ImportPOSType') ||
+      request.url.includes('import') ||
       request.url.includes('Import')
     ) {
       this.token = localStorage.getItem('token');

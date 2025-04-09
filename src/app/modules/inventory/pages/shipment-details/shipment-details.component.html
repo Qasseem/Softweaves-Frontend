@@ -1,0 +1,84 @@
+<div>
+  <div class="m-3" style="width: 100%">
+    <span (click)="backToList()" style="cursor: pointer">
+      Shipment Details
+    </span>
+    <span class="mr-4 status"> new </span>
+  </div>
+  <hr class="header-divider" />
+</div>
+<div class="add-form container-card">
+  <div>
+    <div class="grid card-container">
+      <div *ngFor="let item of cards" class="col-4">
+        <div class="card-container">
+          <div class="m-2 label-primary">{{ item.title }}</div>
+          <div class="grid">
+            <div class="col-3 center-container">
+              <p-avatar
+                icon="pi pi-user"
+                styleClass="mr-2"
+                size="large"
+                [style]="{ 'background-color': '#E6F2FE', color: '#0080F9' }"
+                shape="circle"
+              />
+            </div>
+            <div class="col-9 pl-0">
+              <div>{{ item.name }}</div>
+              <div class="label-primary mt-2">
+                <span class="pi pi-phone" *ngIf="item.phone"></span>
+                {{ item.phone }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="grid mt-3">
+      <div *ngFor="let section of detailsSections" class="col-4">
+        <div *ngFor="let field of section" class="grid mt-2">
+          <div class="col-6 label-primary">{{ field.label }}</div>
+          <div *ngIf="field.type == ''" class="col-6">{{ field.value }}</div>
+          <div *ngIf="field.type == 'date'" class="col-6">
+            {{ field.value | date : "dd/MM/yyyy HH:mm" }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="add-form container-card">
+  <div>
+    <div class="grid">
+      <div style="width: 100%" class="pl-4 pr-4">
+        <span style="font-size: 13px">Model Types And Items</span>
+        <p-button
+          label="Export"
+          class="float-right ml-3"
+          icon="pi pi-download"
+          size="small"
+          badgeClass="p-badge-contrast"
+          (click)="export()"
+          outlined="true"
+        />
+      </div>
+      <div class="col-12 pl-4 pr-4">
+        <div class="mt-1">
+          <oc-list
+            [clientSide]="true"
+            [data]="details?.shipmentDetails ? details?.shipmentDetails : []"
+            [columnsI]="columns"
+            [options]="{
+              check: false,
+              viewDetails: false,
+            }"
+            [actions]="[1]"
+            [modulePageName]="'Shipments'"
+          >
+          </oc-list>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,268 @@
+<div [formGroup]="form">
+  <div class="p-grid ml-2 m-2">
+    <div class="p-col" style="text-align: right">
+      <span
+        (click)="backToList()"
+        class="mt-2 ml-3 header-left"
+        style="color: #0080f9; cursor: pointer"
+        >Transfer Custody</span
+      >
+      <span class="mt-2 ml-2 mr-2 header-left">></span>
+      <span class="mt-2 header-left"
+        >{{ formType == "add" ? "Add" : "Edit" }} Transfer Custody</span
+      >
+      <p-button
+        class="mr-3 cancel-button"
+        label="Cancel"
+        [text]="true"
+        (click)="backToList()"
+        size="small"
+      />
+
+      <p-button
+        (click)="submit()"
+        [disabled]="!isAllAddesd"
+        label="{{ formType == 'add' ? 'Add' : 'Save' }}"
+        size="small"
+      >
+      </p-button>
+    </div>
+  </div>
+
+  <hr class="header-divider" />
+
+  <div class="add-form">
+    <form [formGroup]="form">
+      <div class="grid d-flex inputs-div">
+        <div style="width: 100%" class="pl-4 pr-4 mt-3">
+          <span style="font-size: 13px">Details</span>
+          <div style="border-bottom: 1px solid #d9d9d9" class="mt-2"></div>
+        </div>
+        <div class="col-12 p-0">
+          <div class="p-20 flex flex-wrap">
+            <div
+              *ngFor="let ctrl of custodySourceFormControlsList"
+              class="col-6"
+            >
+              <div *ngIf="ctrl?.showCtrl" class="flex flex-column gap-2">
+                <label [for]="ctrl?.name"
+                  >{{ ctrl?.header }} <span class="p-error"> * </span>
+                </label>
+                <p-dropdown
+                  [options]="ctrl?.data"
+                  [formControlName]="ctrl?.name"
+                  [optionValue]="'id'"
+                  optionLabel="nameEn"
+                  (onChange)="custodySourcesChanged($event, ctrl?.name)"
+                  filter="true"
+                />
+                <div
+                  *ngIf="
+                    f[ctrl?.name].errors &&
+                    (f[ctrl?.name].dirty || f[ctrl?.name].touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f[ctrl?.name]?.errors?.required"
+                  >
+                    {{ ctrl?.header }} Date field is required
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <!-- ////////////////////////////////////////////// -->
+  <div class="add-form" style="margin-top: -20px">
+    <div class="grid d-flex inputs-div">
+      <div style="width: 100%" class="pl-4 pr-4 mt-3">
+        <span style="font-size: 13px">Model Types And Items</span>
+        <p-button
+          label="Export"
+          class="float-right ml-3"
+          icon="pi pi-download"
+          size="small"
+          badgeClass="p-badge-contrast"
+          (click)="export()"
+          outlined="true"
+        />
+      </div>
+      <div class="col-12 pl-4 pr-4">
+        <div class="mt-1">
+          <oc-list
+            [clientSide]="true"
+            [data]="modeltypesFormList"
+            [columnsI]="columns"
+            [options]="{
+              check: false,
+              viewDetails: false,
+              editForm: false,
+              deleteForm: false
+            }"
+            [actions]="[1]"
+            [modulePageName]="'Shipments'"
+          >
+          </oc-list>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="add-form" style="margin-top: -20px">
+    <div class="grid d-flex inputs-div">
+      <div class="col-12 p-0">
+        <div class="p-20 flex flex-wrap" style="padding-right: 0px !important">
+          <div class="col-6">
+            <div class="flex flex-column gap-2">
+              <label for="qty"
+                >Add Device/SIM Serials<span class="p-error"> * </span>
+              </label>
+              <input
+                [ngModelOptions]="{ standalone: true }"
+                pInputText
+                [(ngModel)]="serial"
+                (keyup.enter)="onEnter($event)"
+              />
+            </div>
+          </div>
+          <div class="col-3" style="padding-top: 30px">
+            <p-button
+              [style]="{ width: '100px' }"
+              size="small"
+              label="Add"
+              (click)="addSerialModelTypes()"
+              icon="pi pi-plus"
+              [disabled]="!serial"
+            />
+            <p-button
+              label="Import"
+              class="ml-3"
+              icon="pi pi-download"
+              size="small"
+              badgeClass="p-badge-contrast"
+              (click)="showImportModal = true"
+              outlined="true"
+            />
+          </div>
+        </div>
+        <div
+          style="
+            padding-left: 50px;
+            padding-right: 50px;
+            margin-top: -10px;
+            margin-bottom: 10px;
+          "
+        >
+          <div style="border-bottom: 1px solid #d9d9d9" class="mt-2"></div>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="grid pl-4 pr-4">
+          <div class="col-10">
+            <div class="grid">
+              <div class="col-12">
+                <span style="font-size: 13px">Model Types And Items</span>
+                <p-button
+                  label="Export"
+                  class="float-right ml-3"
+                  icon="pi pi-download"
+                  size="small"
+                  badgeClass="p-badge-contrast"
+                  (click)="exportSerials()"
+                  outlined="true"
+                />
+              </div>
+            </div>
+            <oc-list
+              [clientSide]="true"
+              [data]="serlialList"
+              [columnsI]="serialColumns"
+              [options]="{
+                check: false,
+                viewDetails: false,
+                editForm: false,
+                deleteForm: true
+              }"
+              [actions]="[1]"
+              [modulePageName]="'Shipments'"
+              (rowClickedAction)="rowClickedAction($event)"
+            >
+            </oc-list>
+          </div>
+          <div class="col-2">
+            <div class="summary">
+              <div class="p-3">
+                <span style="color: white; font-size: 16px">Summary</span>
+              </div>
+              <div class="container">
+                <img
+                  style="width: 100px; height: 100px"
+                  src="../../../../../assets/iamges/serial.png"
+                  alt="Base64 Image"
+                />
+              </div>
+              <div class="mt-2"></div>
+              <div
+                *ngFor="let item of summaryList"
+                class="pl-3 pr-3 pt-2"
+                style="color: white"
+              >
+                <span>{{ item?.modelType }}</span>
+                <div class="grid mt-1">
+                  <div class="col-6 color-grey">QTY</div>
+                  <div class="col-6">{{ item?.quantity }}</div>
+                </div>
+                <div class="grid">
+                  <div class="col-6 color-grey">Added</div>
+                  <div class="col-6" style="color: #ffd400">
+                    {{ item?.added ? item?.added : 0 }}
+                  </div>
+                </div>
+                <hr style="margin-top: 0px" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p-dialog
+  [header]="'Import Serials'"
+  [modal]="true"
+  [(visible)]="showImportModal"
+  [style]="{ width: '40rem' }"
+>
+  <div style="margin-top: -20px">
+    <p-divider></p-divider>
+  </div>
+  <oc-file-upload
+    [sampleName]="'import-serials.xlsx'"
+    (filesSelectedEvent)="filesSelectedEvent($event)"
+  ></oc-file-upload>
+  <p-divider></p-divider>
+
+  <div>
+    <p-button
+      [outlined]="true"
+      size="small"
+      class="float-left"
+      label="Cancel"
+      (click)="showImportModal = false"
+    />
+    <p-button
+      [disabled]="!selectedFile"
+      (click)="importFromFile()"
+      size="small"
+      class="float-right"
+      label="Save"
+    />
+  </div>
+</p-dialog>
