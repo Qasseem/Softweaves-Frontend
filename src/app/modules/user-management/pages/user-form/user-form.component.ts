@@ -66,10 +66,7 @@ export class UserFormComponent {
             Validators.maxLength(50),
           ],
         ],
-        phoneNumber: [
-          '',
-          [Validators.required, Validators.pattern(phoneNumberValidation)],
-        ],
+        phoneNumber: ['', [Validators.required]],
         nationalId: [''],
         nationalIdBase64String: [null],
         userType: [null, Validators.required],
