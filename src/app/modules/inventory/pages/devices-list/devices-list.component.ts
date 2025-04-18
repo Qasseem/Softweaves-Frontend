@@ -10,9 +10,11 @@ import {
 import { DevicesService } from '../../services/devices.service';
 import { SearchInterface } from 'src/app/core/shared/core/modules/table/models/search-interface';
 import {
+  DeviceStatusEnum,
   HTTPMethods,
   SearchInputTypes,
 } from 'src/app/core/shared/core/modules/table/models/enums';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-devices-list',
@@ -23,7 +25,8 @@ export class DevicesListComponent implements OnInit {
   constructor(
     private router: Router,
     public authService: AuthService,
-    public service: DevicesService
+    public service: DevicesService,
+    private confirmationService: ConfirmationService
   ) {}
 
   ngOnInit() {
@@ -270,6 +273,20 @@ export class DevicesListComponent implements OnInit {
       call: (row: any) => this.blockItem(row),
       customPermission: (row: any) => this.showBlock,
     },
+    {
+      name: 'Approve',
+      icon: 'pi pi-file-check',
+      call: (row: any) => this.ShowDialog(row, true),
+      customPermission: (row: any) =>
+        row.statusId == DeviceStatusEnum.InProgress || true,
+    },
+    {
+      name: 'Reject',
+      icon: 'pi pi-file-check',
+      call: (row: any) => this.ShowDialog(row, false),
+      customPermission: (row: any) =>
+        row.statusId == DeviceStatusEnum.InProgress || true,
+    },
   ];
   public gridActionsList: ActionsInterface[] = [
     {
@@ -326,4 +343,32 @@ export class DevicesListComponent implements OnInit {
   showEdit = true;
   viewDetails = true;
   blockItem(row: any): any {}
+
+  ShowDialog(rowData, isApproved) {
+    if (rowData) {
+      const isBlock = !rowData.isBlock;
+      let message =
+        'are you sure you want to ' +
+        (isApproved ? 'approve' : 'reject') +
+        ' this device transaction?';
+      this.confirmationService.confirm({
+        header: isApproved ? 'Approve' : 'Reject',
+        message: message,
+        acceptIcon: 'pi pi-check mr-2',
+        rejectIcon: 'pi pi-times mr-2',
+        rejectButtonStyleClass: 'p-button-sm',
+        acceptButtonStyleClass: 'p-button-outlined p-button-sm',
+        accept: () => {
+          this.takeAction(rowData, isApproved);
+        },
+        reject: () => {
+          this.takeAction(rowData, isApproved);
+        },
+        key: 'myDialog',
+        acceptLabel: `Yes, ${isApproved ? 'Approve' : 'Reject'}`,
+        rejectLabel: 'No, Cancel',
+      });
+    }
+  }
+  takeAction(rowData, isApproved) {}
 }
