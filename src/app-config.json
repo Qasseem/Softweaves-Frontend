@@ -1,3 +1,4 @@
 {
-  "api": "https://oc-uae.paymob.com"
+  "api": "https://oc-uae.paymob.com",
+  "country": "UAE"
 }
