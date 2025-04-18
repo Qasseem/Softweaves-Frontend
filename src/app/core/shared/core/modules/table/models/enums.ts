@@ -72,3 +72,8 @@ export enum MerchantTicketStatusEnum {
   NotRegistered = 5,
   Completed = 6,
 }
+
+export enum DeviceStatusEnum {
+  New = 1,
+  InProgress,
+}

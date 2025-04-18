@@ -26,6 +26,7 @@ import {
   marker,
   tileLayer,
 } from 'leaflet';
+import { HttpService } from 'src/app/core/http/http.service';
 
 @Component({
   selector: 'oc-map',
@@ -87,11 +88,24 @@ export class LeafletMapComponent
   private form: FormGroup;
   private map: Map;
   private resizeObserver: ResizeObserver;
-  private initialCoords: LatLng = latLng(26.8206, 30.8025); // Default coordinates
+  private initialCoords: LatLng = this.getCountryCooords(); // Default coordinates
+  // private initialCoords: LatLng = latLng(25.276987, 55.296249);
+
+  getCountryCooords(): LatLng {
+    switch (this.httpService.country) {
+      case 'Eg':
+        return latLng(26.8206, 30.8025);
+      case 'UAE':
+        return latLng(25.276987, 55.296249);
+      default:
+        return latLng(26.8206, 30.8025);
+    }
+  }
 
   constructor(
     @Optional() private controlContainer: ControlContainer,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private httpService: HttpService
   ) {}
 
   ngOnInit(): void {
