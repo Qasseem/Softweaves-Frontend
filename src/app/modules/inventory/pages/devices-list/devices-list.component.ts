@@ -278,14 +278,14 @@ export class DevicesListComponent implements OnInit {
       icon: 'pi pi-file-check',
       call: (row: any) => this.ShowDialog(row, true),
       customPermission: (row: any) =>
-        row.statusId == DeviceStatusEnum.InProgress || true,
+        row.statusId == DeviceStatusEnum.InProgress && false,
     },
     {
       name: 'Reject',
       icon: 'pi pi-file-check',
       call: (row: any) => this.ShowDialog(row, false),
       customPermission: (row: any) =>
-        row.statusId == DeviceStatusEnum.InProgress || true,
+        row.statusId == DeviceStatusEnum.InProgress && false,
     },
   ];
   public gridActionsList: ActionsInterface[] = [
