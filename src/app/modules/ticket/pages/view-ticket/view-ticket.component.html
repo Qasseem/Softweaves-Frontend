@@ -430,6 +430,21 @@
                         {{ panel?.poS_Serial }}
                       </div>
                     </div>
+                    <div
+                      *ngIf="panel?.requireQuantity"
+                      class="view-container--cards--details-card--info--container--left--item"
+                    >
+                      <div
+                        class="view-container--cards--details-card--info--container--left--item--label"
+                      >
+                        <label for="pos-type">Required QTY</label>
+                      </div>
+                      <div
+                        class="view-container--cards--details-card--info--container--left--item--text"
+                      >
+                        {{ panel?.quantity }}
+                      </div>
+                    </div>
                   </div>
                   <div
                     class="view-container--cards--details-card--info--container--right"
@@ -460,6 +475,21 @@
                         class="view-container--cards--details-card--info--container--right--item--text"
                       >
                         {{ panel?.siM_Serial }}
+                      </div>
+                    </div>
+                    <div
+                      *ngIf="panel?.requireQuantity"
+                      class="view-container--cards--details-card--info--container--left--item"
+                    >
+                      <div
+                        class="view-container--cards--details-card--info--container--left--item--label"
+                      >
+                        <label for="pos-type">Delivered QTY</label>
+                      </div>
+                      <div
+                        class="view-container--cards--details-card--info--container--left--item--text"
+                      >
+                        {{ panel?.quantity }}
                       </div>
                     </div>
                   </div>

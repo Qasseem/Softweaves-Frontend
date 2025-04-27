@@ -42,6 +42,8 @@ export class CategoriesErrandTypesFormComponent implements OnInit, OnDestroy {
       nameAr: ['', [Validators.pattern(arabicLetterPattern)]],
       serviceLevel: ['', Validators.required],
       requireQuantity: [null, Validators.required],
+      itemCategoryId: [null],
+      item: [null],
       id: [null],
     });
 
@@ -101,5 +103,17 @@ export class CategoriesErrandTypesFormComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.alive = false;
+  }
+  requieredQuantityChanged(event) {
+    //Set controls as required
+    if (event?.checked) {
+      this.form.controls.item.setValidators([Validators.required]);
+      this.form.controls.itemCategoryId.setValidators([Validators.required]);
+      this.form.updateValueAndValidity();
+    } else {
+      this.form.controls.item.setValidators(null);
+      this.form.controls.itemCategoryId.setValidators(null);
+      this.form.updateValueAndValidity();
+    }
   }
 }
