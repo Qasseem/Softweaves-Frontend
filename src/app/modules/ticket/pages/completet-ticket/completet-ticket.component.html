@@ -329,6 +329,65 @@
                 </div>
               </div>
             </div>
+
+            <div *ngIf="showDeliveredQtyInput" class="col-6">
+              <div class="flex flex-column gap-2">
+                <label for="deliveredQuantity"
+                  >Delivered QTY <span class="p-error"> * </span></label
+                >
+                <input
+                  [ngClass]="{
+                    'ng-invalid ng-dirty': f.deliveredQuantity?.errors?.required
+                  }"
+                  pInputText
+                  type="number"
+                  formControlName="deliveredQuantity"
+                />
+
+                <div
+                  *ngIf="
+                    f.deliveredQuantity.errors &&
+                    (f.deliveredQuantity.dirty || f.deliveredQuantity.touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.deliveredQuantity.errors.required"
+                  >
+                    Delivered QTY field is required
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="showSimcardProviderInput" class="col-6">
+              <div class="flex flex-column gap-2">
+                <label for="simCardModelTypeId"
+                  >Simcard Provider <span class="p-error"> * </span>
+                </label>
+                <p-dropdown
+                  [options]="simCardProviders"
+                  formControlName="simCardModelTypeId"
+                  [optionValue]="'id'"
+                  optionLabel="nameEn"
+                  filter="true"
+                />
+                <div
+                  *ngIf="
+                    f.simCardModelTypeId.errors &&
+                    (f.simCardModelTypeId.dirty || f.simCardModelTypeId.touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.simCardModelTypeId.errors.required"
+                  >
+                    Simcard Provider field is required
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <hr class="header-divider" />
           <div class="grid">
@@ -448,6 +507,8 @@
           form.get('statusId').value == 1 &&
           form.get('terminalId').valid &&
           form.get('posSerial').valid &&
+          form.get('deliveredQuantity').valid &&
+          form.get('simCardModelTypeId').valid &&
           form.get('simSerial').valid &&
           form.get('imei').valid
         )

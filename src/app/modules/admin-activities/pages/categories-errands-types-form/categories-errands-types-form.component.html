@@ -42,7 +42,7 @@
                   >Category<span class="p-error"> * </span>
                 </label>
                 <p-dropdown
-                  [options]="categoriesLists"
+                  [options]="itemscategoriesLists"
                   formControlName="categoryId"
                   [optionValue]="'id'"
                   optionLabel="nameEn"
@@ -151,12 +151,13 @@
         <div class="col-12 p-lr pb-16">
           <div class="col-12 displayFlex align-item-center">
             <p-checkbox
+              (onChange)="requieredQuantityChanged($event)"
               formControlName="requireQuantity"
               binary="true"
             ></p-checkbox>
             <label class="requireQuantity" for="requireQuantity"
-              >Require Qty <span class="p-error"> * </span></label
-            >
+              >Require Qty
+            </label>
             <div
               *ngIf="
                 f.requireQuantity.errors &&
@@ -168,6 +169,74 @@
                 <span *ngIf="f.requireQuantity.errors.required">
                   Require Qty field is required
                 </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div *ngIf="f.requireQuantity.value" class="categories-errands-type-form">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="grid d-flex inputs-div">
+        <div class="mt-3 ml-3 mr-3">
+          <span style="font-weight: bolder; font-size: 12px">Linked Item</span>
+        </div>
+        <div class="col-12 p-0">
+          <div class="p-20 flex flex-wrap">
+            <div class="col-6">
+              <div class="flex flex-column gap-2">
+                <label for="itemCategoryId"
+                  >Item Category<span class="p-error"> * </span>
+                </label>
+                <p-dropdown
+                  [options]="itemscategoriesLists"
+                  formControlName="itemCategoryId"
+                  [optionValue]="'id'"
+                  optionLabel="nameEn"
+                  (onChange)="categoryChanged($event)"
+                />
+
+                <div
+                  *ngIf="
+                    f.itemCategoryId.errors &&
+                    (f.itemCategoryId.dirty || f.itemCategoryId.touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div class="fs-10 color-red">
+                    <span *ngIf="f.itemCategoryId.errors.required">
+                      Category field is required
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="flex flex-column gap-2">
+                <label for="modelTypeId"
+                  >Item<span class="p-error"> * </span>
+                </label>
+                <p-dropdown
+                  [options]="modelTypesList"
+                  formControlName="modelTypeId"
+                  [optionValue]="'id'"
+                  optionLabel="nameEn"
+                />
+
+                <div
+                  *ngIf="
+                    f.modelTypeId.errors &&
+                    (f.modelTypeId.dirty || f.modelTypeId.touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div class="fs-10 color-red">
+                    <span *ngIf="f.modelTypeId.errors.required">
+                      Category field is required
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

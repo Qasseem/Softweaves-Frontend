@@ -33,4 +33,12 @@ export class DevicesService {
   getConditionDropDown() {
     return this.http.getReq(this.controllerName + '/GetConditionDropDown');
   }
+
+  reviewCancellation(data) {
+    return this.http.postReq(this.controllerName + '/ReviewCancellation', data);
+  }
+
+  reviewDelivery(data) {
+    return this.http.postReq(this.controllerName + '/ReviewDelivery', data);
+  }
 }
