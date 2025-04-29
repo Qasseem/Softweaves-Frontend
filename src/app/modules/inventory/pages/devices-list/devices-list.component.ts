@@ -15,6 +15,7 @@ import {
   SearchInputTypes,
 } from 'src/app/core/shared/core/modules/table/models/enums';
 import { ConfirmationService } from 'primeng/api';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-devices-list',
@@ -22,6 +23,11 @@ import { ConfirmationService } from 'primeng/api';
   styleUrls: ['./devices-list.component.css'],
 })
 export class DevicesListComponent implements OnInit {
+  conditionId: any;
+  allConditions = [];
+  showDecisionDialog = false;
+  isApproved = false;
+  rowData: any;
   constructor(
     private router: Router,
     public authService: AuthService,
@@ -47,8 +53,19 @@ export class DevicesListComponent implements OnInit {
     if (!this.authService.hasPermission('inventory-devices-add')) {
       this.tableBtns.showImport = false;
     }
+    this.getConditionDropDown();
   }
 
+  getConditionDropDown() {
+    this.service
+      .getConditionDropDown()
+      .pipe(take(1))
+      .subscribe((resp) => {
+        if (resp.success) {
+          this.allConditions = resp.data;
+        }
+      });
+  }
   navigateToAdd() {
     this.router.navigate(['main/inventory/devices/add']);
   }
@@ -276,16 +293,16 @@ export class DevicesListComponent implements OnInit {
     {
       name: 'Approve',
       icon: 'pi pi-file-check',
-      call: (row: any) => this.ShowDialog(row, true),
+      call: (row: any) => this.takeDecision(row, true),
       customPermission: (row: any) =>
-        row.statusId == DeviceStatusEnum.InProgress && false,
+        row.statusId == DeviceStatusEnum.InDeliveryPhase,
     },
     {
       name: 'Reject',
       icon: 'pi pi-file-check',
-      call: (row: any) => this.ShowDialog(row, false),
+      call: (row: any) => this.takeDecision(row, false),
       customPermission: (row: any) =>
-        row.statusId == DeviceStatusEnum.InProgress && false,
+        row.statusId == DeviceStatusEnum.InDeliveryPhase,
     },
   ];
   public gridActionsList: ActionsInterface[] = [
@@ -344,31 +361,34 @@ export class DevicesListComponent implements OnInit {
   viewDetails = true;
   blockItem(row: any): any {}
 
-  ShowDialog(rowData, isApproved) {
+  takeDecision(rowData, isApproved) {
     if (rowData) {
-      const isBlock = !rowData.isBlock;
-      let message =
-        'are you sure you want to ' +
-        (isApproved ? 'approve' : 'reject') +
-        ' this device transaction?';
-      this.confirmationService.confirm({
-        header: isApproved ? 'Approve' : 'Reject',
-        message: message,
-        acceptIcon: 'pi pi-check mr-2',
-        rejectIcon: 'pi pi-times mr-2',
-        rejectButtonStyleClass: 'p-button-sm',
-        acceptButtonStyleClass: 'p-button-outlined p-button-sm',
-        accept: () => {
-          this.takeAction(rowData, isApproved);
-        },
-        reject: () => {
-          this.takeAction(rowData, isApproved);
-        },
-        key: 'myDialog',
-        acceptLabel: `Yes, ${isApproved ? 'Approve' : 'Reject'}`,
-        rejectLabel: 'No, Cancel',
-      });
+      this.isApproved = isApproved;
+      this.rowData = rowData;
+      this.showDecisionDialog = true;
+      this.conditionId = rowData.conditionId;
     }
   }
-  takeAction(rowData, isApproved) {}
+  takeAction() {
+    let data = {
+      deviceId: this.rowData.id,
+      actionId: this.isApproved ? 1 : 2,
+      conditionId: this.conditionId,
+    };
+    this.service
+      .reviewDelivery(data)
+      .pipe(take(1))
+      .subscribe((resp) => {
+        if (resp.success) {
+          this.rowData.statusName = this.isApproved
+            ? 'Installed'
+            : 'Spare With Agent';
+          this.rowData.statusId = this.rowData.statusId = this.isApproved
+            ? DeviceStatusEnum.Installed
+            : DeviceStatusEnum.SpareWithAgent;
+          this.showDecisionDialog = false;
+          this.conditionId = null;
+        }
+      });
+  }
 }

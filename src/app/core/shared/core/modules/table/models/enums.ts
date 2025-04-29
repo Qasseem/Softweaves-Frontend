@@ -74,6 +74,17 @@ export enum MerchantTicketStatusEnum {
 }
 
 export enum DeviceStatusEnum {
-  New = 1,
-  InProgress,
+  InWarehouse = 1,
+  SpareWithAgent = 2,
+  InDeliveryPhase = 3,
+  Installed = 4,
+  Scrapped = 5,
+  InCancellationPhase = 6,
+}
+
+export enum TicketCategoryEnum {
+  Deployment = 1,
+  Visit = 2,
+  Cancellation = 3,
+  AfterSales = 4,
 }

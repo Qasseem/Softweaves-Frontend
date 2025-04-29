@@ -5,6 +5,8 @@ import { TerminalService } from 'src/app/modules/terminal/services/terminal.serv
 import { ActivatedRoute, Router } from '@angular/router';
 import { take, pipe } from 'rxjs';
 import { ToastService } from 'src/app/core/services/toaster.service';
+import { TicketCategoryEnum } from 'src/app/core/shared/core/modules/table/models/enums';
+import { HttpService } from 'src/app/core/http/http.service';
 
 @Component({
   selector: 'app-completet-ticket',
@@ -17,6 +19,7 @@ export class CompletetTicketComponent implements OnInit {
   data: any;
   visible = false;
   options: any;
+  simCardProviders = [];
   statusOptions: any[] = [
     { name: 'Succeeded', key: 1 },
     { name: 'Failed', key: 2 },
@@ -29,18 +32,34 @@ export class CompletetTicketComponent implements OnInit {
   selectedItem: any;
   isAllTasksStatusesDone: any;
   showChart: boolean;
+  showSimcardProviderInput: boolean = false;
+  showDeliveredQtyInput: boolean = false;
+  countryId: any;
   constructor(
     private fb: FormBuilder,
     private service: TicketService,
     private terminalService: TerminalService,
     private router: Router,
     private route: ActivatedRoute,
-    private toaster: ToastService
+    private toaster: ToastService,
+    private httpService: HttpService
   ) {
     this.id = this.route.snapshot.params.id || null;
     this.getTicketDetails(this.id);
     this.buildForm();
     this.getFailedReasons();
+    this.countryId = httpService.country;
+    this.getSimcardProviders();
+  }
+  getSimcardProviders() {
+    this.service
+      .getSIMCardProviders(this.countryId)
+      .pipe(take(1))
+      .subscribe((resp) => {
+        if (resp.success) {
+          this.simCardProviders = resp.data;
+        }
+      });
   }
   getFailedReasons() {
     this.service.getFailReasons().subscribe((res) => {
@@ -57,9 +76,29 @@ export class CompletetTicketComponent implements OnInit {
           this.details = res.data;
           this.checkForNotCompleteTasks();
           this.setChartData();
+          this.setTaskType();
         }
       });
     }
+  }
+  setTaskType() {
+    if (
+      this.details?.categoryId == TicketCategoryEnum.Deployment ||
+      this.details?.categoryId == TicketCategoryEnum.Cancellation
+    ) {
+      this.showSimcardProviderInput = true;
+      this.form.controls.simCardModelTypeId.setValidators([
+        Validators.required,
+      ]);
+    }
+    if (
+      this.details?.categoryId == TicketCategoryEnum.Visit ||
+      this.details?.categoryId == TicketCategoryEnum.AfterSales
+    ) {
+      this.showDeliveredQtyInput = true;
+      this.form.controls.deliveredQuantity.setValidators([Validators.required]);
+    }
+    this.form.updateValueAndValidity();
   }
 
   ngOnInit() {}
@@ -77,6 +116,8 @@ export class CompletetTicketComponent implements OnInit {
       images: [[], Validators.required],
       files: [[], Validators.required],
       id: [null],
+      deliveredQuantity: [null],
+      simCardModelTypeId: [null],
       selectedTaskId: [null],
     });
   }
@@ -96,6 +137,8 @@ export class CompletetTicketComponent implements OnInit {
         if (resp.success) {
           this.getTicketDetails(this.id);
           this.visible = false;
+          this.showDeliveredQtyInput = false;
+          this.showSimcardProviderInput = false;
         }
       });
   }

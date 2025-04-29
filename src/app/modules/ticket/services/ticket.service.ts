@@ -79,4 +79,17 @@ export class TicketService {
   schedule(data) {
     return this.http.postReq('/Ticket/Schedule', data);
   }
+
+  getSIMCardProviders(country) {
+    let countryId = '1';
+    switch (country) {
+      case 'UAE':
+        countryId = '2';
+        break;
+
+      default:
+        break;
+    }
+    return this.http.getHeaderReq('/Ticket/GetSIMCardProviders', countryId);
+  }
 }

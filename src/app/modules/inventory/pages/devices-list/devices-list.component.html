@@ -42,3 +42,35 @@
 <div class="card flex justify-content-center">
   <p-confirmDialog key="myDialog"> </p-confirmDialog>
 </div>
+
+<p-dialog
+  [contentStyle]="{ overflow: 'visible' }"
+  [header]="isApproved ? 'Approve' : 'Reject'"
+  [modal]="true"
+  [(visible)]="showDecisionDialog"
+  [style]="{ width: '35rem' }"
+>
+  <div class="mb-3">
+    <label for="username" class="font-semibold w-6rem">Condition</label>
+    <p-dropdown
+      [options]="allConditions"
+      [(ngModel)]="conditionId"
+      [optionValue]="'id'"
+      optionLabel="nameEn"
+      filter="true"
+    />
+  </div>
+  <div class="flex justify-content-end gap-2">
+    <p-button
+      label="Cancel"
+      size="small"
+      (onClick)="showDecisionDialog = false"
+      [outlined]="true"
+    />
+    <p-button
+      [label]="isApproved ? 'Approve' : 'Reject'"
+      size="small"
+      (onClick)="takeAction()"
+    />
+  </div>
+</p-dialog>
