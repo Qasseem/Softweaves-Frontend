@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeWhile } from 'rxjs';
 import { ErrandTypeService } from '../../services/errand-type.service';
+import { ModeltypesService } from 'src/app/modules/inventory/services/modeltypes.service';
 @Component({
   selector: 'oc-categories-errands-types-form',
   templateUrl: './categories-errands-types-form.component.html',
@@ -15,11 +16,14 @@ export class CategoriesErrandTypesFormComponent implements OnInit, OnDestroy {
   details: any;
   formType = 'add';
   categoriesLists = [];
+  itemscategoriesLists = [];
+  modelTypesList = [];
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
-    private service: ErrandTypeService
+    private service: ErrandTypeService,
+    private modeltypesService: ModeltypesService
   ) {
     this.formType = this.route.snapshot.data.type;
   }
@@ -41,13 +45,42 @@ export class CategoriesErrandTypesFormComponent implements OnInit, OnDestroy {
       ],
       nameAr: ['', [Validators.pattern(arabicLetterPattern)]],
       serviceLevel: ['', Validators.required],
-      requireQuantity: [null, Validators.required],
+      requireQuantity: [null],
       itemCategoryId: [null],
-      item: [null],
+      modelTypeId: [null],
       id: [null],
     });
 
     this.getCategoriesErrandType();
+    this.getCategoryDropDown();
+  }
+  getCategoryDropDown() {
+    this.modeltypesService
+      .getCategoryDropDown()
+      .pipe(takeWhile(() => this.alive))
+      .subscribe((resp) => {
+        if (resp.success) {
+          this.itemscategoriesLists = resp.data;
+        }
+      });
+  }
+
+  categoryChanged(event) {
+    this.modelTypesList = [];
+    this.form.controls.modelTypeId.setValue(null);
+    if (event?.value) {
+      this.GetModelTypeDropDown(event?.value);
+    }
+  }
+  GetModelTypeDropDown(id) {
+    this.modeltypesService
+      .getModelTypeDropDown(id)
+      .pipe(takeWhile(() => this.alive))
+      .subscribe((resp) => {
+        if (resp.success) {
+          this.modelTypesList = resp.data;
+        }
+      });
   }
 
   getCategoriesErrandType() {
@@ -105,15 +138,19 @@ export class CategoriesErrandTypesFormComponent implements OnInit, OnDestroy {
     this.alive = false;
   }
   requieredQuantityChanged(event) {
+    this.form.controls.modelTypeId.setValue(null);
+    this.form.controls.itemCategoryId.setValidators(null);
     //Set controls as required
     if (event?.checked) {
-      this.form.controls.item.setValidators([Validators.required]);
+      this.form.controls.modelTypeId.setValidators([Validators.required]);
       this.form.controls.itemCategoryId.setValidators([Validators.required]);
       this.form.updateValueAndValidity();
     } else {
-      this.form.controls.item.setValidators(null);
-      this.form.controls.itemCategoryId.setValidators(null);
-      this.form.updateValueAndValidity();
+      this.form.controls.modelTypeId.clearValidators();
+      this.form.controls.itemCategoryId.clearValidators();
     }
+    this.form.controls.modelTypeId.updateValueAndValidity();
+    this.form.controls.itemCategoryId.updateValueAndValidity();
+    this.form.updateValueAndValidity();
   }
 }

@@ -42,7 +42,7 @@
                   >Category<span class="p-error"> * </span>
                 </label>
                 <p-dropdown
-                  [options]="categoriesLists"
+                  [options]="itemscategoriesLists"
                   formControlName="categoryId"
                   [optionValue]="'id'"
                   optionLabel="nameEn"
@@ -156,8 +156,8 @@
               binary="true"
             ></p-checkbox>
             <label class="requireQuantity" for="requireQuantity"
-              >Require Qty <span class="p-error"> * </span></label
-            >
+              >Require Qty
+            </label>
             <div
               *ngIf="
                 f.requireQuantity.errors &&
@@ -190,10 +190,11 @@
                   >Item Category<span class="p-error"> * </span>
                 </label>
                 <p-dropdown
-                  [options]="categoriesLists"
+                  [options]="itemscategoriesLists"
                   formControlName="itemCategoryId"
                   [optionValue]="'id'"
                   optionLabel="nameEn"
+                  (onChange)="categoryChanged($event)"
                 />
 
                 <div
@@ -213,27 +214,26 @@
             </div>
             <div class="col-6">
               <div class="flex flex-column gap-2">
-                <label for="item">Item<span class="p-error"> * </span> </label>
-                <input
-                  [ngClass]="{
-                    'ng-invalid ng-dirty':
-                      f.item?.errors?.required || f?.item?.errors?.pattern
-                  }"
-                  type="text"
-                  pInputText
-                  formControlName="item"
+                <label for="modelTypeId"
+                  >Item<span class="p-error"> * </span>
+                </label>
+                <p-dropdown
+                  [options]="modelTypesList"
+                  formControlName="modelTypeId"
+                  [optionValue]="'id'"
+                  optionLabel="nameEn"
                 />
 
                 <div
-                  *ngIf="f.item.errors && (f.item.dirty || f.item.touched)"
+                  *ngIf="
+                    f.modelTypeId.errors &&
+                    (f.modelTypeId.dirty || f.modelTypeId.touched)
+                  "
                   class="invalid-feedback"
                 >
                   <div class="fs-10 color-red">
-                    <span *ngIf="f.item.errors.required">
-                      Name Type [EN] field is required
-                    </span>
-                    <span *ngIf="f.item.errors.pattern">
-                      Only English letters are allowed.
+                    <span *ngIf="f.modelTypeId.errors.required">
+                      Category field is required
                     </span>
                   </div>
                 </div>

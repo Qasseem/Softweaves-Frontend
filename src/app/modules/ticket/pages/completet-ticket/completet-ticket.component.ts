@@ -97,7 +97,10 @@ export class CompletetTicketComponent implements OnInit {
     ) {
       this.showDeliveredQtyInput = true;
       this.form.controls.deliveredQuantity.setValidators([Validators.required]);
+
+      this.form.controls.deliveredQuantity.pristine;
     }
+
     this.form.updateValueAndValidity();
   }
 
@@ -116,8 +119,8 @@ export class CompletetTicketComponent implements OnInit {
       images: [[], Validators.required],
       files: [[], Validators.required],
       id: [null],
-      deliveredQuantity: [null],
-      simCardModelTypeId: [null],
+      deliveredQuantity: [null, []],
+      simCardModelTypeId: [null, []],
       selectedTaskId: [null],
     });
   }
