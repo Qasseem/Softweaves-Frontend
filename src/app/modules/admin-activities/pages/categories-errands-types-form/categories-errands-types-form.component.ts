@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { takeWhile } from 'rxjs';
 import { ErrandTypeService } from '../../services/errand-type.service';
 import { ModeltypesService } from 'src/app/modules/inventory/services/modeltypes.service';
+import { ItemsWithoutSerialService } from 'src/app/modules/inventory/services/items-without-serial.service';
 @Component({
   selector: 'oc-categories-errands-types-form',
   templateUrl: './categories-errands-types-form.component.html',
@@ -23,7 +24,8 @@ export class CategoriesErrandTypesFormComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private service: ErrandTypeService,
-    private modeltypesService: ModeltypesService
+    private modeltypesService: ModeltypesService,
+    private itemsWithoutSerialService: ItemsWithoutSerialService
   ) {
     this.formType = this.route.snapshot.data.type;
   }
@@ -51,16 +53,17 @@ export class CategoriesErrandTypesFormComponent implements OnInit, OnDestroy {
       id: [null],
     });
 
-    this.getCategoriesErrandType();
+    // this.getCategoriesErrandType();
     this.getCategoryDropDown();
   }
   getCategoryDropDown() {
-    this.modeltypesService
+    this.itemsWithoutSerialService
       .getCategoryDropDown()
       .pipe(takeWhile(() => this.alive))
       .subscribe((resp) => {
         if (resp.success) {
           this.itemscategoriesLists = resp.data;
+          this.categoriesLists = resp.data;
         }
       });
   }
@@ -83,16 +86,16 @@ export class CategoriesErrandTypesFormComponent implements OnInit, OnDestroy {
       });
   }
 
-  getCategoriesErrandType() {
-    this.service
-      .getCategoriesFixed()
-      .pipe(takeWhile(() => this.alive))
-      .subscribe((resp) => {
-        if (resp.success) {
-          this.categoriesLists = resp.data;
-        }
-      });
-  }
+  // getCategoriesErrandType() {
+  //   this.service
+  //     .getCategoriesFixed()
+  //     .pipe(takeWhile(() => this.alive))
+  //     .subscribe((resp) => {
+  //       if (resp.success) {
+  //         this.categoriesLists = resp.data;
+  //       }
+  //     });
+  // }
   getItemDetails() {
     this.service
       .GetCategoriesErrandsTypesDetails(this.id)

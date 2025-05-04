@@ -95,6 +95,64 @@
                 </div>
               </div>
             </div>
+            <div class="col-6">
+              <div class="flex flex-column gap-2">
+                <label for="regionId"
+                  >Region <span class="p-error"> * </span>
+                </label>
+
+                <p-dropdown
+                  (onChange)="regionChanged($event)"
+                  [options]="regionsList"
+                  formControlName="regionId"
+                  [optionValue]="'id'"
+                  optionLabel="nameEn"
+                  filter="true"
+                />
+                <div
+                  *ngIf="
+                    f.regionId.errors &&
+                    (f.regionId.dirty || f.regionId.touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.regionId?.errors?.required"
+                  >
+                    Region field is required
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="flex flex-column gap-2">
+                <label for="cityId"
+                  >City <span class="p-error"> * </span>
+                </label>
+
+                <p-dropdown
+                  [options]="citiesList"
+                  formControlName="cityId"
+                  [optionValue]="'id'"
+                  optionLabel="nameEn"
+                  filter="true"
+                />
+                <div
+                  *ngIf="
+                    f.cityId.errors && (f.cityId.dirty || f.cityId.touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.cityId?.errors?.required"
+                  >
+                    City field is required
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
