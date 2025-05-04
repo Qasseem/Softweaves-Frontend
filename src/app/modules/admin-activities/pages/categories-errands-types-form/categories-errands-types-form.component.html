@@ -186,12 +186,12 @@
           <div class="p-20 flex flex-wrap">
             <div class="col-6">
               <div class="flex flex-column gap-2">
-                <label for="itemCategoryId"
+                <label for="modelCategoryId"
                   >Item Category<span class="p-error"> * </span>
                 </label>
                 <p-dropdown
                   [options]="categoriesLists"
-                  formControlName="itemCategoryId"
+                  formControlName="modelCategoryId"
                   [optionValue]="'id'"
                   optionLabel="nameEn"
                   (onChange)="categoryChanged($event)"
@@ -199,13 +199,13 @@
 
                 <div
                   *ngIf="
-                    f.itemCategoryId.errors &&
-                    (f.itemCategoryId.dirty || f.itemCategoryId.touched)
+                    f.modelCategoryId.errors &&
+                    (f.modelCategoryId.dirty || f.modelCategoryId.touched)
                   "
                   class="invalid-feedback"
                 >
                   <div class="fs-10 color-red">
-                    <span *ngIf="f.itemCategoryId.errors.required">
+                    <span *ngIf="f.modelCategoryId.errors.required">
                       Category field is required
                     </span>
                   </div>

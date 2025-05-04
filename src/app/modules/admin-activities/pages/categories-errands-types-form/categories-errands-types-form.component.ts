@@ -48,7 +48,7 @@ export class CategoriesErrandTypesFormComponent implements OnInit, OnDestroy {
       nameAr: ['', [Validators.pattern(arabicLetterPattern)]],
       serviceLevel: ['', Validators.required],
       requireQuantity: [null],
-      itemCategoryId: [null],
+      modelCategoryId: [null],
       modelTypeId: [null],
       id: [null],
     });
@@ -76,7 +76,7 @@ export class CategoriesErrandTypesFormComponent implements OnInit, OnDestroy {
     }
   }
   GetModelTypeDropDown(id) {
-    this.modeltypesService
+    this.itemsWithoutSerialService
       .getModelTypeDropDown(id)
       .pipe(takeWhile(() => this.alive))
       .subscribe((resp) => {
@@ -106,6 +106,7 @@ export class CategoriesErrandTypesFormComponent implements OnInit, OnDestroy {
           if (this.details) {
             this.form.patchValue(this.details);
             this.form.updateValueAndValidity();
+            this.GetModelTypeDropDown(resp.data?.modelCategoryId);
           }
         }
       });
@@ -142,18 +143,18 @@ export class CategoriesErrandTypesFormComponent implements OnInit, OnDestroy {
   }
   requieredQuantityChanged(event) {
     this.form.controls.modelTypeId.setValue(null);
-    this.form.controls.itemCategoryId.setValidators(null);
+    this.form.controls.modelCategoryId.setValidators(null);
     //Set controls as required
     if (event?.checked) {
       this.form.controls.modelTypeId.setValidators([Validators.required]);
-      this.form.controls.itemCategoryId.setValidators([Validators.required]);
+      this.form.controls.modelCategoryId.setValidators([Validators.required]);
       this.form.updateValueAndValidity();
     } else {
       this.form.controls.modelTypeId.clearValidators();
-      this.form.controls.itemCategoryId.clearValidators();
+      this.form.controls.modelCategoryId.clearValidators();
     }
     this.form.controls.modelTypeId.updateValueAndValidity();
-    this.form.controls.itemCategoryId.updateValueAndValidity();
+    this.form.controls.modelCategoryId.updateValueAndValidity();
     this.form.updateValueAndValidity();
   }
 }
