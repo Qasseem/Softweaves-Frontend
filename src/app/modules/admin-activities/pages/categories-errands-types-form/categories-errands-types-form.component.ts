@@ -53,7 +53,7 @@ export class CategoriesErrandTypesFormComponent implements OnInit, OnDestroy {
       id: [null],
     });
 
-    // this.getCategoriesErrandType();
+    this.getCategoriesErrandType();
     this.getCategoryDropDown();
   }
   getCategoryDropDown() {
@@ -62,7 +62,7 @@ export class CategoriesErrandTypesFormComponent implements OnInit, OnDestroy {
       .pipe(takeWhile(() => this.alive))
       .subscribe((resp) => {
         if (resp.success) {
-          this.itemscategoriesLists = resp.data;
+          // this.itemscategoriesLists = resp.data;
           this.categoriesLists = resp.data;
         }
       });
@@ -86,16 +86,16 @@ export class CategoriesErrandTypesFormComponent implements OnInit, OnDestroy {
       });
   }
 
-  // getCategoriesErrandType() {
-  //   this.service
-  //     .getCategoriesFixed()
-  //     .pipe(takeWhile(() => this.alive))
-  //     .subscribe((resp) => {
-  //       if (resp.success) {
-  //         this.categoriesLists = resp.data;
-  //       }
-  //     });
-  // }
+  getCategoriesErrandType() {
+    this.service
+      .getCategoriesFixed()
+      .pipe(takeWhile(() => this.alive))
+      .subscribe((resp) => {
+        if (resp.success) {
+          this.itemscategoriesLists = resp.data;
+        }
+      });
+  }
   getItemDetails() {
     this.service
       .GetCategoriesErrandsTypesDetails(this.id)
