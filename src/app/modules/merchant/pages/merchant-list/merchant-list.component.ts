@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ActionsInterface } from 'src/app/core/shared/core/modules/table/models/actions.interface';
+import {
+  ActionsInterface,
+  ActionsTypeEnum,
+} from 'src/app/core/shared/core/modules/table/models/actions.interface';
 import {
   HTTPMethods,
   SearchInputTypes,
@@ -235,4 +238,20 @@ export class MerchantListComponent implements OnInit {
     const URL = `main/merchant/details/${row?.id}`;
     return URL;
   }
+
+  public gridActionsList: ActionsInterface[] = [
+    {
+      name: 'Bulk update',
+      icon: 'pi pi-chart-bar',
+      permission: 'merchants-all-merchants-edit',
+      call: (row: any) => this.bulkAdd(row),
+      type: ActionsTypeEnum.File,
+      uploadFileData: {
+        url: '/Merchant/ImportToUpdate',
+        header: 'Update Bulk Mwerchants',
+        templateName: 'Import Update Device.xlsx',
+      },
+    },
+  ];
+  bulkAdd(row: any): any {}
 }

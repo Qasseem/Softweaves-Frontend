@@ -1,6 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ActionsInterface } from 'src/app/core/shared/core/modules/table/models/actions.interface';
+import {
+  ActionsInterface,
+  ActionsTypeEnum,
+} from 'src/app/core/shared/core/modules/table/models/actions.interface';
 import {
   HTTPMethods,
   SearchInputTypes,
@@ -303,4 +306,19 @@ export class TerminalListComponent implements OnInit, OnDestroy {
   navigateToAdd() {
     this.router.navigate(['main/terminal/add']);
   }
+  public gridActionsList: ActionsInterface[] = [
+    {
+      name: 'Bulk update',
+      icon: 'pi pi-chart-bar',
+      permission: 'terminals-all-terminals-edit',
+      call: (row: any) => this.bulkAdd(row),
+      type: ActionsTypeEnum.File,
+      uploadFileData: {
+        url: '/Merchant/ImportToUpdate',
+        header: 'Update Bulk Terminals',
+        templateName: 'Import Update Device.xlsx',
+      },
+    },
+  ];
+  bulkAdd(row: any): any {}
 }
