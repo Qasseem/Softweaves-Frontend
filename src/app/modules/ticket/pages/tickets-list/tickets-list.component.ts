@@ -131,7 +131,6 @@ export class TicketsListComponent implements OnInit, OnDestroy {
         this.filters.find((x) => x.field == 'errandType').ddlData = [
           ...res?.data,
         ];
-        console.log(this.errandTypes);
       }
     });
   }
