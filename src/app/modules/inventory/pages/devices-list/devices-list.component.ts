@@ -32,6 +32,8 @@ export class DevicesListComponent implements OnInit {
   rowData: any;
   warehouseId: any;
   warehousesList = [];
+  canReviewCancellation = true;
+  canReviewDelivery = true;
   constructor(
     private router: Router,
     public authService: AuthService,
@@ -58,6 +60,17 @@ export class DevicesListComponent implements OnInit {
     if (!this.authService.hasPermission('inventory-devices-add')) {
       this.tableBtns.showImport = false;
     }
+
+    if (
+      !this.authService.hasPermission('inventory-devices-reviewcancellation')
+    ) {
+      this.canReviewCancellation = false;
+    }
+
+    if (!this.authService.hasPermission('inventory-devices-reviewdelivery')) {
+      this.canReviewDelivery = false;
+    }
+
     this.getConditionDropDown();
     this.getWarehouseDropDown();
   }
@@ -297,32 +310,36 @@ export class DevicesListComponent implements OnInit {
       customPermission: (row: any) => this.showBlock,
     },
     {
-      name: 'Approve',
-      icon: 'pi pi-file-check',
+      name: 'Approve Installation',
+      icon: 'pi pi-verified',
       call: (row: any) => this.takeDecision(row, true),
       customPermission: (row: any) =>
-        row.statusId == DeviceStatusEnum.InDeliveryPhase,
+        row.statusId == DeviceStatusEnum.InDeliveryPhase &&
+        this.canReviewDelivery,
     },
     {
-      name: 'Reject',
-      icon: 'pi pi-file-check',
+      name: 'Reject Installation',
+      icon: 'pi pi-ban',
       call: (row: any) => this.takeDecision(row, false),
       customPermission: (row: any) =>
-        row.statusId == DeviceStatusEnum.InDeliveryPhase,
+        row.statusId == DeviceStatusEnum.InDeliveryPhase &&
+        this.canReviewDelivery,
     },
     {
       name: 'Approve Cancellation',
-      icon: 'pi pi-file-check',
+      icon: 'pi pi-undo',
       call: (row: any) => this.takeCancellationDecision(row, true),
       customPermission: (row: any) =>
-        row.statusId == DeviceStatusEnum.InCancellationPhase,
+        row.statusId == DeviceStatusEnum.InCancellationPhase &&
+        this.canReviewCancellation,
     },
     {
       name: 'Reject Cancellation',
-      icon: 'pi pi-file-check',
+      icon: 'pi pi-ban',
       call: (row: any) => this.takeCancellationDecision(row, false),
       customPermission: (row: any) =>
-        row.statusId == DeviceStatusEnum.InCancellationPhase,
+        row.statusId == DeviceStatusEnum.InCancellationPhase &&
+        this.canReviewCancellation,
     },
   ];
   public gridActionsList: ActionsInterface[] = [
@@ -445,11 +462,11 @@ export class DevicesListComponent implements OnInit {
       .subscribe((resp) => {
         if (resp.success) {
           this.rowData.statusName = this.isApproved
-            ? 'Installed'
-            : 'Spare With Agent';
+            ? 'In Warehouse'
+            : 'Installed';
           this.rowData.statusId = this.rowData.statusId = this.isApproved
-            ? DeviceStatusEnum.Installed
-            : DeviceStatusEnum.SpareWithAgent;
+            ? DeviceStatusEnum.InWarehouse
+            : DeviceStatusEnum.Installed;
           this.showCancellationDecisionDialog = false;
           this.conditionId = null;
         }
