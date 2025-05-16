@@ -442,7 +442,8 @@ export class SearchBarComponent implements OnInit, OnChanges, AfterViewInit {
     this.convertObjToArray();
   }
 
-  getSelectedData(event, ctrlName) {
+  getSelectedData(event, ctrl) {
+    ctrl?.onSelect(event?.value);
     if (event) {
       let propValue = '';
       if (Array.isArray(event?.value)) {
@@ -457,7 +458,9 @@ export class SearchBarComponent implements OnInit, OnChanges, AfterViewInit {
           ? (propValue = event?.value?.nameEn)
           : (propValue = event?.value?.nameAr);
       }
-      this.formValueDictionary[ctrlName] = propValue ? propValue : event.value;
+      this.formValueDictionary[ctrl?.field] = propValue
+        ? propValue
+        : event.value;
     }
   }
   getInputData(value, ctrlName) {

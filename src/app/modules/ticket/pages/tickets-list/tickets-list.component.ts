@@ -103,6 +103,9 @@ export function checkDates(
   styleUrls: ['./tickets-list.component.scss'],
 })
 export class TicketsListComponent implements OnInit, OnDestroy {
+  getErrandType(item: any): any {}
+  errandTypes = [];
+
   navigateToComplete(row: any): any {
     let id = row?.ticketId;
     this.router.navigate([`main/ticket/complete/${id}`]);
@@ -119,6 +122,18 @@ export class TicketsListComponent implements OnInit, OnDestroy {
   cloneItem(row: any): any {
     const URL = `main/ticket/clone/${row?.ticketId}`;
     this.router.navigate([URL]);
+  }
+
+  GetErrandTypeDropDown() {
+    this.service.GetErrandTypeDropDown().subscribe((res: any) => {
+      if (res.success) {
+        this.errandTypes = res.data;
+        this.filters.find((x) => x.field == 'errandType').ddlData = [
+          ...res?.data,
+        ];
+        console.log(this.errandTypes);
+      }
+    });
   }
   blockItem(row: any): any {
     const isBlock = !row.isBlock;
@@ -337,23 +352,22 @@ export class TicketsListComponent implements OnInit, OnDestroy {
       propValueName: 'id',
     },
     {
-      isMultiple: false,
+      isMultiple: true,
       type: SearchInputTypes.select,
       field: 'category',
       isFixed: true,
       url: '/Ticket/GetTicketCategory',
       method: HTTPMethods.getReq,
       propValueName: 'id',
+      onSelect: (item) => this.getErrandType(item),
     },
     {
       isMultiple: true,
       type: SearchInputTypes.select,
       field: 'errandType',
       isFixed: true,
-      url: '/Ticket/GetCategoryErrandTypes',
-      method: HTTPMethods.getReq,
+      ddlData: [],
       propValueName: 'id',
-      header: '1',
     },
     {
       isMultiple: false,
@@ -487,6 +501,7 @@ export class TicketsListComponent implements OnInit, OnDestroy {
       },
       { validators: checkDates('startDate', 'endDate') }
     );
+    this.GetErrandTypeDropDown();
   }
   recurrenceTypes = [];
 

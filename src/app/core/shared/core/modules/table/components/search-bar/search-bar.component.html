@@ -290,7 +290,7 @@
                       [optionValue]="'id'"
                       optionLabel="nameEn"
                       appendTo="body"
-                      (onChange)="getSelectedData($event, ctrl.field)"
+                      (onChange)="getSelectedData($event, ctrl)"
                       placeholder="Select"
                       filter="true"
                     />
@@ -301,7 +301,7 @@
                       [optionValue]="'id'"
                       optionLabel="nameEn"
                       appendTo="body"
-                      (onChange)="getSelectedData($event, ctrl.field)"
+                      (onChange)="getSelectedData($event, ctrl)"
                       placeholder="Select"
                       [filterBy]="'searchKey'"
                     />
@@ -329,7 +329,7 @@
                         ctrl.ddlPosition ? ctrl.ddlPosition : 'auto'
                       "
                       [multipleSelectCount]="1"
-                      (dataChange)="getSelectedData($event, ctrl.field)"
+                      (dataChange)="getSelectedData($event, ctrl)"
                       [relativeTo]="'.p-overlaypanel-content'"
                       [showArabicName]="!ctrl.ddlHideArabicName"
                       [isMultiple]="ctrl.isMultiple"
@@ -363,7 +363,7 @@
                       [optionValue]="'id'"
                       optionLabel="nameEn"
                       appendTo="body"
-                      (onChange)="getSelectedData($event, ctrl.field)"
+                      (onChange)="getSelectedData($event, ctrl)"
                       placeholder="Select"
                       filter="true"
                     />
@@ -374,7 +374,7 @@
                       [optionValue]="'id'"
                       optionLabel="nameEn"
                       appendTo="body"
-                      (onChange)="getSelectedData($event, ctrl.field)"
+                      (onChange)="getSelectedData($event, ctrl)"
                       placeholder="Select"
                       [filterBy]="ctrl?.filter ? ctrl.filterBy : 'id'"
                     />

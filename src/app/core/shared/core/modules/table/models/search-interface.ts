@@ -28,4 +28,5 @@ export interface SearchInterface {
   filter?: boolean;
   filterBy?: string;
   hidden?: boolean;
+  onSelect?: (row?: any) => any;
 }
