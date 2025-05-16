@@ -316,7 +316,7 @@ export class TerminalListComponent implements OnInit, OnDestroy {
       uploadFileData: {
         url: '/Merchant/ImportToUpdate',
         header: 'Update Bulk Terminals',
-        templateName: 'Import Update Device.xlsx',
+        templateName: 'ImportTerminalSample.xlsx',
       },
     },
   ];

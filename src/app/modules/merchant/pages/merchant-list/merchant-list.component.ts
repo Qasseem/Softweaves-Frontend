@@ -249,7 +249,7 @@ export class MerchantListComponent implements OnInit {
       uploadFileData: {
         url: '/Merchant/ImportToUpdate',
         header: 'Update Bulk Mwerchants',
-        templateName: 'Import Update Device.xlsx',
+        templateName: 'ImportMerchantSample.xlsx',
       },
     },
   ];
