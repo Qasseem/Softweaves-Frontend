@@ -314,7 +314,7 @@ export class TerminalListComponent implements OnInit, OnDestroy {
       call: (row: any) => this.bulkAdd(row),
       type: ActionsTypeEnum.File,
       uploadFileData: {
-        url: '/Merchant/ImportToUpdate',
+        url: '/Terminal/ImportToUpdate',
         header: 'Update Bulk Terminals',
         templateName: 'ImportTerminalSample.xlsx',
       },
