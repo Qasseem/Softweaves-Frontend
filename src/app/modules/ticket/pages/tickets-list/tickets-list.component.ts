@@ -337,13 +337,23 @@ export class TicketsListComponent implements OnInit, OnDestroy {
       propValueName: 'id',
     },
     {
-      isMultiple: true,
+      isMultiple: false,
       type: SearchInputTypes.select,
       field: 'category',
       isFixed: true,
       url: '/Ticket/GetTicketCategory',
       method: HTTPMethods.getReq,
       propValueName: 'id',
+    },
+    {
+      isMultiple: true,
+      type: SearchInputTypes.select,
+      field: 'errandType',
+      isFixed: true,
+      url: '/Ticket/GetCategoryErrandTypes',
+      method: HTTPMethods.getReq,
+      propValueName: 'id',
+      header: '1',
     },
     {
       isMultiple: false,
@@ -429,13 +439,24 @@ export class TicketsListComponent implements OnInit, OnDestroy {
       method: HTTPMethods.getReq,
       propValueName: 'id',
     },
+    {
+      isMultiple: true,
+      type: SearchInputTypes.selectValue,
+      field: 'completionStatus',
+      ddlData: [
+        { nameEn: 'Succeeded ', id: 1 },
+        { nameEn: 'Failed', id: 2 },
+        { nameEn: 'Hyperred', id: 3 },
+      ],
+      isFixed: true,
+    },
   ];
   viewDetails = true;
   reloadIfUpdated = false;
   weekDays: any[];
   constructor(
     private router: Router,
-    private service: TicketService,
+    public service: TicketService,
     public toaster: ToastService,
     public authService: AuthService,
     private schedule: ScheduleTicketsService,

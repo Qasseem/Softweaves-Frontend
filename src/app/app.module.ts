@@ -60,8 +60,13 @@ export function MSALInstanceFactory(): PublicClientApplication {
       clientId: environment.adConfig.clientId,
       authority: `https://login.microsoftonline.com/${environment.adConfig.tenantId}`,
       knownAuthorities: [`login.microsoftonline.com`],
+<<<<<<< HEAD
       redirectUri: ' https://oc-fsm.paymob.com',
       postLogoutRedirectUri: ' https://oc-fsm.paymob.com',
+=======
+      redirectUri: 'https://uat.softwaves.co',
+      postLogoutRedirectUri: 'https://uat.softwaves.co',
+>>>>>>> origin/sso
     },
     cache: {
       cacheLocation: BrowserCacheLocation.LocalStorage,

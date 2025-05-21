@@ -736,20 +736,10 @@ export class ListComponent implements OnInit, OnDestroy, OnChanges {
   }
   toggleActionBlock(row) {
     const isBlock = !row.isBlock;
-    const action = isBlock ? 'block' : 'unblock';
-    const okText = isBlock ? 'Yes, Block' : 'Yes, Unblock';
-    // this.service
-    //   .confirm(
-    //     `Are you sure you want to ${action} this item?`,
-    //     `${action} Item`,
-    //     okText,
-    //     'No,Cancel'
-    //   )
-    //   .subscribe((response) => {
-    //     if (response) {
-
+    let idLabel = this.service?.idLabel;
+    let id = idLabel ? row[idLabel] : row?.id;
     this.service
-      .Block({ id: row.id, isBlock: isBlock })
+      .Block({ id: id, isBlock: isBlock })
       .pipe(takeWhile(() => this.alive))
       .subscribe((response) => {
         if (response.success) {
@@ -764,12 +754,8 @@ export class ListComponent implements OnInit, OnDestroy, OnChanges {
           if (row.hasOwnProperty('statusEn')) {
             row.statusEn = isBlock ? 'Blocked' : response.data.status;
           }
-          // this.updateActions(row);
-          // this.getTableData();
         }
       });
-    //   }
-    // });
   }
   goToEdit(rowData) {
     let id = '';
