@@ -456,7 +456,7 @@ export class TicketsListComponent implements OnInit, OnDestroy {
   weekDays: any[];
   constructor(
     private router: Router,
-    private service: TicketService,
+    public service: TicketService,
     public toaster: ToastService,
     public authService: AuthService,
     private schedule: ScheduleTicketsService,

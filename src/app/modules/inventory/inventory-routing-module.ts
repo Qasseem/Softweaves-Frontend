@@ -22,6 +22,7 @@ import { ShipmentFormComponent } from './pages/shipment-form/shipment-form.compo
 import { ShipmentDetailsComponent } from './pages/shipment-details/shipment-details.component';
 import { TransferCustodyDetailsComponent } from './pages/transfer-custody-details/transfer-custody-details.component';
 import { TransferCustodySerialsComponent } from './pages/transfer-custody-serials/transfer-custody-serials.component';
+import { ItemsWithoutSerialEmployeeComponent } from './pages/items-without-serial-employee/items-without-serial-employee.component';
 
 const routes: Routes = [
   {
@@ -77,6 +78,13 @@ const routes: Routes = [
       {
         path: 'itemswithoutserial/warehouse/:id',
         component: ItemsWithoutSerialWarehouseComponent,
+        data: {
+          type: 'edit',
+        },
+      },
+      {
+        path: 'itemswithoutserial/employee/:id',
+        component: ItemsWithoutSerialEmployeeComponent,
         data: {
           type: 'edit',
         },

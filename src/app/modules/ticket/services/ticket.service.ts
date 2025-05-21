@@ -10,7 +10,7 @@ export class TicketService {
     private http: HttpService,
     private dialogService: DialogService
   ) {}
-
+  public idLabel = 'ticketId';
   CompleteTicket(value: any) {
     return this.http.postReq('/Ticket/SubmitTaskDecision', value);
   }
