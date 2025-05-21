@@ -61,6 +61,7 @@
       [uploadHeader]="uploadHeader"
       [sampleName]="sampleName"
       [hasCustomFilter]="customFilter"
+      [gridActionsList]="gridActionsList"
     ></oc-search-bar>
   </div>
   <div *ngIf="false" style="margin-bottom: 0" #top class="add-header">
@@ -116,6 +117,7 @@
       [options]="options"
       [noDataText]="noDataText"
       (selected)="getSelected($event)"
+      [modulePageName]="modulePageName"
     ></oc-list>
     <!-- TODO: removed due to check unCheck issue [IC-1477] -->
     <!-- [selectedData]="selectedData" -->

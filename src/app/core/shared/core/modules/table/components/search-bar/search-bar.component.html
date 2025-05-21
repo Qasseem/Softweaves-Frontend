@@ -42,6 +42,30 @@
 
   <div *ngIf="buttonsExistance?.showAllButtons" class="mt-3 mr-3">
     <div style="width: 100%" class="float-right">
+      <div
+        *ngIf="gridActionsList.length"
+        class="float-right ml-3 actions-dialog"
+        (click)="opActions.toggle($event)"
+        style="user-select: none; caret-color: transparent"
+      >
+        <i class="pi pi-ellipsis-v" style="color: #708090"></i>
+      </div>
+      <!-- <p-button class="float-right ml-3" (onClick)="op.toggle($event)" /> -->
+      <p-overlayPanel #opActions>
+        <div class="flex flex-column gap-3 w-12rem">
+          <div
+            class="action-container"
+            *ngFor="let action of gridActionsList"
+            (click)="actionClicked(action)"
+          >
+            <div *ngIf="action?.showAction">
+              <i [class]="action.icon" style="margin-right: 5px"></i>
+              {{ action.name }}
+            </div>
+          </div>
+        </div>
+      </p-overlayPanel>
+
       <button
         *ngIf="buttonsExistance?.showFilter"
         (click)="op.toggle($event)"
@@ -59,6 +83,26 @@
         size="small"
         badgeClass="p-badge-contrast"
         (click)="export()"
+        outlined="true"
+      />
+      <p-button
+        *ngIf="buttonsExistance?.showCustomExport"
+        label="Tickets"
+        class="float-right ml-3"
+        icon="pi pi-download"
+        size="small"
+        badgeClass="p-badge-contrast"
+        (click)="export()"
+        outlined="true"
+      />
+      <p-button
+        *ngIf="buttonsExistance?.showExportDetails"
+        label="Tasks"
+        class="float-right ml-3"
+        icon="pi pi-download"
+        size="small"
+        badgeClass="p-badge-contrast"
+        (click)="exportDetails()"
         outlined="true"
       />
       <p-button
@@ -143,38 +187,41 @@
               class="col-4 mt-3 mb-0 pb-0"
               *ngFor="let ctrl of filterControls"
             >
-              <!-- switch for the type-->
-              <div [ngSwitch]="ctrl.type">
-                <div *ngSwitchCase="'TEXT'">
-                  <div>
-                    <div class="header mb-2">
-                      <span>
-                        {{
-                          ctrl.headerName
-                            ? ("propsNames." + ctrl.headerName | translate)
-                            : ("propsNames." + ctrl.field | translate)
-                        }}
-                        <span
-                          *ngIf="!ctrl.isFixed"
-                          style="color: #c3c3c3; font-size: smaller"
-                          [ngClass]="
-                            !language.isEnglish() ? 'float-left' : 'float-right'
-                          "
-                        >
+              <div [hidden]="ctrl?.hidden">
+                <!-- switch for the type-->
+                <div [ngSwitch]="ctrl.type">
+                  <div *ngSwitchCase="'TEXT'">
+                    <div>
+                      <div class="header mb-2">
+                        <span>
+                          {{
+                            ctrl.headerName
+                              ? ("propsNames." + ctrl.headerName | translate)
+                              : ("propsNames." + ctrl.field | translate)
+                          }}
+                          <span
+                            *ngIf="!ctrl.isFixed"
+                            style="color: #c3c3c3; font-size: smaller"
+                            [ngClass]="
+                              !language.isEnglish()
+                                ? 'float-left'
+                                : 'float-right'
+                            "
+                          >
+                          </span>
                         </span>
-                      </span>
-                    </div>
+                      </div>
 
-                    <input
-                      type="text"
-                      (input)="getInputData($event.target.value, ctrl.field)"
-                      [formControlName]="ctrl.field"
-                      style="background-image: none"
-                      pInputText
-                      class="form-control"
-                      formControlName="text"
-                    />
-                    <!--
+                      <input
+                        type="text"
+                        (input)="getInputData($event.target.value, ctrl.field)"
+                        [formControlName]="ctrl.field"
+                        style="background-image: none"
+                        pInputText
+                        class="form-control"
+                        formControlName="text"
+                      />
+                      <!--
                     <input
                       [mask]="ctrl?.mask"
                       (input)="getInputData($event.target.value, ctrl.field)"
@@ -183,156 +230,45 @@
                       [type]="ctrl.typeInput ? ctrl.typeInput : 'text'"
                       class="form-control"
                     /> -->
-                  </div>
-                  <!-- <oc-input [formControlName]="ctrl.field"></oc-input> -->
-                </div>
-                <div *ngSwitchCase="'NUMBER'">
-                  <div>
-                    <div class="header mb-2">
-                      <span>
-                        {{
-                          ctrl.headerName
-                            ? ("propsNames." + ctrl.headerName | translate)
-                            : ("propsNames." + ctrl.field | translate)
-                        }}
-                        <span
-                          *ngIf="!ctrl.isFixed"
-                          style="color: #c3c3c3; font-size: smaller"
-                          [ngClass]="
-                            !language.isEnglish() ? 'float-left' : 'float-right'
-                          "
-                        >
-                        </span>
-                      </span>
                     </div>
-
-                    <input
-                      [mask]="ctrl?.mask"
-                      (input)="getInputData($event.target.value, ctrl.field)"
-                      [formControlName]="ctrl.field"
-                      style="background-image: none"
-                      [type]="'text'"
-                      class="phone-control"
-                      numbersOnly
-                    />
+                    <!-- <oc-input [formControlName]="ctrl.field"></oc-input> -->
                   </div>
-                  <!-- <oc-input [formControlName]="ctrl.field"></oc-input> -->
-                </div>
+                  <div *ngSwitchCase="'NUMBER'">
+                    <div>
+                      <div class="header mb-2">
+                        <span>
+                          {{
+                            ctrl.headerName
+                              ? ("propsNames." + ctrl.headerName | translate)
+                              : ("propsNames." + ctrl.field | translate)
+                          }}
+                          <span
+                            *ngIf="!ctrl.isFixed"
+                            style="color: #c3c3c3; font-size: smaller"
+                            [ngClass]="
+                              !language.isEnglish()
+                                ? 'float-left'
+                                : 'float-right'
+                            "
+                          >
+                          </span>
+                        </span>
+                      </div>
 
-                <div *ngSwitchCase="'SELECT'">
-                  <div class="header mb-2">
-                    <span>
-                      {{ "propsNames." + ctrl.field | translate }}
-                      <span
-                        *ngIf="!ctrl.isFixed"
-                        style="color: #c3c3c3; font-size: smaller"
-                        [ngClass]="
-                          !language.isEnglish() ? 'float-left' : 'float-right'
-                        "
-                      >
-                      </span>
-                    </span>
-                  </div>
-
-                  <p-dropdown
-                    *ngIf="!ctrl.isMultiple"
-                    [formControlName]="ctrl.field"
-                    [options]="ctrl.ddlData"
-                    [optionValue]="'id'"
-                    optionLabel="nameEn"
-                    appendTo="body"
-                    (onChange)="getSelectedData($event, ctrl.field)"
-                    placeholder="Select"
-                    filter="true"
-                  />
-                  <p-multiSelect
-                    *ngIf="ctrl.isMultiple"
-                    [formControlName]="ctrl.field"
-                    [options]="ctrl.ddlData"
-                    [optionValue]="'id'"
-                    optionLabel="nameEn"
-                    appendTo="body"
-                    (onChange)="getSelectedData($event, ctrl.field)"
-                    placeholder="Select"
-                    [filterBy]="'searchKey'"
-                  />
-                </div>
-
-                <div *ngSwitchCase="'CHOICE'">
-                  <div class="header mb-2">
-                    <span>
-                      {{ "propsNames." + ctrl.field | translate }}
-                      <span
-                        *ngIf="!ctrl.isFixed"
-                        style="color: #c3c3c3; font-size: smaller"
-                        [ngClass]="
-                          !language.isEnglish() ? 'float-left' : 'float-right'
-                        "
-                      >
-                      </span>
-                    </span>
-                  </div>
-                  <oc-ddl
-                    *ngIf="ctrl.serverSide"
-                    [id]="ctrl.propValueName ? ctrl.propValueName : 'id'"
-                    [url]="ctrl.url"
-                    [dropdownPosition]="
-                      ctrl.ddlPosition ? ctrl.ddlPosition : 'auto'
-                    "
-                    [multipleSelectCount]="1"
-                    (dataChange)="getSelectedData($event, ctrl.field)"
-                    [relativeTo]="'.p-overlaypanel-content'"
-                    [showArabicName]="!ctrl.ddlHideArabicName"
-                    [isMultiple]="ctrl.isMultiple"
-                    [controlName]="ctrl.field"
-                    [form]="filtersForm"
-                    [isHideSelected]="false"
-                    [pageSize]="ctrl.pageSize ? ctrl.pageSize : 10"
-                  >
-                  </oc-ddl>
-                </div>
-
-                <div *ngSwitchCase="'SELECTVALUE'">
-                  <div class="header mb-2">
-                    <span>
-                      {{ "propsNames." + ctrl.field | translate }}
-                      <span
-                        *ngIf="!ctrl.isFixed"
-                        style="color: #c3c3c3; font-size: smaller"
-                        [ngClass]="
-                          !language.isEnglish() ? 'float-left' : 'float-right'
-                        "
-                      >
-                      </span>
-                    </span>
+                      <input
+                        [mask]="ctrl?.mask"
+                        (input)="getInputData($event.target.value, ctrl.field)"
+                        [formControlName]="ctrl.field"
+                        style="background-image: none"
+                        [type]="'text'"
+                        class="phone-control"
+                        numbersOnly
+                      />
+                    </div>
+                    <!-- <oc-input [formControlName]="ctrl.field"></oc-input> -->
                   </div>
 
-                  <p-dropdown
-                    *ngIf="!ctrl.isMultiple"
-                    [formControlName]="ctrl.field"
-                    [options]="ctrl.ddlData"
-                    [optionValue]="'id'"
-                    optionLabel="nameEn"
-                    appendTo="body"
-                    (onChange)="getSelectedData($event, ctrl.field)"
-                    placeholder="Select"
-                    filter="true"
-                  />
-                  <p-multiSelect
-                    *ngIf="ctrl.isMultiple"
-                    [formControlName]="ctrl.field"
-                    [options]="ctrl.ddlData"
-                    [optionValue]="'id'"
-                    optionLabel="nameEn"
-                    appendTo="body"
-                    (onChange)="getSelectedData($event, ctrl.field)"
-                    placeholder="Select"
-                    [filterBy]="ctrl?.filter ? ctrl.filterBy : 'id'"
-                  />
-                </div>
-
-                <div *ngSwitchCase="'RANGE'">
-                  <div>
+                  <div *ngSwitchCase="'SELECT'">
                     <div class="header mb-2">
                       <span>
                         {{ "propsNames." + ctrl.field | translate }}
@@ -347,96 +283,211 @@
                       </span>
                     </div>
 
-                    <div class="row m-0 p-0">
-                      <div class="col-6 m-0 p-0">
-                        <div class="input-group mb-3">
-                          <div class="input-group-prepend">
-                            <span
+                    <p-dropdown
+                      *ngIf="!ctrl.isMultiple"
+                      [formControlName]="ctrl.field"
+                      [options]="ctrl.ddlData"
+                      [optionValue]="'id'"
+                      optionLabel="nameEn"
+                      appendTo="body"
+                      (onChange)="getSelectedData($event, ctrl.field)"
+                      placeholder="Select"
+                      filter="true"
+                    />
+                    <p-multiSelect
+                      *ngIf="ctrl.isMultiple"
+                      [formControlName]="ctrl.field"
+                      [options]="ctrl.ddlData"
+                      [optionValue]="'id'"
+                      optionLabel="nameEn"
+                      appendTo="body"
+                      (onChange)="getSelectedData($event, ctrl.field)"
+                      placeholder="Select"
+                      [filterBy]="'searchKey'"
+                    />
+                  </div>
+
+                  <div *ngSwitchCase="'CHOICE'">
+                    <div class="header mb-2">
+                      <span>
+                        {{ "propsNames." + ctrl.field | translate }}
+                        <span
+                          *ngIf="!ctrl.isFixed"
+                          style="color: #c3c3c3; font-size: smaller"
+                          [ngClass]="
+                            !language.isEnglish() ? 'float-left' : 'float-right'
+                          "
+                        >
+                        </span>
+                      </span>
+                    </div>
+                    <oc-ddl
+                      *ngIf="ctrl.serverSide"
+                      [id]="ctrl.propValueName ? ctrl.propValueName : 'id'"
+                      [url]="ctrl.url"
+                      [dropdownPosition]="
+                        ctrl.ddlPosition ? ctrl.ddlPosition : 'auto'
+                      "
+                      [multipleSelectCount]="1"
+                      (dataChange)="getSelectedData($event, ctrl.field)"
+                      [relativeTo]="'.p-overlaypanel-content'"
+                      [showArabicName]="!ctrl.ddlHideArabicName"
+                      [isMultiple]="ctrl.isMultiple"
+                      [controlName]="ctrl.field"
+                      [form]="filtersForm"
+                      [isHideSelected]="false"
+                      [pageSize]="ctrl.pageSize ? ctrl.pageSize : 10"
+                    >
+                    </oc-ddl>
+                  </div>
+
+                  <div *ngSwitchCase="'SELECTVALUE'">
+                    <div class="header mb-2">
+                      <span>
+                        {{ "propsNames." + ctrl.field | translate }}
+                        <span
+                          *ngIf="!ctrl.isFixed"
+                          style="color: #c3c3c3; font-size: smaller"
+                          [ngClass]="
+                            !language.isEnglish() ? 'float-left' : 'float-right'
+                          "
+                        >
+                        </span>
+                      </span>
+                    </div>
+
+                    <p-dropdown
+                      *ngIf="!ctrl.isMultiple"
+                      [formControlName]="ctrl.field"
+                      [options]="ctrl.ddlData"
+                      [optionValue]="'id'"
+                      optionLabel="nameEn"
+                      appendTo="body"
+                      (onChange)="getSelectedData($event, ctrl.field)"
+                      placeholder="Select"
+                      filter="true"
+                    />
+                    <p-multiSelect
+                      *ngIf="ctrl.isMultiple"
+                      [formControlName]="ctrl.field"
+                      [options]="ctrl.ddlData"
+                      [optionValue]="'id'"
+                      optionLabel="nameEn"
+                      appendTo="body"
+                      (onChange)="getSelectedData($event, ctrl.field)"
+                      placeholder="Select"
+                      [filterBy]="ctrl?.filter ? ctrl.filterBy : 'id'"
+                    />
+                  </div>
+
+                  <div *ngSwitchCase="'RANGE'">
+                    <div>
+                      <div class="header mb-2">
+                        <span>
+                          {{ "propsNames." + ctrl.field | translate }}
+                          <span
+                            *ngIf="!ctrl.isFixed"
+                            style="color: #c3c3c3; font-size: smaller"
+                            [ngClass]="
+                              !language.isEnglish()
+                                ? 'float-left'
+                                : 'float-right'
+                            "
+                          >
+                          </span>
+                        </span>
+                      </div>
+
+                      <div class="row m-0 p-0">
+                        <div class="col-6 m-0 p-0">
+                          <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                              <span
+                                [ngClass]="
+                                  language.isEnglish()
+                                    ? 'radius-left'
+                                    : 'radius-right'
+                                "
+                                class="input-group-text m-0 p-1 no-radius"
+                                id="basic-addon1"
+                                >From</span
+                              >
+                            </div>
+                            <input
+                              [formControlName]="ctrl.field + 'From'"
+                              numbersOnly
+                              (input)="
+                                getInputRangeData(
+                                  $event.target.value,
+                                  ctrl.field,
+                                  'from'
+                                )
+                              "
+                              type="text"
+                              class="form-control no-radius"
+                              aria-label="Username"
+                              aria-describedby="basic-addon1"
+                            />
+                          </div>
+                        </div>
+                        <div class="col-6 m-0 p-0">
+                          <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                              <span
+                                class="input-group-text m-0 p-1 no-radius"
+                                id="basic-addon1"
+                                >To</span
+                              >
+                            </div>
+                            <input
+                              (input)="
+                                getInputRangeData(
+                                  $event.target.value,
+                                  ctrl.field,
+                                  'to'
+                                )
+                              "
+                              [formControlName]="ctrl.field + 'To'"
+                              numbersOnly
+                              type="text"
+                              class="form-control no-radius"
                               [ngClass]="
-                                language.isEnglish()
+                                !language.isEnglish()
                                   ? 'radius-left'
                                   : 'radius-right'
                               "
-                              class="input-group-text m-0 p-1 no-radius"
-                              id="basic-addon1"
-                              >From</span
-                            >
+                              aria-label="Username"
+                              aria-describedby="basic-addon1"
+                            />
                           </div>
-                          <input
-                            [formControlName]="ctrl.field + 'From'"
-                            numbersOnly
-                            (input)="
-                              getInputRangeData(
-                                $event.target.value,
-                                ctrl.field,
-                                'from'
-                              )
-                            "
-                            type="text"
-                            class="form-control no-radius"
-                            aria-label="Username"
-                            aria-describedby="basic-addon1"
-                          />
-                        </div>
-                      </div>
-                      <div class="col-6 m-0 p-0">
-                        <div class="input-group mb-3">
-                          <div class="input-group-prepend">
-                            <span
-                              class="input-group-text m-0 p-1 no-radius"
-                              id="basic-addon1"
-                              >To</span
-                            >
-                          </div>
-                          <input
-                            (input)="
-                              getInputRangeData(
-                                $event.target.value,
-                                ctrl.field,
-                                'to'
-                              )
-                            "
-                            [formControlName]="ctrl.field + 'To'"
-                            numbersOnly
-                            type="text"
-                            class="form-control no-radius"
-                            [ngClass]="
-                              !language.isEnglish()
-                                ? 'radius-left'
-                                : 'radius-right'
-                            "
-                            aria-label="Username"
-                            aria-describedby="basic-addon1"
-                          />
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                <div *ngSwitchCase="'DATE'">
-                  <div class="header mb-2">
-                    <span>
-                      {{ "propsNames." + ctrl.field | translate }}
+                  <div *ngSwitchCase="'DATE'">
+                    <div class="header mb-2">
+                      <span>
+                        {{ "propsNames." + ctrl.field | translate }}
 
-                      <span
-                        *ngIf="!ctrl.isFixed"
-                        style="color: #c3c3c3; font-size: smaller"
-                        [ngClass]="
-                          !language.isEnglish() ? 'float-left' : 'float-right'
-                        "
-                      >
+                        <span
+                          *ngIf="!ctrl.isFixed"
+                          style="color: #c3c3c3; font-size: smaller"
+                          [ngClass]="
+                            !language.isEnglish() ? 'float-left' : 'float-right'
+                          "
+                        >
+                        </span>
                       </span>
-                    </span>
-                  </div>
+                    </div>
 
-                  <p-calendar
-                    [formControlName]="ctrl.field"
-                    selectionMode="range"
-                    appendTo="body"
-                    [readonlyInput]="true"
-                  />
-                  <!-- <input
+                    <p-calendar
+                      [formControlName]="ctrl.field"
+                      selectionMode="range"
+                      appendTo="body"
+                      [readonlyInput]="true"
+                    />
+                    <!-- <input
                     (dateTimeChange)="
                       getDateData($event.value, ctrl.field, ctrl.pickerType)
                     "
@@ -453,7 +504,7 @@
                         : 'range'
                     "
                   /> -->
-                  <!-- <div
+                    <!-- <div
                     style="color: #969696; font-size: 14px; padding-top: 25px"
                     class="icon-claender"
                     [ngClass]="{
@@ -484,6 +535,7 @@
                     "
                     #dt1
                   ></owl-date-time> -->
+                  </div>
                 </div>
               </div>
             </div>

@@ -27,4 +27,5 @@ export interface SearchInterface {
   pageSize?: Number;
   filter?: boolean;
   filterBy?: string;
+  hidden?: boolean;
 }

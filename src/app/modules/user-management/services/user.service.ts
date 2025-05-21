@@ -60,6 +60,10 @@ export class UserService {
     return this.http.postReq('/User/Block', data);
   }
 
+  getAllSystemUserDropDown() {
+    return this.http.getReq('/User/GetAllSystemUserDropDown');
+  }
+
   confirm(
     msg: string = 'messages.block-item-content',
     title: string = 'messages.block-item-title',

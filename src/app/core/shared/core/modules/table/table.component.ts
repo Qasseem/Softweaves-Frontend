@@ -68,6 +68,8 @@ export class TableComponent implements OnInit, OnDestroy {
   @Input() sampleName = '';
   @Input() service: any;
   @Input() customFilter: boolean = false;
+  @Input() modulePageName = '';
+  @Input() gridActionsList: ActionsInterface[] = [];
 
   first = 0;
 

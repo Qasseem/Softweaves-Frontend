@@ -189,12 +189,14 @@ export class TicketsListComponent implements OnInit, OnDestroy {
   public tableBtns: TableButtonsExistanceInterface = {
     showAllButtons: true,
     showAdd: true,
-    showExport: true,
+    showExport: false,
     showFilter: true,
     showImport: false,
     showImportVisit: true,
     showImportCancellation: true,
     showChangeStatus: true,
+    showExportDetails: true,
+    showCustomExport: true,
   };
   public columns: ColumnsInterface[] = [
     {

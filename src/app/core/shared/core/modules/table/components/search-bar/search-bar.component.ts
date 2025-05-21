@@ -1,5 +1,7 @@
 import {
+  AfterViewInit,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
@@ -27,13 +29,18 @@ import {
   TableUrlInterface,
 } from '../../models/table-url.interface';
 import { ToastService } from 'src/app/core/services/toaster.service';
+import {
+  ActionsInterface,
+  ActionsTypeEnum,
+} from '../../models/actions.interface';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'oc-search-bar',
   templateUrl: './search-bar.component.html',
   styleUrls: ['./search-bar.component.sass'],
 })
-export class SearchBarComponent implements OnInit, OnChanges {
+export class SearchBarComponent implements OnInit, OnChanges, AfterViewInit {
   @ViewChild('op') mySearchDialog: any;
   apis: any;
   InputSearch$ = new Subject<string>();
@@ -61,6 +68,8 @@ export class SearchBarComponent implements OnInit, OnChanges {
   @Input() taskSearchHistoryObj = {};
   @Input() sampleName = '';
   @Input() hasCustomFilter: boolean = false;
+  @Input() gridActionsList: ActionsInterface[] = [];
+
   filtersForm: UntypedFormGroup;
   filterControls;
   unPinnedControls;
@@ -80,19 +89,31 @@ export class SearchBarComponent implements OnInit, OnChanges {
   taskListFormData: any;
   fileToUpload: any;
 
+  clickedAction: ActionsInterface;
+
+  openFileDialog(action: ActionsInterface) {
+    this.clickedAction = action;
+    this.uploadHeader = action.uploadFileData.header;
+    this.sampleName = action.uploadFileData.templateName;
+    this.url.import = action.uploadFileData.url;
+    this.visible = true;
+  }
+
   constructor(
     public language: AppTranslateService,
     private tableCoreService: TableCoreService,
     private router: Router,
     private route: ActivatedRoute,
     private searchFilterService: SearchFilterService,
-    private toaster: ToastService
+    private toaster: ToastService,
+    public authService: AuthService
   ) {
     this.moduleReference = ModulesReferencesEnum[this.router.url.split('/')[2]];
 
     // create a empty FormGroup
     this.filtersForm = new UntypedFormGroup({});
   }
+  ngAfterViewInit(): void {}
 
   //this method is for task module history search
   ngOnChanges(changes: SimpleChanges): void {
@@ -110,28 +131,36 @@ export class SearchBarComponent implements OnInit, OnChanges {
     }
   }
   ngOnInit() {
-    // //check if there is any history for the activated page
-    // if (this.tableCoreService.gridSearchHistory[this.router.url]) {
-    //   //assign the search ker if exist in history obj
-    //   this.inputTextHistoryValue =
-    //     this.tableCoreService.gridSearchHistory[this.router.url].searchKey;
-    //   //check if there is any toolTip data in search history obj
-    //   if (
-    //     this.tableCoreService.gridSearchHistory[this.router.url].search
-    //       .toolTipData
-    //   ) {
-    //     //assign the tool tip data if exist in history obj
-    //     this.formHistoryData = this.formValueDictionaryTooltip =
-    //       this.tableCoreService.gridSearchHistory[this.router.url].search;
-    //     this.formValueDictionaryTooltip =
-    //       this.tableCoreService.gridSearchHistory[
-    //         this.router.url
-    //       ].search.toolTipData;
-    //     this.convertObjToArray();
-    //   }
-    // }
+    //check if there is any history for the activated page
+    if (this.tableCoreService.gridSearchHistory[this.router.url]) {
+      //assign the search ker if exist in history obj
+      this.inputTextHistoryValue =
+        this.tableCoreService.gridSearchHistory[this.router.url].searchKey;
+      //check if there is any toolTip data in search history obj
+      if (
+        this.tableCoreService.gridSearchHistory[this.router.url].search
+          .toolTipData
+      ) {
+        //assign the tool tip data if exist in history obj
+        this.formHistoryData = this.formValueDictionaryTooltip =
+          this.tableCoreService.gridSearchHistory[this.router.url].search;
+        this.formValueDictionaryTooltip =
+          this.tableCoreService.gridSearchHistory[
+            this.router.url
+          ].search.toolTipData;
+        this.convertObjToArray();
+      }
+    }
 
     this.searchOnType();
+    this.checkActionPermissions();
+  }
+  checkActionPermissions() {
+    if (this.gridActionsList.length > 0) {
+      this.gridActionsList.forEach((action) => {
+        action.showAction = this.authService.hasPermission(action.permission);
+      });
+    }
   }
   getDDLData(item) {
     let targetedApi;
@@ -218,6 +247,7 @@ export class SearchBarComponent implements OnInit, OnChanges {
       if (this.hasThreeFields(this.filtersInput, 'region', 'city', 'zone')) {
         this.filtersForm.get('region').valueChanges.subscribe({
           next: (val) => {
+            this.filtersForm.get('city').setValue(null);
             if (val) {
               const item = this.filtersInput.find((x) => x.field == 'city');
               if (item) {
@@ -227,17 +257,22 @@ export class SearchBarComponent implements OnInit, OnChanges {
             }
           },
         });
-        this.filtersForm.get('city').valueChanges.subscribe({
-          next: (val) => {
-            if (val) {
-              const item = this.filtersInput.find((x) => x.field == 'zone');
-              if (item) {
-                item.header = !Array.isArray(val) ? val : '0';
-                this.getDDLData(item);
+        let isZoneHidden = this.filtersInput.find(
+          (x) => x.field == 'zone'
+        )?.hidden;
+        if (!isZoneHidden) {
+          this.filtersForm.get('city').valueChanges.subscribe({
+            next: (val) => {
+              if (val) {
+                const item = this.filtersInput.find((x) => x.field == 'zone');
+                if (item) {
+                  item.header = !Array.isArray(val) ? val : '0';
+                  this.getDDLData(item);
+                }
               }
-            }
-          },
-        });
+            },
+          });
+        }
       }
     }
   }
@@ -386,6 +421,10 @@ export class SearchBarComponent implements OnInit, OnChanges {
     this.InputSearch$.pipe(debounceTime(700), distinctUntilChanged()).subscribe(
       (searchValue) => {
         this.emitSearchKeyValue.emit(searchValue);
+        if (this.url.refScope && this.url.refId) {
+          this.tableCoreService.refId = parseInt(this.url.refId);
+          this.tableCoreService.refScope = this.url.refScope;
+        }
 
         this.tableCoreService.pageOptions.searchKey = searchValue;
         this.tableCoreService.pageOptions.isSearchFilter = false;
@@ -477,7 +516,7 @@ export class SearchBarComponent implements OnInit, OnChanges {
   inputText(event) {
     this.searchFilterTriggered.emit(true);
     if (event == null || event == '') {
-      // delete this.tableCoreService.gridSearchHistory[this.router.url];
+      delete this.tableCoreService.gridSearchHistory[this.router.url];
     }
   }
   navigateToAdd() {
@@ -494,6 +533,12 @@ export class SearchBarComponent implements OnInit, OnChanges {
   export() {
     if (this.url.export) {
       this.tableCoreService.exportTable(this.url.export).subscribe();
+    }
+  }
+
+  exportDetails() {
+    if (this.url.exportDetails) {
+      this.tableCoreService.exportTable(this.url?.exportDetails).subscribe();
     }
   }
 
@@ -538,8 +583,15 @@ export class SearchBarComponent implements OnInit, OnChanges {
           const message = 'Import Completed Successfully';
           this.toaster.showSuccess(message);
           this.getListData.next(true);
+          if (resp.data) {
+            this.downloadFile(resp.data);
+          }
         }
       });
+  }
+
+  downloadFile(url: string): void {
+    window.open(url, '_blank');
   }
 
   customFilter(value: any, filter: string): boolean {
@@ -548,5 +600,13 @@ export class SearchBarComponent implements OnInit, OnChanges {
 
     // Filter logic based on the bindValue
     return value[bindValue]?.toString().toLowerCase().includes(searchTerm);
+  }
+
+  actionClicked(action: ActionsInterface) {
+    if (action.type == ActionsTypeEnum.File) {
+      this.openFileDialog(action);
+    } else {
+      action.call();
+    }
   }
 }

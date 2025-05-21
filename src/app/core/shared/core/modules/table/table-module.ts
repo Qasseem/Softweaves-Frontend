@@ -11,6 +11,7 @@ import { FormModule } from 'src/app/core/shared/form/form-module';
 import { FileUploadModule } from './components/file-upload/file-upload.module';
 import { IconModule } from 'src/app/modules/shared/inline-svg-icon/icon.module';
 import { OcDdlComponent } from '../../../components/oc-ddl/oc-ddl.component';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @NgModule({
   imports: [
@@ -22,6 +23,7 @@ import { OcDdlComponent } from '../../../components/oc-ddl/oc-ddl.component';
     PrimeNgButtonsModule,
     FileUploadModule,
     OcDdlComponent,
+    ConfirmDialogModule,
     IconModule,
   ],
   declarations: [ListComponent, TableComponent, SearchBarComponent],

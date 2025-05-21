@@ -1,0 +1,102 @@
+<div [formGroup]="form">
+  <div class="p-grid ml-2 m-2">
+    <div class="p-col" style="text-align: right">
+      <span
+        (click)="backToList()"
+        class="mt-2 ml-3 header-left"
+        style="color: #0080f9; cursor: pointer"
+        >Model Types</span
+      >
+      <span class="mt-2 ml-2 mr-2 header-left">></span>
+      <span class="mt-2 header-left"
+        >{{ formType == "add" ? "Add" : "Edit" }} Model Type</span
+      >
+      <p-button
+        class="mr-3 cancel-button"
+        label="Cancel"
+        [text]="true"
+        (click)="backToList()"
+        size="small"
+      />
+
+      <p-button
+        (click)="submit()"
+        [disabled]="!form?.valid"
+        label="{{ formType == 'add' ? 'Add' : 'Save' }}"
+        size="small"
+      >
+      </p-button>
+    </div>
+  </div>
+
+  <hr class="header-divider" />
+
+  <div class="add-form">
+    <form [formGroup]="form">
+      <div class="grid d-flex inputs-div">
+        <div class="col-12 p-0">
+          <div class="p-20 flex flex-wrap">
+            <div class="col-6">
+              <div class="flex flex-column gap-2">
+                <label for="categoryId"
+                  >Model Type Category <span class="p-error"> * </span>
+                </label>
+                <p-dropdown
+                  [options]="categoriesList"
+                  formControlName="categoryId"
+                  [optionValue]="'id'"
+                  optionLabel="nameEn"
+                  filter="true"
+                />
+                <div
+                  *ngIf="
+                    f.categoryId.errors &&
+                    (f.categoryId.dirty || f.categoryId.touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.categoryId.errors.required"
+                  >
+                    Category field is required
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="flex flex-column gap-2">
+                <label for="name"
+                  >Model Type<span class="p-error"> * </span>
+                </label>
+                <input
+                  [ngClass]="{
+                    'ng-invalid ng-dirty':
+                      f.name?.errors?.required || f.name?.errors?.pattern
+                  }"
+                  type="text"
+                  pInputText
+                  formControlName="name"
+                />
+
+                <div
+                  *ngIf="f.name.errors && (f.name.dirty || f.name.touched)"
+                  class="invalid-feedback"
+                >
+                  <div class="fs-10 color-red">
+                    <span *ngIf="f.name.errors.required">
+                      Name EN field is required
+                    </span>
+                    <span *ngIf="f.name.errors.pattern">
+                      Only English letters are allowed.
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

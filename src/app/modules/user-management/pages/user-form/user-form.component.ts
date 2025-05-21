@@ -293,6 +293,9 @@ export class UserFormComponent {
               if (resp.data.rolesIds) {
                 this.form.get('rolesIds').setValue(resp.data.rolesIds);
               }
+              if (this.details.userType == UserTypeEnum.SysytemUser) {
+                this.hideLocationAndServiceTypeAction = true;
+              }
               // this.profileImage = resp.data.imageUrl;
               this.form.get('imageBase64String').patchValue(resp.data.imageUrl);
               this.fileName = 'National ID File';

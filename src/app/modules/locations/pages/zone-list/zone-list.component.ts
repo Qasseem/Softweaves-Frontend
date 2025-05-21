@@ -72,7 +72,7 @@ export class ZoneListComponent {
       type: SearchInputTypes.select,
       field: 'region',
       isFixed: true,
-      url: '/Terminal/GetAllRegions', // Replaced with direct URL
+      url: '/Terminal/GetAllRegions',
       method: HTTPMethods.getReq,
       propValueName: 'id',
     },
@@ -81,10 +81,21 @@ export class ZoneListComponent {
       type: SearchInputTypes.select,
       field: 'city',
       isFixed: true,
-      url: '/Terminal/GetAllCities', // Replaced with direct URL
+      url: '/Terminal/GetAllCities',
       method: HTTPMethods.getReq,
       propValueName: 'id',
       header: '0',
+    },
+    {
+      isMultiple: true,
+      type: SearchInputTypes.select,
+      field: 'zone',
+      isFixed: true,
+      url: '/Terminal/GetAllZones',
+      method: HTTPMethods.getReq,
+      propValueName: 'id',
+      header: '0',
+      hidden: true,
     },
   ];
   showBlock = true;

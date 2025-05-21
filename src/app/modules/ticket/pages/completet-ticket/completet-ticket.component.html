@@ -70,7 +70,7 @@
                     class="ring"
                     [ngStyle]="{
                       'border-color':
-                        item.statusId == 0
+                        item.statusId == 3
                           ? '#E3E7EE'
                           : item.statusId == 1
                           ? 'green'
@@ -87,7 +87,7 @@
                     (click)="openCompleteTaskPopup(item)"
                     class="grid all-right"
                     style="cursor: pointer"
-                    *ngIf="item?.statusId == 0"
+                    *ngIf="item?.statusId == 3"
                   >
                     <span style="color: #005ce8; cursor: pointer">
                       Complete

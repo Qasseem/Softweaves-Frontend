@@ -24,4 +24,6 @@ export interface TableButtonsExistanceInterface {
   showChangeStatus?: boolean;
   showFilter?: boolean;
   showAllButtons: true;
+  showExportDetails?: boolean;
+  showCustomExport?: boolean;
 }

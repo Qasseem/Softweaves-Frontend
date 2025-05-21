@@ -733,16 +733,24 @@ export class HomeComponent implements OnInit {
       }),
     });
     const now = new Date();
-    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const startOfDay = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      0,
+      0,
+      0,
+      0
+    );
 
     this.dashboardForm
       .get('statistics')
       .get('createDate')
-      .patchValue([startOfMonth, now]);
+      .patchValue([startOfDay, now]);
     this.dashboardForm
       .get('performance')
       .get('createDate')
-      .patchValue([startOfMonth, now]);
+      .patchValue([startOfDay, now]);
   }
   getRegions() {
     this.terminalService.GetAllRegionsFilter().subscribe({
