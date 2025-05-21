@@ -24,6 +24,7 @@ import { ShipmentListComponent } from './pages/shipment-list/shipment-list.compo
 import { TransferCustodyDetailsComponent } from './pages/transfer-custody-details/transfer-custody-details.component';
 import { TransferCustodySerialsComponent } from './pages/transfer-custody-serials/transfer-custody-serials.component';
 import { FileUploadModule } from 'src/app/core/shared/core/modules/table/components/file-upload/file-upload.module';
+import { ItemsWithoutSerialEmployeeComponent } from './pages/items-without-serial-employee/items-without-serial-employee.component';
 
 @NgModule({
   imports: [
@@ -48,6 +49,7 @@ import { FileUploadModule } from 'src/app/core/shared/core/modules/table/compone
     WarehousesListComponent,
     DevicesDetailsComponent,
     ItemsWithoutSerialWarehouseComponent,
+    ItemsWithoutSerialEmployeeComponent,
     SimcardsDetailsComponent,
     ShipmentDetailsComponent,
     ShipmentFormComponent,
