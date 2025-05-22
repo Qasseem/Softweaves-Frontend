@@ -10,7 +10,7 @@ export class TicketService {
     private http: HttpService,
     private dialogService: DialogService
   ) {}
-
+  public idLabel = 'ticketId';
   CompleteTicket(value: any) {
     return this.http.postReq('/Ticket/SubmitTaskDecision', value);
   }
@@ -78,5 +78,18 @@ export class TicketService {
 
   schedule(data) {
     return this.http.postReq('/Ticket/Schedule', data);
+  }
+
+  getSIMCardProviders(country) {
+    let countryId = '1';
+    switch (country) {
+      case 'UAE':
+        countryId = '2';
+        break;
+
+      default:
+        break;
+    }
+    return this.http.getHeaderReq('/Ticket/GetSIMCardProviders', countryId);
   }
 }

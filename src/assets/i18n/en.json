@@ -235,7 +235,7 @@
     "fromWarehouse": "From Warehouse",
     "transferId": "Transfer ID",
     "updatedBy": "Updated By",
-    "": "",
+    "completionStatus": "Task Success",
     "": ""
   },
   "merchants": {

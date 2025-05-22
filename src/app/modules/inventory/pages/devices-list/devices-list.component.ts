@@ -15,6 +15,8 @@ import {
   SearchInputTypes,
 } from 'src/app/core/shared/core/modules/table/models/enums';
 import { ConfirmationService } from 'primeng/api';
+import { take } from 'rxjs';
+import { WarehousesService } from '../../services/warehouses.service';
 
 @Component({
   selector: 'app-devices-list',
@@ -22,11 +24,22 @@ import { ConfirmationService } from 'primeng/api';
   styleUrls: ['./devices-list.component.css'],
 })
 export class DevicesListComponent implements OnInit {
+  conditionId: any;
+  allConditions = [];
+  showDecisionDialog = false;
+  showCancellationDecisionDialog = false;
+  isApproved = false;
+  rowData: any;
+  warehouseId: any;
+  warehousesList = [];
+  canReviewCancellation = true;
+  canReviewDelivery = true;
   constructor(
     private router: Router,
     public authService: AuthService,
     public service: DevicesService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private warehousesService: WarehousesService
   ) {}
 
   ngOnInit() {
@@ -47,8 +60,31 @@ export class DevicesListComponent implements OnInit {
     if (!this.authService.hasPermission('inventory-devices-add')) {
       this.tableBtns.showImport = false;
     }
+
+    if (
+      !this.authService.hasPermission('inventory-devices-reviewcancellation')
+    ) {
+      this.canReviewCancellation = false;
+    }
+
+    if (!this.authService.hasPermission('inventory-devices-reviewdelivery')) {
+      this.canReviewDelivery = false;
+    }
+
+    this.getConditionDropDown();
+    this.getWarehouseDropDown();
   }
 
+  getConditionDropDown() {
+    this.service
+      .getConditionDropDown()
+      .pipe(take(1))
+      .subscribe((resp) => {
+        if (resp.success) {
+          this.allConditions = resp.data;
+        }
+      });
+  }
   navigateToAdd() {
     this.router.navigate(['main/inventory/devices/add']);
   }
@@ -274,18 +310,36 @@ export class DevicesListComponent implements OnInit {
       customPermission: (row: any) => this.showBlock,
     },
     {
-      name: 'Approve',
-      icon: 'pi pi-file-check',
-      call: (row: any) => this.ShowDialog(row, true),
+      name: 'Approve Installation',
+      icon: 'pi pi-verified',
+      call: (row: any) => this.takeDecision(row, true),
       customPermission: (row: any) =>
-        row.statusId == DeviceStatusEnum.InProgress && false,
+        row.statusId == DeviceStatusEnum.InDeliveryPhase &&
+        this.canReviewDelivery,
     },
     {
-      name: 'Reject',
-      icon: 'pi pi-file-check',
-      call: (row: any) => this.ShowDialog(row, false),
+      name: 'Reject Installation',
+      icon: 'pi pi-ban',
+      call: (row: any) => this.takeDecision(row, false),
       customPermission: (row: any) =>
-        row.statusId == DeviceStatusEnum.InProgress && false,
+        row.statusId == DeviceStatusEnum.InDeliveryPhase &&
+        this.canReviewDelivery,
+    },
+    {
+      name: 'Approve Cancellation',
+      icon: 'pi pi-undo',
+      call: (row: any) => this.takeCancellationDecision(row, true),
+      customPermission: (row: any) =>
+        row.statusId == DeviceStatusEnum.InCancellationPhase &&
+        this.canReviewCancellation,
+    },
+    {
+      name: 'Reject Cancellation',
+      icon: 'pi pi-ban',
+      call: (row: any) => this.takeCancellationDecision(row, false),
+      customPermission: (row: any) =>
+        row.statusId == DeviceStatusEnum.InCancellationPhase &&
+        this.canReviewCancellation,
     },
   ];
   public gridActionsList: ActionsInterface[] = [
@@ -344,31 +398,78 @@ export class DevicesListComponent implements OnInit {
   viewDetails = true;
   blockItem(row: any): any {}
 
-  ShowDialog(rowData, isApproved) {
-    if (rowData) {
-      const isBlock = !rowData.isBlock;
-      let message =
-        'are you sure you want to ' +
-        (isApproved ? 'approve' : 'reject') +
-        ' this device transaction?';
-      this.confirmationService.confirm({
-        header: isApproved ? 'Approve' : 'Reject',
-        message: message,
-        acceptIcon: 'pi pi-check mr-2',
-        rejectIcon: 'pi pi-times mr-2',
-        rejectButtonStyleClass: 'p-button-sm',
-        acceptButtonStyleClass: 'p-button-outlined p-button-sm',
-        accept: () => {
-          this.takeAction(rowData, isApproved);
-        },
-        reject: () => {
-          this.takeAction(rowData, isApproved);
-        },
-        key: 'myDialog',
-        acceptLabel: `Yes, ${isApproved ? 'Approve' : 'Reject'}`,
-        rejectLabel: 'No, Cancel',
+  getWarehouseDropDown() {
+    this.warehousesService
+      .getAgentWarehouseDropDown()
+      .pipe(take(1))
+      .subscribe((resp) => {
+        if (resp.success) {
+          this.warehousesList = resp.data;
+        }
       });
+  }
+
+  takeDecision(rowData, isApproved) {
+    if (rowData) {
+      this.isApproved = isApproved;
+      this.rowData = rowData;
+      this.showDecisionDialog = true;
+      this.conditionId = rowData.conditionId;
     }
   }
-  takeAction(rowData, isApproved) {}
+  takeAction() {
+    let data = {
+      deviceId: this.rowData.id,
+      actionId: this.isApproved ? 1 : 2,
+      conditionId: this.conditionId,
+    };
+    this.service
+      .reviewDelivery(data)
+      .pipe(take(1))
+      .subscribe((resp) => {
+        if (resp.success) {
+          this.rowData.statusName = this.isApproved
+            ? 'Installed'
+            : 'Spare With Agent';
+          this.rowData.statusId = this.rowData.statusId = this.isApproved
+            ? DeviceStatusEnum.Installed
+            : DeviceStatusEnum.SpareWithAgent;
+          this.showDecisionDialog = false;
+          this.conditionId = null;
+        }
+      });
+  }
+
+  takeCancellationDecision(rowData, isApproved) {
+    if (rowData) {
+      this.isApproved = isApproved;
+      this.rowData = rowData;
+      this.showCancellationDecisionDialog = true;
+      this.conditionId = rowData.conditionId;
+    }
+  }
+
+  reviewCancellation() {
+    let data = {
+      deviceId: this.rowData.id,
+      actionId: this.isApproved ? 1 : 2,
+      conditionId: this.conditionId,
+      warehouseId: this.warehouseId,
+    };
+    this.service
+      .reviewCancellation(data)
+      .pipe(take(1))
+      .subscribe((resp) => {
+        if (resp.success) {
+          this.rowData.statusName = this.isApproved
+            ? 'In Warehouse'
+            : 'Installed';
+          this.rowData.statusId = this.rowData.statusId = this.isApproved
+            ? DeviceStatusEnum.InWarehouse
+            : DeviceStatusEnum.Installed;
+          this.showCancellationDecisionDialog = false;
+          this.conditionId = null;
+        }
+      });
+  }
 }

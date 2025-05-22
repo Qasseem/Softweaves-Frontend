@@ -32,4 +32,10 @@ export class ItemsWithoutSerialService {
       data
     );
   }
+  getModelTypeDropDown(id) {
+    return this.http.getHeaderReq(
+      '/ItemWithoutSerial/GetModelTypeDropDown',
+      id
+    );
+  }
 }

@@ -102,6 +102,24 @@ export class ItemsWithoutSerialListComponent implements OnInit {
       propValueName: 'id',
       params: 0,
     },
+    {
+      isMultiple: true,
+      type: SearchInputTypes.select,
+      field: 'warehouse',
+      isFixed: true,
+      url: '/Warehouse/GetWarehouseDropDown',
+      method: HTTPMethods.getReq,
+      propValueName: 'id',
+    },
+    {
+      isMultiple: true,
+      type: SearchInputTypes.select,
+      field: 'agent',
+      isFixed: true,
+      url: '/User/GetAllUsersDropDown',
+      method: HTTPMethods.getReq,
+      propValueName: 'id',
+    },
     // {
     //   isMultiple: true,
     //   type: SearchInputTypes.select,
@@ -150,6 +168,8 @@ export class ItemsWithoutSerialListComponent implements OnInit {
     {
       field: 'employeeQuantity',
       header: 'Employee QTY',
+      customCell: 'navTo',
+      action: (row) => this.employeeStock(row),
       width: '100px',
     },
   ];
@@ -220,6 +240,12 @@ export class ItemsWithoutSerialListComponent implements OnInit {
   adjustWarehouseStock(row: any) {
     this.router.navigate([
       `main/inventory/itemswithoutserial/warehouse/${row?.id}`,
+    ]);
+  }
+
+  employeeStock(row: any) {
+    this.router.navigate([
+      `main/inventory/itemswithoutserial/employee/${row?.id}`,
     ]);
   }
 }
