@@ -38,4 +38,18 @@ export class ItemsWithoutSerialService {
       id
     );
   }
+
+  employeeHistory(id, employeeId) {
+    return this.http.getHeaderReq(
+      this.controllerName + '/GetEmployeeHistory',
+      id + '/' + employeeId
+    );
+  }
+
+  warehouseHistory(id, warehouseId) {
+    return this.http.getHeaderReq(
+      this.controllerName + '/GetWarehouseHistory',
+      id + '/' + warehouseId
+    );
+  }
 }

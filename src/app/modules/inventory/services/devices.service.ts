@@ -18,6 +18,9 @@ export class DevicesService {
     return this.http.getHeaderReq(this.controllerName + '/GetById', id);
   }
 
+  history(id) {
+    return this.http.getHeaderReq(this.controllerName + '/GetHistory', id);
+  }
   update(id) {
     return this.http.postReq(this.controllerName + '/Update', id);
   }

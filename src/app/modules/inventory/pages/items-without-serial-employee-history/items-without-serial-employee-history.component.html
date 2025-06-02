@@ -1,0 +1,32 @@
+<div class="p-grid ml-2 m-2">
+  <div class="p-col" style="text-align: right">
+    <span
+      (click)="backToList()"
+      class="mt-2 ml-3 header-left"
+      style="color: #0080f9; cursor: pointer"
+      >Items Without Serial > Employee Stock</span
+    >
+    <span class="mt-2 ml-2 mr-2 header-left">></span>
+    <span class="mt-2 header-left">History - {{ "(" + ownerId + ")" }} </span>
+  </div>
+</div>
+<div class="add-form" style="margin: 0px !important">
+  <hr class="header-divider mt-3" />
+  <div class="col-12 mt-3">
+    <div class="mt-1">
+      <oc-list
+        [clientSide]="true"
+        [data]="details ? details : []"
+        [columnsI]="columns"
+        [options]="{
+          check: false,
+          viewDetails: false,
+          historyDetails: false,
+          details: false
+        }"
+        [modulePageName]="'Transfer Custody'"
+      >
+      </oc-list>
+    </div>
+  </div>
+</div>

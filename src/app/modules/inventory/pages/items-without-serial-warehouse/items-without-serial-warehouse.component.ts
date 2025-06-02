@@ -83,6 +83,12 @@ export class ItemsWithoutSerialWarehouseComponent implements OnInit {
       call: (row: any) => this.adjustStock(row),
       customPermission: (row: any) => this.showEdit,
     },
+    {
+      name: 'History',
+      icon: 'pi pi-history',
+      call: (row: any) => this.gotoHistory(row),
+      customPermission: (row: any) => true,
+    },
   ];
 
   backToList() {
@@ -109,4 +115,8 @@ export class ItemsWithoutSerialWarehouseComponent implements OnInit {
       });
   }
   showEdit = true;
+  gotoHistory(row: any): any {
+    const URL = `main/inventory/itemswithoutserial/warehousehistory/${row?.itemId}/${row?.warehouseId}`;
+    this.router.navigate([URL]);
+  }
 }

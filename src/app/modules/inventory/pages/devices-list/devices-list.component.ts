@@ -89,6 +89,12 @@ export class DevicesListComponent implements OnInit {
     this.router.navigate(['main/inventory/devices/add']);
   }
 
+  /*************  ✨ Windsurf Command ⭐  *************/
+  /**
+   * Navigate to the edit page of a device
+   * @param row The row of the device to be edited
+   */
+  /*******  8e5c88ce-8d9e-4c0b-97c5-a06672d019f8  *******/
   editItem(row: any): any {
     const URL = `main/inventory/devices/edit/${row?.id}`;
     this.router.navigate([URL]);
@@ -341,6 +347,12 @@ export class DevicesListComponent implements OnInit {
         row.statusId == DeviceStatusEnum.InCancellationPhase &&
         this.canReviewCancellation,
     },
+    {
+      name: 'History',
+      icon: 'pi pi-history',
+      call: (row: any) => this.gotoHistory(row),
+      customPermission: (row: any) => true,
+    },
   ];
   public gridActionsList: ActionsInterface[] = [
     {
@@ -471,5 +483,9 @@ export class DevicesListComponent implements OnInit {
           this.conditionId = null;
         }
       });
+  }
+  gotoHistory(row: any): any {
+    const URL = `main/inventory/devices/history/${row?.id}/${row?.serialNumber}`;
+    this.router.navigate([URL]);
   }
 }

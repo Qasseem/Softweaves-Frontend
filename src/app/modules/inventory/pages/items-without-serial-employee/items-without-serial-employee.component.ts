@@ -72,6 +72,20 @@ export class ItemsWithoutSerialEmployeeComponent implements OnInit {
     },
   ];
 
+  public actions: ActionsInterface[] = [
+    // {
+    //   name: 'Edit',
+    //   icon: 'pi pi-file-edit',
+    //   call: (row: any) => this.adjustStock(row),
+    //   customPermission: (row: any) => this.showEdit,
+    // },
+    {
+      name: 'History',
+      icon: 'pi pi-history',
+      call: (row: any) => this.gotoHistory(row),
+      customPermission: (row: any) => true,
+    },
+  ];
   backToList() {
     this.router.navigate(['main/inventory/itemswithoutserial/list']);
   }
@@ -96,4 +110,8 @@ export class ItemsWithoutSerialEmployeeComponent implements OnInit {
       });
   }
   showEdit = true;
+  gotoHistory(row: any): any {
+    const URL = `main/inventory/itemswithoutserial/employeehistory/${row?.itemId}/${row?.employeeId}`;
+    this.router.navigate([URL]);
+  }
 }
