@@ -15,14 +15,14 @@ export class ItemsWithoutSerialEmployeeHistoryComponent implements OnInit {
   details: any;
   public columns: ColumnsInterface[] = [
     {
-      field: 'deviceId',
+      field: 'modelTypeId',
       header: 'ID',
       width: '50px',
     },
 
     {
-      field: 'actionName',
-      header: 'Action Type',
+      field: 'modelType',
+      header: 'Model Type',
       width: '200px',
     },
     {
@@ -35,7 +35,7 @@ export class ItemsWithoutSerialEmployeeHistoryComponent implements OnInit {
       width: '100px',
     },
     {
-      field: 'warehouseId',
+      field: 'reference',
       header: 'Reference',
       width: '100px',
       customCell: 'navTo',
@@ -72,8 +72,6 @@ export class ItemsWithoutSerialEmployeeHistoryComponent implements OnInit {
   }
 
   backToList() {
-    this.router.navigate([
-      `main/inventory/itemswithoutserial/warehouse/${this.id}`,
-    ]);
+    this.router.navigate(['main/inventory/itemswithoutserial/list']);
   }
 }

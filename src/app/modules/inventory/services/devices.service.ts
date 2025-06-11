@@ -44,4 +44,8 @@ export class DevicesService {
   reviewDelivery(data) {
     return this.http.postReq(this.controllerName + '/ReviewDelivery', data);
   }
+
+  returnToWarehouse(data) {
+    return this.http.postReq(this.controllerName + '/ReturnToWarehouse', data);
+  }
 }

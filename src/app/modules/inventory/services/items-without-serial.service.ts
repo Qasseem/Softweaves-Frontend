@@ -52,4 +52,7 @@ export class ItemsWithoutSerialService {
       id + '/' + warehouseId
     );
   }
+  returnToWarehouse(data) {
+    return this.http.postReq(this.controllerName + '/ReturnToWarehouse', data);
+  }
 }

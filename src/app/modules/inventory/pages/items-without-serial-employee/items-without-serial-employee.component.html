@@ -67,3 +67,42 @@
     <p-button label="Save" size="small" (onClick)="adjustQty()" />
   </div>
 </p-dialog>
+
+<p-dialog
+  [contentStyle]="{ overflow: 'visible' }"
+  [header]="'Return to Warehouse'"
+  [modal]="true"
+  [(visible)]="showreturnToWarehouseDialog"
+  [style]="{ width: '35rem' }"
+>
+  <div class="mb-3">
+    <label class="font-semibold w-6rem">Warehouse</label>
+    <p-dropdown
+      [options]="warehousesList"
+      [(ngModel)]="warehouseId"
+      [optionValue]="'id'"
+      optionLabel="nameEn"
+      filter="true"
+    />
+  </div>
+  <div class="mb-3">
+    <label for="username" class="font-semibold w-6rem">QTY</label>
+    <input
+      class="mt-2"
+      pInputText
+      type="number"
+      [(ngModel)]="quantity"
+      mode="decimal"
+      inputId="withoutgrouping"
+    />
+  </div>
+  <div class="flex justify-content-end gap-2">
+    <p-button
+      label="Cancel"
+      size="small"
+      (onClick)="showreturnToWarehouseDialog = false"
+      [outlined]="true"
+    />
+    <p-button [label]="'Return'" size="small" (onClick)="returnToWarehouse()" />
+  </div>
+</p-dialog>

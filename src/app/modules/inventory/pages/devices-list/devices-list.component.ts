@@ -33,7 +33,9 @@ export class DevicesListComponent implements OnInit {
   warehouseId: any;
   warehousesList = [];
   canReviewCancellation = true;
+  canReturn = true;
   canReviewDelivery = true;
+  showreturnToWarehouseDialog = false;
   constructor(
     private router: Router,
     public authService: AuthService,
@@ -65,6 +67,12 @@ export class DevicesListComponent implements OnInit {
       !this.authService.hasPermission('inventory-devices-reviewcancellation')
     ) {
       this.canReviewCancellation = false;
+    }
+
+    if (
+      !this.authService.hasPermission('inventory-devices-returntowarehouse')
+    ) {
+      this.canReturn = false;
     }
 
     if (!this.authService.hasPermission('inventory-devices-reviewdelivery')) {
@@ -348,6 +356,15 @@ export class DevicesListComponent implements OnInit {
         this.canReviewCancellation,
     },
     {
+      name: 'Return to Warehouse',
+      icon: 'pi pi-undo',
+      call: (row: any) => this.returnToWarehouseDialoge(row),
+      customPermission: (row: any) =>
+        (row.statusId == DeviceStatusEnum.SpareWithAgent ||
+          row.statusId == DeviceStatusEnum.InDeliveryPhase) &&
+        this.canReturn,
+    },
+    {
       name: 'History',
       icon: 'pi pi-history',
       call: (row: any) => this.gotoHistory(row),
@@ -487,5 +504,31 @@ export class DevicesListComponent implements OnInit {
   gotoHistory(row: any): any {
     const URL = `main/inventory/devices/history/${row?.id}/${row?.serialNumber}`;
     this.router.navigate([URL]);
+  }
+
+  returnToWarehouseDialoge(row: any): any {
+    if (row) {
+      this.rowData = row;
+      this.showreturnToWarehouseDialog = true;
+    }
+  }
+  returnToWarehouse() {
+    let data = {
+      deviceId: this.rowData.id,
+      warehouseId: this.warehouseId,
+      conditionId: this.conditionId,
+    };
+    this.service
+      .returnToWarehouse(data)
+      .pipe(take(1))
+      .subscribe((resp) => {
+        if (resp.success) {
+          this.rowData.statusName = 'In Warehouse';
+          this.rowData.statusId = DeviceStatusEnum.InWarehouse;
+          this.showreturnToWarehouseDialog = false;
+          this.warehouseId = null;
+          this.conditionId = null;
+        }
+      });
   }
 }
