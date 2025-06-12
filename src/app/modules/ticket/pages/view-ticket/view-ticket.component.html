@@ -392,11 +392,7 @@
                 *ngIf="details?.categoryId == TicketCategoryEnum?.Replacement"
               >
                 <span>{{
-                  curr == 1
-                    ? "Cancelled Device"
-                    : curr == 2
-                    ? "Deployed Device"
-                    : "Deployed Device"
+                  curr == 1 ? "Deployed Device" : "Cancelled Device"
                 }}</span>
               </div>
               <ng-container
@@ -441,14 +437,12 @@
                         <div
                           class="view-container--cards--details-card--info--container--left--item--text"
                         >
-                          {{
-                            curr == 2 ? panel?.oldPoS_Serial : panel?.poS_Serial
-                          }}
+                          {{ panel?.poS_Serial }}
                         </div>
                       </div>
 
                       <div
-                        *ngIf="panel?.simCardModelType"
+                        *ngIf="panel?.simCardModelType && curr == 1"
                         class="view-container--cards--details-card--info--container--left--item"
                       >
                         <div
@@ -464,7 +458,7 @@
                       </div>
 
                       <div
-                        *ngIf="panel?.cableModelType"
+                        *ngIf="panel?.cableModelType && curr == 1"
                         class="view-container--cards--details-card--info--container--left--item"
                       >
                         <div
@@ -551,6 +545,7 @@
                         </div>
                       </div>
                       <div
+                        *ngIf="panel?.paperRollModelType && curr == 1"
                         class="view-container--cards--details-card--info--container--right--item"
                       >
                         <div
