@@ -35,11 +35,14 @@ export class ItemsWithoutSerialEmployeeHistoryComponent implements OnInit {
       width: '100px',
     },
     {
-      field: 'reference',
-      header: 'Reference',
+      field: 'oldQuantity',
+      header: 'Old QTY',
       width: '100px',
-      customCell: 'navTo',
-      action: (row) => this.goToRef(row),
+    },
+    {
+      field: 'quantity',
+      header: 'New QTY',
+      width: '100px',
     },
   ];
   constructor(
