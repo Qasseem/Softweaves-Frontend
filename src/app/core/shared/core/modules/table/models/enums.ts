@@ -87,4 +87,5 @@ export enum TicketCategoryEnum {
   Visit = 2,
   Cancellation = 3,
   AfterSales = 4,
+  Replacement = 5,
 }

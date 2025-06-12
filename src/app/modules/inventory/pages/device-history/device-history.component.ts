@@ -23,8 +23,8 @@ export class DeviceHistoryComponent implements OnInit {
     },
 
     {
-      field: 'actionName',
-      header: 'Action Type',
+      field: 'notes',
+      header: 'Notes',
       width: '200px',
     },
     {
