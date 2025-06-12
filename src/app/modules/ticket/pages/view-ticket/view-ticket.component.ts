@@ -46,7 +46,7 @@ export class ViewTicketComponent implements OnInit {
         };
         this.setStatusTagStyle();
         if (this.details?.categoryId == TicketCategoryEnum.Replacement) {
-          this.recuerncies.push(2);
+          this.recuerncies.unshift(2);
         }
         // this.handleAddress(res);
       },
