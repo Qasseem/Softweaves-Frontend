@@ -386,213 +386,332 @@
                 </div>
               </div>
             </ng-template>
-
-            <ng-container
-              [ngTemplateOutlet]="
-                panel?.statusEn.toLowerCase() == 'success'
-                  ? successTemplate
-                  : failTemplate
-              "
-            >
-              <ng-template #successTemplate>
-                <div
-                  class="view-container--cards--details-card--info--container"
-                >
-                  <div
-                    class="view-container--cards--details-card--info--container--left"
-                  >
-                    <div
-                      class="view-container--cards--details-card--info--container--left--item"
-                    >
-                      <div
-                        class="view-container--cards--details-card--info--container--left--item--label"
-                      >
-                        <label for="username">Terminal ID</label>
-                      </div>
-                      <div
-                        class="view-container--cards--details-card--info--container--left--item--text"
-                      >
-                        {{ panel?.terminalId }}
-                      </div>
-                    </div>
-
-                    <div
-                      class="view-container--cards--details-card--info--container--left--item"
-                    >
-                      <div
-                        class="view-container--cards--details-card--info--container--left--item--label"
-                      >
-                        <label for="pos-type">POS Serial</label>
-                      </div>
-                      <div
-                        class="view-container--cards--details-card--info--container--left--item--text"
-                      >
-                        {{ panel?.poS_Serial }}
-                      </div>
-                    </div>
-                    <div
-                      *ngIf="panel?.requireQuantity"
-                      class="view-container--cards--details-card--info--container--left--item"
-                    >
-                      <div
-                        class="view-container--cards--details-card--info--container--left--item--label"
-                      >
-                        <label for="pos-type">Required QTY</label>
-                      </div>
-                      <div
-                        class="view-container--cards--details-card--info--container--left--item--text"
-                      >
-                        {{ panel?.quantity }}
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="view-container--cards--details-card--info--container--right"
-                  >
-                    <div
-                      class="view-container--cards--details-card--info--container--right--item"
-                    >
-                      <div
-                        class="view-container--cards--details-card--info--container--right--item--label"
-                      >
-                        <label for="created-at">IMEI</label>
-                      </div>
-                      <div
-                        class="view-container--cards--details-card--info--container--right--item--text"
-                      >
-                        {{ panel?.imei }}
-                      </div>
-                    </div>
-                    <div
-                      class="view-container--cards--details-card--info--container--right--item"
-                    >
-                      <div
-                        class="view-container--cards--details-card--info--container--right--item--label"
-                      >
-                        <label for="created-at">SIM Serial</label>
-                      </div>
-                      <div
-                        class="view-container--cards--details-card--info--container--right--item--text"
-                      >
-                        {{ panel?.siM_Serial }}
-                      </div>
-                    </div>
-                    <div
-                      *ngIf="panel?.requireQuantity"
-                      class="view-container--cards--details-card--info--container--left--item"
-                    >
-                      <div
-                        class="view-container--cards--details-card--info--container--left--item--label"
-                      >
-                        <label for="pos-type">Delivered QTY</label>
-                      </div>
-                      <div
-                        class="view-container--cards--details-card--info--container--left--item--text"
-                      >
-                        {{ panel?.deliveredQuantity }}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </ng-template>
-              <ng-template #failTemplate>
-                <div class="input-groups">
-                  <div class="input-group">
-                    <label for="reason">Reason:</label>
-                    <span>{{
-                      panel?.failReasonEn ? panel?.failReasonEn : "--"
-                    }}</span>
-                  </div>
-                  <div class="input-group">
-                    <label for="note">Note:</label>
-                    <span>{{ panel?.notes ? panel?.notes : "--" }}</span>
-                  </div>
-                </div>
-              </ng-template>
-            </ng-container>
-            <div class="view-container--cards--details-card--info--attachments">
+            <div class="panel-container" *ngFor="let curr of recuerncies">
               <div
-                class="view-container--cards--details-card--info--attachments--title-feedback"
+                class="panel-header-sub"
+                *ngIf="details?.categoryId == TicketCategoryEnum?.Replacement"
               >
-                Attached Files
+                <span>{{
+                  curr == 1
+                    ? "Cancelled Device"
+                    : curr == 2
+                    ? "Deployed Device"
+                    : "Deployed Device"
+                }}</span>
               </div>
-              <div
-                class="view-container--cards--details-card--info--attachments--items"
-                *ngIf="panel?.files?.length"
+              <ng-container
+                [ngTemplateOutlet]="
+                  panel?.statusEn.toLowerCase() == 'success'
+                    ? successTemplate
+                    : failTemplate
+                "
               >
-                <div
-                  class="view-container--cards--details-card--info--attachments--items--item"
-                  *ngFor="let item of panel?.files; let i = index"
-                >
+                <ng-template #successTemplate>
                   <div
-                    class="view-container--cards--details-card--info--attachments--items--item--info"
+                    class="view-container--cards--details-card--info--container"
                   >
                     <div
-                      class="view-container--cards--details-card--info--attachments--items-item--info--icon"
+                      class="view-container--cards--details-card--info--container--left"
                     >
-                      <oc-icon
-                        [icon]="'attachment-icon'"
-                        width="24px"
-                        height="24px"
-                      ></oc-icon>
+                      <div
+                        class="view-container--cards--details-card--info--container--left--item"
+                      >
+                        <div
+                          class="view-container--cards--details-card--info--container--left--item--label"
+                        >
+                          <label for="username">Terminal ID</label>
+                        </div>
+                        <div
+                          class="view-container--cards--details-card--info--container--left--item--text"
+                        >
+                          {{
+                            curr == 2 ? panel?.oldTerminalId : panel?.terminalId
+                          }}
+                        </div>
+                      </div>
+
+                      <div
+                        class="view-container--cards--details-card--info--container--left--item"
+                      >
+                        <div
+                          class="view-container--cards--details-card--info--container--left--item--label"
+                        >
+                          <label for="pos-type">POS Serial</label>
+                        </div>
+                        <div
+                          class="view-container--cards--details-card--info--container--left--item--text"
+                        >
+                          {{
+                            curr == 2 ? panel?.oldPoS_Serial : panel?.poS_Serial
+                          }}
+                        </div>
+                      </div>
+
+                      <div
+                        *ngIf="panel?.simCardModelType"
+                        class="view-container--cards--details-card--info--container--left--item"
+                      >
+                        <div
+                          class="view-container--cards--details-card--info--container--left--item--label"
+                        >
+                          <label for="pos-type">Sim Type</label>
+                        </div>
+                        <div
+                          class="view-container--cards--details-card--info--container--left--item--text"
+                        >
+                          {{ panel?.simCardModelType }}
+                        </div>
+                      </div>
+
+                      <div
+                        *ngIf="panel?.cableModelType"
+                        class="view-container--cards--details-card--info--container--left--item"
+                      >
+                        <div
+                          class="view-container--cards--details-card--info--container--left--item--label"
+                        >
+                          <label for="pos-type">Cable</label>
+                        </div>
+                        <div
+                          class="view-container--cards--details-card--info--container--left--item--text"
+                        >
+                          {{ panel?.cableModelType }}
+                        </div>
+                      </div>
+
+                      <div
+                        *ngIf="panel?.requireQuantity"
+                        class="view-container--cards--details-card--info--container--left--item"
+                      >
+                        <div
+                          class="view-container--cards--details-card--info--container--left--item--label"
+                        >
+                          <label for="pos-type">Required QTY</label>
+                        </div>
+                        <div
+                          class="view-container--cards--details-card--info--container--left--item--text"
+                        >
+                          {{ panel?.quantity }}
+                        </div>
+                      </div>
                     </div>
                     <div
-                      class="view-container--cards--details-card--info--attachments--items-item--info--text"
+                      class="view-container--cards--details-card--info--container--right"
                     >
-                      {{ "Example File " + (i + 1) }}
+                      <div
+                        class="view-container--cards--details-card--info--container--right--item"
+                      >
+                        <div
+                          class="view-container--cards--details-card--info--container--right--item--label"
+                        >
+                          <label for="created-at">IMEI</label>
+                        </div>
+                        <div
+                          class="view-container--cards--details-card--info--container--right--item--text"
+                        >
+                          {{ curr == 2 ? panel?.oldIMEI : panel?.imei }}
+                        </div>
+                      </div>
+                      <div
+                        class="view-container--cards--details-card--info--container--right--item"
+                      >
+                        <div
+                          class="view-container--cards--details-card--info--container--right--item--label"
+                        >
+                          <label for="created-at">SIM Serial</label>
+                        </div>
+                        <div
+                          class="view-container--cards--details-card--info--container--right--item--text"
+                        >
+                          {{
+                            curr == 2 ? panel?.oldSIMSerial : panel?.siM_Serial
+                          }}
+                        </div>
+                      </div>
+                      <div
+                        class="view-container--cards--details-card--info--container--right--item"
+                      >
+                        <div
+                          class="view-container--cards--details-card--info--container--right--item--label"
+                        >
+                          <label for="created-at">{{
+                            curr == 2
+                              ? "Cancellation recipet"
+                              : "Deploy recipet"
+                          }}</label>
+                        </div>
+                        <div
+                          class="view-container--cards--details-card--info--container--right--item--text"
+                        >
+                          {{
+                            curr == 2
+                              ? panel?.receiptModelType
+                              : panel?.receiptModelType
+                          }}
+                        </div>
+                      </div>
+                      <div
+                        class="view-container--cards--details-card--info--container--right--item"
+                      >
+                        <div
+                          class="view-container--cards--details-card--info--container--right--item--label"
+                        >
+                          <label for="created-at">Paper Roll Type</label>
+                        </div>
+                        <div
+                          class="view-container--cards--details-card--info--container--right--item--text"
+                        >
+                          {{ panel?.paperRollModelType }}
+                        </div>
+                      </div>
+                      <div
+                        *ngIf="panel?.requireQuantity"
+                        class="view-container--cards--details-card--info--container--left--item"
+                      >
+                        <div
+                          class="view-container--cards--details-card--info--container--left--item--label"
+                        >
+                          <label for="pos-type">Delivered QTY</label>
+                        </div>
+                        <div
+                          class="view-container--cards--details-card--info--container--left--item--text"
+                        >
+                          {{ panel?.deliveredQuantity }}
+                        </div>
+                      </div>
                     </div>
                   </div>
+                </ng-template>
+                <ng-template #failTemplate>
+                  <div class="input-groups">
+                    <div class="input-group">
+                      <label for="reason">Reason:</label>
+                      <span>{{
+                        panel?.failReasonEn ? panel?.failReasonEn : "--"
+                      }}</span>
+                    </div>
+                    <div class="input-group">
+                      <label for="note">Note:</label>
+                      <span>{{ panel?.notes ? panel?.notes : "--" }}</span>
+                    </div>
+                  </div>
+                </ng-template>
+              </ng-container>
+              <div
+                class="view-container--cards--details-card--info--attachments"
+              >
+                <div
+                  class="view-container--cards--details-card--info--attachments--title-feedback"
+                >
+                  Attached Files
+                </div>
+                <div
+                  class="view-container--cards--details-card--info--attachments--items"
+                  *ngIf="
+                    (panel?.files?.length && curr == 1) ||
+                    (panel?.oldFiles?.length && curr == 2)
+                  "
+                >
                   <div
-                    class="view-container--cards--details-card--info--attachments--items--item--download"
-                    (click)="
-                      downloadImage(
-                        item?.attachmentUrl,
-                        'Example File ' + (i + 1)
-                      )
+                    class="view-container--cards--details-card--info--attachments--items--item"
+                    *ngFor="
+                      let item of curr == 1 ? panel?.files : panel?.oldFiles;
+                      let i = index
                     "
                   >
-                    <oc-icon
-                      [icon]="'download-icon'"
-                      width="20px"
-                      height="20px"
-                    ></oc-icon>
-                  </div>
-                </div>
-              </div>
-              <div
-                class="view-container--cards--details-card--info--attachments--items-empty"
-                *ngIf="!panel?.files?.length"
-              >
-                No Files Uploaded!
-              </div>
-            </div>
-            <div class="upload-control">
-              <label for="upload">Attached Images</label>
-              <div class="upload-container">
-                <div class="uploaded-images" *ngIf="panel?.images?.length">
-                  <div
-                    class="uploaded-image"
-                    *ngFor="let base64String of panel?.images; let j = index"
-                    [style.cursor]="'pointer'"
-                    (click)="downloadImage(img.src, 'Example File ' + (j + 1))"
-                  >
-                    <img
-                      #img
-                      src="{{ base64String?.attachmentUrl }}"
-                      [pTooltip]="
-                        img?.src?.includes('missing') ? 'Missing Image' : ''
+                    <div
+                      class="view-container--cards--details-card--info--attachments--items--item--info"
+                    >
+                      <div
+                        class="view-container--cards--details-card--info--attachments--items-item--info--icon"
+                      >
+                        <oc-icon
+                          [icon]="'attachment-icon'"
+                          width="24px"
+                          height="24px"
+                        ></oc-icon>
+                      </div>
+                      <div
+                        class="view-container--cards--details-card--info--attachments--items-item--info--text"
+                      >
+                        {{ "Example File " + (i + 1) }}
+                      </div>
+                    </div>
+                    <div
+                      class="view-container--cards--details-card--info--attachments--items--item--download"
+                      (click)="
+                        downloadImage(
+                          item?.attachmentUrl,
+                          'Example File ' + (i + 1)
+                        )
                       "
-                      alt=""
-                      hideMissing
-                      [errorIconURL]="'assets/iamges/missing-image.svg'"
-                    />
+                    >
+                      <oc-icon
+                        [icon]="'download-icon'"
+                        width="20px"
+                        height="20px"
+                      ></oc-icon>
+                    </div>
                   </div>
                 </div>
                 <div
                   class="view-container--cards--details-card--info--attachments--items-empty"
-                  *ngIf="!panel?.images?.length"
+                  *ngIf="
+                    !(
+                      (panel?.files?.length && curr == 1) ||
+                      (panel?.oldFiles?.length && curr == 2)
+                    )
+                  "
                 >
-                  No Images Uploaded!
+                  No Files Uploaded!
+                </div>
+              </div>
+              <div class="upload-control">
+                <label for="upload">Attached Images</label>
+                <div class="upload-container">
+                  <div
+                    class="uploaded-images"
+                    *ngIf="
+                      (panel?.images?.length && curr == 1) ||
+                      (panel?.oldImages?.length && curr == 2)
+                    "
+                  >
+                    <div
+                      class="uploaded-image"
+                      *ngFor="
+                        let base64String of curr == 1
+                          ? panel?.images
+                          : panel?.oldImages;
+                        let j = index
+                      "
+                      [style.cursor]="'pointer'"
+                      (click)="
+                        downloadImage(img.src, 'Example File ' + (j + 1))
+                      "
+                    >
+                      <img
+                        #img
+                        src="{{ base64String?.attachmentUrl }}"
+                        [pTooltip]="
+                          img?.src?.includes('missing') ? 'Missing Image' : ''
+                        "
+                        alt=""
+                        hideMissing
+                        [errorIconURL]="'assets/iamges/missing-image.svg'"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="view-container--cards--details-card--info--attachments--items-empty"
+                    *ngIf="
+                      !(
+                        (panel?.images?.length && curr == 1) ||
+                        (panel?.oldImages?.length && curr == 2)
+                      )
+                    "
+                  >
+                    No Images Uploaded!
+                  </div>
                 </div>
               </div>
             </div>

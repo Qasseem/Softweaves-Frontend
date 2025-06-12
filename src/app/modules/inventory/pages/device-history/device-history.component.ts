@@ -36,13 +36,6 @@ export class DeviceHistoryComponent implements OnInit {
       customCell: 'multiLabel',
       width: '100px',
     },
-    {
-      field: 'warehouseId',
-      header: 'Reference',
-      width: '100px',
-      customCell: 'navTo',
-      action: (row) => this.goToRef(row),
-    },
   ];
   serial: any;
 

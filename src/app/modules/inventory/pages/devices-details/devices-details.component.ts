@@ -84,7 +84,7 @@ export class DevicesDetailsComponent implements OnInit {
   prepareCardsData() {
     this.cards.push({
       title: 'Owner',
-      name: this.details?.agent ? this.details?.agent : this.details?.warehouse,
+      name: this.details?.owner,
       phone: this.details?.ownerPhone,
     });
     this.details?.warehouseManagers?.forEach((user) => {

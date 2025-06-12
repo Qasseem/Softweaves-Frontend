@@ -143,7 +143,10 @@
     <div>
       <div class="grid">
         <div class="col-12">
-          <div class="flex flex-wrap gap-3">
+          <div
+            *ngIf="ticketCategory != TicketCategoryEnum.Replacement"
+            class="flex flex-wrap gap-3"
+          >
             <div *ngFor="let category of statusOptions" class="field-checkbox">
               <p-radioButton
                 [inputId]="category.key"
@@ -662,6 +665,20 @@
     <div>
       <div class="grid">
         <div class="col-12">
+          <div class="flex flex-wrap gap-3">
+            <div *ngFor="let category of statusOptions" class="field-checkbox">
+              <p-radioButton
+                [inputId]="category.key"
+                [value]="category.key"
+                formControlName="statusId"
+                (onClick)="replacementPopupstatusChange($event)"
+              />
+              <label [for]="category.key" class="ml-2">
+                {{ category.name }}
+              </label>
+              <span style="margin-right: 150px"></span>
+            </div>
+          </div>
           <hr class="header-divider" />
 
           <div class="grid">

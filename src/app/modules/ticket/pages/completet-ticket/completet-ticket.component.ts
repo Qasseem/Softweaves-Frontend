@@ -126,7 +126,7 @@ export class CompletetTicketComponent implements OnInit {
   setTaskType() {
     if (
       this.details?.categoryId == TicketCategoryEnum.Deployment ||
-      this.details?.categoryId == TicketCategoryEnum.Cancellation
+      this.details?.categoryId == TicketCategoryEnum.Replacement
     ) {
       this.showSimcardProviderInput = true;
       this.form.controls.simCardModelTypeId.setValidators([
@@ -185,6 +185,7 @@ export class CompletetTicketComponent implements OnInit {
       oldImages: [[], Validators.required],
       oldFiles: [[], Validators.required],
       oldReceiptModelTypeId: [null, Validators.required],
+      statusId: [1, Validators.required],
     });
   }
 
@@ -291,7 +292,11 @@ export class CompletetTicketComponent implements OnInit {
     this.showChart = true;
   }
 
-  statusChange(event) {}
+  statusChange(event) {
+    if (this.ticketCategory == TicketCategoryEnum.Replacement) {
+      this.replacementPopupstatusChange(event);
+    }
+  }
   get f() {
     return this.form.controls;
   }
@@ -373,5 +378,19 @@ export class CompletetTicketComponent implements OnInit {
         this.backToList();
       }
     });
+  }
+
+  replacementPopupstatusChange(event) {
+    if (event.value == 1) {
+      this.showReplacmentModal = true;
+      this.visible = false;
+      this.form.controls.statusId.setValue(1);
+      this.form2.controls.statusId.setValue(1);
+    } else if (event.value == 2) {
+      this.showReplacmentModal = false;
+      this.visible = true;
+      this.form.controls.statusId.setValue(2);
+      this.form2.controls.statusId.setValue(2);
+    }
   }
 }

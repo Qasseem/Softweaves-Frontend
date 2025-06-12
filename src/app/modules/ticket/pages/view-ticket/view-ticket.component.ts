@@ -3,7 +3,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TicketService } from '../../services/ticket.service';
 import { TerminalService } from 'src/app/modules/terminal/services/terminal.service';
 import { HttpClient } from '@angular/common/http';
-import { TicketStatusEnum } from 'src/app/core/shared/core/modules/table/models/enums';
+import {
+  TicketCategoryEnum,
+  TicketStatusEnum,
+} from 'src/app/core/shared/core/modules/table/models/enums';
 
 @Component({
   selector: 'oc-view-ticket',
@@ -15,6 +18,8 @@ export class ViewTicketComponent implements OnInit {
   details;
   id;
   statusStyleObj;
+  recuerncies = [1];
+  TicketCategoryEnum = TicketCategoryEnum;
   constructor(
     private service: TicketService,
     private route: ActivatedRoute,
@@ -40,6 +45,9 @@ export class ViewTicketComponent implements OnInit {
           lng: this.details?.longitude,
         };
         this.setStatusTagStyle();
+        if (this.details?.categoryId == TicketCategoryEnum.Replacement) {
+          this.recuerncies.push(2);
+        }
         // this.handleAddress(res);
       },
     });
