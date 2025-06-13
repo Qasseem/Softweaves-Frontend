@@ -277,7 +277,7 @@ export class DevicesListComponent implements OnInit {
     {
       field: [
         { label: 'ownerEn', custom: 'normal' },
-        { label: 'ownerAr', custom: 'defaultDate' },
+        { label: 'ownerAr', custom: 'default' },
       ],
       header: 'Owner',
       customCell: 'multiLabel',
