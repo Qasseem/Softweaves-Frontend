@@ -44,6 +44,11 @@ export class ItemsWithoutSerialWarehouseHistoryComponent implements OnInit {
       header: 'New QTY',
       width: '100px',
     },
+    {
+      field: 'reference',
+      header: 'Reference',
+      width: '200px',
+    },
   ];
   constructor(
     private route: ActivatedRoute,
