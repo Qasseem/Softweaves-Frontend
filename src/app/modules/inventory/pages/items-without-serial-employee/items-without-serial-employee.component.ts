@@ -5,6 +5,9 @@ import { ItemsWithoutSerialService } from '../../services/items-without-serial.s
 import { TableButtonsExistanceInterface } from 'src/app/core/shared/core/modules/table/models/table-url.interface';
 import { ColumnsInterface } from 'src/app/core/shared/models/Interfaces';
 import { ActionsInterface } from 'src/app/core/shared/core/modules/table/models/actions.interface';
+import { take } from 'rxjs';
+import { DeviceStatusEnum } from 'src/app/core/shared/core/modules/table/models/enums';
+import { WarehousesService } from '../../services/warehouses.service';
 
 @Component({
   selector: 'app-items-without-serial-employee',
@@ -17,19 +20,46 @@ export class ItemsWithoutSerialEmployeeComponent implements OnInit {
   shipmentId;
   showStockDialog = false;
   row: any;
+  rowData: any;
+  showreturnToWarehouseDialog: boolean;
+  warehouseId: any;
+  conditionId: any;
+  canReturn: boolean = true;
+  warehousesList: any[] = [];
   constructor(
     private router: Router,
     public authService: AuthService,
     private route: ActivatedRoute,
-    public service: ItemsWithoutSerialService
+    public service: ItemsWithoutSerialService,
+    private warehousesService: WarehousesService
   ) {
     this.id = this.route.snapshot.params.id || null;
   }
 
   ngOnInit() {
+    this.getWarehouseDropDown();
     this.showEdit = this.authService.hasPermission(
       'inventory-items-without-serial-edit'
     );
+
+    if (
+      !this.authService.hasPermission(
+        'inventory-items-without-serial-returntowarehouse'
+      )
+    ) {
+      this.canReturn = false;
+    }
+  }
+
+  getWarehouseDropDown() {
+    this.warehousesService
+      .getAgentWarehouseDropDown()
+      .pipe(take(1))
+      .subscribe((resp) => {
+        if (resp.success) {
+          this.warehousesList = resp.data;
+        }
+      });
   }
 
   navigateToAdd() {
@@ -62,7 +92,7 @@ export class ItemsWithoutSerialEmployeeComponent implements OnInit {
     },
     {
       field: 'warehouse',
-      header: 'Waehouse Name',
+      header: 'Employee',
       width: '200px',
     },
     {
@@ -72,6 +102,26 @@ export class ItemsWithoutSerialEmployeeComponent implements OnInit {
     },
   ];
 
+  public actions: ActionsInterface[] = [
+    // {
+    //   name: 'Edit',
+    //   icon: 'pi pi-file-edit',
+    //   call: (row: any) => this.adjustStock(row),
+    //   customPermission: (row: any) => this.showEdit,
+    // },
+    {
+      name: 'History',
+      icon: 'pi pi-history',
+      call: (row: any) => this.gotoHistory(row),
+      customPermission: (row: any) => true,
+    },
+    {
+      name: 'Return to Warehouse',
+      icon: 'pi pi-undo',
+      call: (row: any) => this.returnToWarehouseDialoge(row),
+      customPermission: (row: any) => this.canReturn,
+    },
+  ];
   backToList() {
     this.router.navigate(['main/inventory/itemswithoutserial/list']);
   }
@@ -96,4 +146,34 @@ export class ItemsWithoutSerialEmployeeComponent implements OnInit {
       });
   }
   showEdit = true;
+  gotoHistory(row: any): any {
+    const URL = `main/inventory/itemswithoutserial/employeehistory/${row?.itemId}/${row?.warehouseId}`;
+    this.router.navigate([URL]);
+  }
+
+  returnToWarehouseDialoge(row: any): any {
+    if (row) {
+      this.rowData = row;
+      this.showreturnToWarehouseDialog = true;
+    }
+  }
+  returnToWarehouse() {
+    let data = {
+      agentId: this.rowData.warehouseId,
+      warehouseId: this.warehouseId,
+      itemId: this.rowData.itemId,
+      quantity: this.quantity,
+    };
+    this.service
+      .returnToWarehouse(data)
+      .pipe(take(1))
+      .subscribe((resp) => {
+        if (resp.success) {
+          this.rowData.quantity = this.rowData.quantity - this.quantity;
+          this.showreturnToWarehouseDialog = false;
+          this.warehouseId = null;
+          this.quantity = null;
+        }
+      });
+  }
 }

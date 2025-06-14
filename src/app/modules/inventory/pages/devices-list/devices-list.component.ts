@@ -33,7 +33,9 @@ export class DevicesListComponent implements OnInit {
   warehouseId: any;
   warehousesList = [];
   canReviewCancellation = true;
+  canReturn = true;
   canReviewDelivery = true;
+  showreturnToWarehouseDialog = false;
   constructor(
     private router: Router,
     public authService: AuthService,
@@ -67,6 +69,12 @@ export class DevicesListComponent implements OnInit {
       this.canReviewCancellation = false;
     }
 
+    if (
+      !this.authService.hasPermission('inventory-devices-returntowarehouse')
+    ) {
+      this.canReturn = false;
+    }
+
     if (!this.authService.hasPermission('inventory-devices-reviewdelivery')) {
       this.canReviewDelivery = false;
     }
@@ -89,6 +97,12 @@ export class DevicesListComponent implements OnInit {
     this.router.navigate(['main/inventory/devices/add']);
   }
 
+  /*************  ✨ Windsurf Command ⭐  *************/
+  /**
+   * Navigate to the edit page of a device
+   * @param row The row of the device to be edited
+   */
+  /*******  8e5c88ce-8d9e-4c0b-97c5-a06672d019f8  *******/
   editItem(row: any): any {
     const URL = `main/inventory/devices/edit/${row?.id}`;
     this.router.navigate([URL]);
@@ -263,7 +277,7 @@ export class DevicesListComponent implements OnInit {
     {
       field: [
         { label: 'ownerEn', custom: 'normal' },
-        { label: 'ownerAr', custom: 'defaultDate' },
+        { label: 'ownerAr', custom: 'default' },
       ],
       header: 'Owner',
       customCell: 'multiLabel',
@@ -340,6 +354,21 @@ export class DevicesListComponent implements OnInit {
       customPermission: (row: any) =>
         row.statusId == DeviceStatusEnum.InCancellationPhase &&
         this.canReviewCancellation,
+    },
+    {
+      name: 'Return to Warehouse',
+      icon: 'pi pi-undo',
+      call: (row: any) => this.returnToWarehouseDialoge(row),
+      customPermission: (row: any) =>
+        (row.statusId == DeviceStatusEnum.SpareWithAgent ||
+          row.statusId == DeviceStatusEnum.InDeliveryPhase) &&
+        this.canReturn,
+    },
+    {
+      name: 'History',
+      icon: 'pi pi-history',
+      call: (row: any) => this.gotoHistory(row),
+      customPermission: (row: any) => true,
     },
   ];
   public gridActionsList: ActionsInterface[] = [
@@ -468,6 +497,36 @@ export class DevicesListComponent implements OnInit {
             ? DeviceStatusEnum.InWarehouse
             : DeviceStatusEnum.Installed;
           this.showCancellationDecisionDialog = false;
+          this.conditionId = null;
+        }
+      });
+  }
+  gotoHistory(row: any): any {
+    const URL = `main/inventory/devices/history/${row?.id}/${row?.serialNumber}`;
+    this.router.navigate([URL]);
+  }
+
+  returnToWarehouseDialoge(row: any): any {
+    if (row) {
+      this.rowData = row;
+      this.showreturnToWarehouseDialog = true;
+    }
+  }
+  returnToWarehouse() {
+    let data = {
+      deviceId: this.rowData.id,
+      warehouseId: this.warehouseId,
+      conditionId: this.conditionId,
+    };
+    this.service
+      .returnToWarehouse(data)
+      .pipe(take(1))
+      .subscribe((resp) => {
+        if (resp.success) {
+          this.rowData.statusName = 'In Warehouse';
+          this.rowData.statusId = DeviceStatusEnum.InWarehouse;
+          this.showreturnToWarehouseDialog = false;
+          this.warehouseId = null;
           this.conditionId = null;
         }
       });

@@ -23,6 +23,9 @@ import { ShipmentDetailsComponent } from './pages/shipment-details/shipment-deta
 import { TransferCustodyDetailsComponent } from './pages/transfer-custody-details/transfer-custody-details.component';
 import { TransferCustodySerialsComponent } from './pages/transfer-custody-serials/transfer-custody-serials.component';
 import { ItemsWithoutSerialEmployeeComponent } from './pages/items-without-serial-employee/items-without-serial-employee.component';
+import { DeviceHistoryComponent } from './pages/device-history/device-history.component';
+import { ItemsWithoutSerialEmployeeHistoryComponent } from './pages/items-without-serial-employee-history/items-without-serial-employee-history.component';
+import { ItemsWithoutSerialWarehouseHistoryComponent } from './pages/items-without-serial-warehouse-history/items-without-serial-warehouse-history.component';
 
 const routes: Routes = [
   {
@@ -56,6 +59,10 @@ const routes: Routes = [
         path: 'devices/details/:id',
         component: DevicesDetailsComponent,
       },
+      {
+        path: 'devices/history/:id/:serial',
+        component: DeviceHistoryComponent,
+      },
       //Items Without Serial--------------------------------
       {
         path: 'itemswithoutserial/list',
@@ -88,6 +95,14 @@ const routes: Routes = [
         data: {
           type: 'edit',
         },
+      },
+      {
+        path: 'itemswithoutserial/employeehistory/:id/:ownerId',
+        component: ItemsWithoutSerialEmployeeHistoryComponent,
+      },
+      {
+        path: 'itemswithoutserial/warehousehistory/:id/:ownerId',
+        component: ItemsWithoutSerialWarehouseHistoryComponent,
       },
       //Sim Card--------------------------------
       {
