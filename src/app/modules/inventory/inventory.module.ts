@@ -25,6 +25,9 @@ import { TransferCustodyDetailsComponent } from './pages/transfer-custody-detail
 import { TransferCustodySerialsComponent } from './pages/transfer-custody-serials/transfer-custody-serials.component';
 import { FileUploadModule } from 'src/app/core/shared/core/modules/table/components/file-upload/file-upload.module';
 import { ItemsWithoutSerialEmployeeComponent } from './pages/items-without-serial-employee/items-without-serial-employee.component';
+import { DeviceHistoryComponent } from './pages/device-history/device-history.component';
+import { ItemsWithoutSerialEmployeeHistoryComponent } from './pages/items-without-serial-employee-history/items-without-serial-employee-history.component';
+import { ItemsWithoutSerialWarehouseHistoryComponent } from './pages/items-without-serial-warehouse-history/items-without-serial-warehouse-history.component';
 
 @NgModule({
   imports: [
@@ -56,6 +59,9 @@ import { ItemsWithoutSerialEmployeeComponent } from './pages/items-without-seria
     ShipmentListComponent,
     TransferCustodyDetailsComponent,
     TransferCustodySerialsComponent,
+    DeviceHistoryComponent,
+    ItemsWithoutSerialEmployeeHistoryComponent,
+    ItemsWithoutSerialWarehouseHistoryComponent,
   ],
 })
 export class InventoryModule {}

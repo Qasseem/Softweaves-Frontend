@@ -92,4 +92,18 @@ export class TicketService {
     }
     return this.http.getHeaderReq('/Ticket/GetSIMCardProviders', countryId);
   }
+
+  GetCancellationReceiptModelTypes() {
+    return this.http.getReq('/Ticket/GetCancellationReceiptModelTypes');
+  }
+
+  GetDeployReceiptModelTypes() {
+    return this.http.getReq('/Ticket/GetDeployReceiptModelTypes');
+  }
+  GetCableModelTypes() {
+    return this.http.getReq('/Ticket/GetCableModelTypes');
+  }
+  GetPaperRollModelTypes() {
+    return this.http.getReq('/Ticket/GetPaperRollModelTypes');
+  }
 }

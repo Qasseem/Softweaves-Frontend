@@ -16,7 +16,9 @@ import { HttpService } from 'src/app/core/http/http.service';
 export class CompletetTicketComponent implements OnInit {
   id;
   form: FormGroup;
+  form2: FormGroup;
   data: any;
+  showReplacmentModal = false;
   visible = false;
   options: any;
   simCardProviders = [];
@@ -27,14 +29,22 @@ export class CompletetTicketComponent implements OnInit {
   details: any;
   fileName: any;
   files = [];
+  oldFiles = [];
   images = [];
+  oldImages = [];
   failReasons = [];
+  ticketCategory: TicketCategoryEnum;
+  TicketCategoryEnum = TicketCategoryEnum;
   selectedItem: any;
   isAllTasksStatusesDone: any;
   showChart: boolean;
   showSimcardProviderInput: boolean = false;
   showDeliveredQtyInput: boolean = false;
   countryId: any;
+  paperRollModelTypes = [];
+  cableModelTypes = [];
+  deployRecipts = [];
+  cancellationRecipts = [];
   constructor(
     private fb: FormBuilder,
     private service: TicketService,
@@ -47,6 +57,7 @@ export class CompletetTicketComponent implements OnInit {
     this.id = this.route.snapshot.params.id || null;
     this.getTicketDetails(this.id);
     this.buildForm();
+    this.buildReplacmentForm();
     this.getFailedReasons();
     this.countryId = httpService.country;
     this.getSimcardProviders();
@@ -77,14 +88,45 @@ export class CompletetTicketComponent implements OnInit {
           this.checkForNotCompleteTasks();
           this.setChartData();
           this.setTaskType();
+          this.ticketCategory = this.details.categoryId;
+          this.buildFormValidators();
         }
       });
     }
   }
+  private buildFormValidators(): void {
+    switch (this.ticketCategory) {
+      case TicketCategoryEnum.Deployment:
+        this.setValidatorsForDeployment();
+        break;
+      case TicketCategoryEnum.Cancellation:
+        this.setValidatorsForCancellation();
+        break;
+      case TicketCategoryEnum.Replacement:
+        this.setValidatorsForReplacement();
+        break;
+      default:
+        throw new Error(`Unsupported ticket category: ${this.ticketCategory}`);
+    }
+  }
+
+  private setValidatorsForDeployment(): void {
+    this.form.get('receiptModelTypeId')?.setValidators([Validators.required]);
+    this.form.get('cableModelTypeId')?.setValidators([Validators.required]);
+    this.form.get('paperRollModelTypeId')?.setValidators([Validators.required]);
+  }
+
+  private setValidatorsForCancellation(): void {
+    this.form.get('receiptModelTypeId')?.setValidators([Validators.required]);
+  }
+
+  private setValidatorsForReplacement(): void {
+    this.form.get('receiptModelTypeId')?.setValidators([Validators.required]);
+  }
   setTaskType() {
     if (
       this.details?.categoryId == TicketCategoryEnum.Deployment ||
-      this.details?.categoryId == TicketCategoryEnum.Cancellation
+      this.details?.categoryId == TicketCategoryEnum.Replacement
     ) {
       this.showSimcardProviderInput = true;
       this.form.controls.simCardModelTypeId.setValidators([
@@ -104,7 +146,12 @@ export class CompletetTicketComponent implements OnInit {
     this.form.updateValueAndValidity();
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.GetCancellationReceiptModelTypes();
+    this.GetDeployReceiptModelTypes();
+    this.GetCableModelTypes();
+    this.GetPaperRollModelTypes();
+  }
   buildForm() {
     this.form = this.fb.group({
       ticketId: ['', Validators.required],
@@ -122,15 +169,82 @@ export class CompletetTicketComponent implements OnInit {
       deliveredQuantity: [null, []],
       simCardModelTypeId: [null, []],
       selectedTaskId: [null],
+
+      cableModelTypeId: [null],
+      receiptModelTypeId: [null],
+      paperRollModelTypeId: [null],
     });
+  }
+
+  buildReplacmentForm() {
+    this.form2 = this.fb.group({
+      oldTerminalId: [null, Validators.required],
+      oldPosSerial: [null, Validators.required],
+      oldIMEI: [null, Validators.required],
+      oldSIMSerial: [null, Validators.required],
+      oldImages: [[], Validators.required],
+      oldFiles: [[], Validators.required],
+      oldReceiptModelTypeId: [null, Validators.required],
+      statusId: [1, Validators.required],
+    });
+  }
+
+  GetCancellationReceiptModelTypes() {
+    this.service
+      .GetCancellationReceiptModelTypes()
+      .pipe(take(1))
+      .subscribe((resp) => {
+        if (resp.success) {
+          this.cancellationRecipts = resp.data;
+        }
+      });
+  }
+
+  GetDeployReceiptModelTypes() {
+    this.service
+      .GetDeployReceiptModelTypes()
+      .pipe(take(1))
+      .subscribe((resp) => {
+        if (resp.success) {
+          this.deployRecipts = resp.data;
+        }
+      });
+  }
+
+  GetCableModelTypes() {
+    this.service
+      .GetCableModelTypes()
+      .pipe(take(1))
+      .subscribe((resp) => {
+        if (resp.success) {
+          this.cableModelTypes = resp.data;
+        }
+      });
+  }
+
+  GetPaperRollModelTypes() {
+    this.service
+      .GetPaperRollModelTypes()
+      .pipe(take(1))
+      .subscribe((resp) => {
+        if (resp.success) {
+          this.paperRollModelTypes = resp.data;
+        }
+      });
   }
   backToList() {
     this.router.navigate(['main/ticket/list']);
   }
   compeletTask() {
     let obj = this.form.value;
+    obj = { ...obj, ...this.form2.value };
+
     obj.files = this.files.map((x) => x.data);
     obj.images = this.images.map((x) => x.data);
+
+    obj.oldFiles = this.oldFiles.map((x) => x.data);
+    obj.oldImages = this.oldImages.map((x) => x.data);
+
     obj.ticketId = +this.id;
     obj.errandTypeId = this.selectedItem.errandTypeId;
     this.service
@@ -178,12 +292,23 @@ export class CompletetTicketComponent implements OnInit {
     this.showChart = true;
   }
 
-  statusChange(event) {}
+  statusChange(event) {
+    if (this.ticketCategory == TicketCategoryEnum.Replacement) {
+      this.replacementPopupstatusChange(event);
+    }
+  }
   get f() {
     return this.form.controls;
   }
 
-  onFileSelectedNationalId(event: any) {
+  get f2() {
+    return this.form2.controls;
+  }
+  next() {
+    this.showReplacmentModal = false;
+    this.visible = true;
+  }
+  onFileSelectedNationalId(event: any, isFromReplacment = false) {
     const file = event.target.files[0];
     if (file && file.type.match('image.*')) {
       this.fileName = file.name;
@@ -193,13 +318,13 @@ export class CompletetTicketComponent implements OnInit {
           name: this.fileName,
           data: reader.result,
         };
-        this.files.push(file);
+        isFromReplacment ? this.oldFiles.push(file) : this.files.push(file);
       };
       reader.readAsDataURL(file);
     }
   }
 
-  onFileSelected(event) {
+  onFileSelected(event, isFromReplacment = false) {
     const file = event.target.files[0];
     if (file && file.type.match('image.*')) {
       this.fileName = file.name;
@@ -209,7 +334,7 @@ export class CompletetTicketComponent implements OnInit {
           name: this.fileName,
           data: reader.result,
         };
-        this.images.push(file);
+        isFromReplacment ? this.oldImages.push(file) : this.images.push(file);
       };
       reader.readAsDataURL(file);
     }
@@ -218,14 +343,25 @@ export class CompletetTicketComponent implements OnInit {
   removeImage(item) {
     this.images.splice(this.images.indexOf(item), 1);
   }
+
+  removeFromOldImages(item) {
+    this.oldImages.splice(this.oldImages.indexOf(item), 1);
+  }
   deleteFile(file) {
     this.files.splice(this.files.indexOf(file), 1);
+  }
+
+  deleteFromOldFiles(file) {
+    this.oldFiles.splice(this.files.indexOf(file), 1);
   }
   openCompleteTaskPopup(item) {
     this.selectedItem = item;
     this.form.reset();
     this.form.controls.statusId.setValue(1);
-    this.visible = true;
+
+    if (this.ticketCategory == TicketCategoryEnum.Replacement) {
+      this.showReplacmentModal = true;
+    } else this.visible = true;
   }
   checkForNotCompleteTasks() {
     this.isAllTasksStatusesDone = this.details.tasks.every(
@@ -242,5 +378,19 @@ export class CompletetTicketComponent implements OnInit {
         this.backToList();
       }
     });
+  }
+
+  replacementPopupstatusChange(event) {
+    if (event.value == 1) {
+      this.showReplacmentModal = true;
+      this.visible = false;
+      this.form.controls.statusId.setValue(1);
+      this.form2.controls.statusId.setValue(1);
+    } else if (event.value == 2) {
+      this.showReplacmentModal = false;
+      this.visible = true;
+      this.form.controls.statusId.setValue(2);
+      this.form2.controls.statusId.setValue(2);
+    }
   }
 }

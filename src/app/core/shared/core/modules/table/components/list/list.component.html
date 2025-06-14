@@ -439,7 +439,11 @@
                     style="color: #969696"
                     *ngIf="item.custom === 'defaultDate'"
                   >
-                    {{ rowData[item.label] }}
+                    {{
+                      rowData[item.label]
+                        | dateFixer
+                        | date : "yyyy-MM-dd HH:mm"
+                    }}
                   </span>
 
                   <span
@@ -539,12 +543,12 @@
       <td
         *ngIf="
           actions?.length ||
-          options.historyDetails ||
-          options.details ||
-          options.block ||
-          options.edit ||
-          option.favourite ||
-          option.clone
+          options?.historyDetails ||
+          options?.details ||
+          options?.block ||
+          options?.edit ||
+          option?.favourite ||
+          option?.clone
         "
         style="width: 100px"
       >

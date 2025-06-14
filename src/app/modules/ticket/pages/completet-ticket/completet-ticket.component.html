@@ -143,7 +143,10 @@
     <div>
       <div class="grid">
         <div class="col-12">
-          <div class="flex flex-wrap gap-3">
+          <div
+            *ngIf="ticketCategory != TicketCategoryEnum.Replacement"
+            class="flex flex-wrap gap-3"
+          >
             <div *ngFor="let category of statusOptions" class="field-checkbox">
               <p-radioButton
                 [inputId]="category.key"
@@ -388,6 +391,120 @@
                 </div>
               </div>
             </div>
+
+            <!-- ///////////////////// -->
+
+            <div
+              *ngIf="
+                ticketCategory == TicketCategoryEnum.Deployment ||
+                ticketCategory == TicketCategoryEnum.Replacement
+              "
+              class="col-6"
+            >
+              <div class="flex flex-column gap-2">
+                <label for="cableModelTypeId"
+                  >Cable <span class="p-error"> * </span>
+                </label>
+                <p-dropdown
+                  [options]="cableModelTypes"
+                  formControlName="cableModelTypeId"
+                  [optionValue]="'id'"
+                  optionLabel="nameEn"
+                  filter="true"
+                />
+                <div
+                  *ngIf="
+                    f.cableModelTypeId.errors &&
+                    (f.cableModelTypeId.dirty || f.cableModelTypeId.touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.cableModelTypeId.errors.required"
+                  >
+                    Cable field is required
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              *ngIf="
+                ticketCategory == TicketCategoryEnum.Deployment ||
+                ticketCategory == TicketCategoryEnum.Cancellation ||
+                ticketCategory == TicketCategoryEnum.Replacement
+              "
+              class="col-6"
+            >
+              <div class="flex flex-column gap-2">
+                <label for="receiptModelTypeId"
+                  >Receipt <span class="p-error"> * </span>
+                </label>
+                <p-dropdown
+                  [options]="
+                    ticketCategory == TicketCategoryEnum.Cancellation
+                      ? cancellationRecipts
+                      : deployRecipts
+                  "
+                  formControlName="receiptModelTypeId"
+                  [optionValue]="'id'"
+                  optionLabel="nameEn"
+                  filter="true"
+                />
+                <div
+                  *ngIf="
+                    f.receiptModelTypeId.errors &&
+                    (f.receiptModelTypeId.dirty || f.receiptModelTypeId.touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.receiptModelTypeId.errors.required"
+                  >
+                    Receipt field is required
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              *ngIf="
+                ticketCategory == TicketCategoryEnum.Deployment ||
+                ticketCategory == TicketCategoryEnum.Replacement
+              "
+              class="col-6"
+            >
+              <div class="flex flex-column gap-2">
+                <label for="paperRollModelTypeId"
+                  >Paper Roll Type <span class="p-error"> * </span>
+                </label>
+                <p-dropdown
+                  [options]="paperRollModelTypes"
+                  formControlName="paperRollModelTypeId"
+                  [optionValue]="'id'"
+                  optionLabel="nameEn"
+                  filter="true"
+                />
+                <div
+                  *ngIf="
+                    f.paperRollModelTypeId.errors &&
+                    (f.paperRollModelTypeId.dirty ||
+                      f.paperRollModelTypeId.touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.paperRollModelTypeId.errors.required"
+                  >
+                    Paper Roll Type field is required
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- /////////////////////// -->
           </div>
           <hr class="header-divider" />
           <div class="grid">
@@ -510,11 +627,347 @@
           form.get('deliveredQuantity').valid &&
           form.get('simCardModelTypeId').valid &&
           form.get('simSerial').valid &&
-          form.get('imei').valid
+          form.get('simSerial').valid &&
+          form.get('cableModelTypeId').valid &&
+          form.get('receiptModelTypeId').valid &&
+          form.get('paperRollModelTypeId').valid
         )
       "
       (click)="compeletTask()"
       label="Finish"
+      [raised]="true"
+    />
+  </div>
+</p-dialog>
+
+<!-- ///////////////////////////////////////////////////
+///////////////////////////////////////////////////
+///////////////////////////////////////////////////
+///////////////////////////////////////////////////
+///////////////////////////////////////////////////
+///////////////////////////////////////////////////
+/////////////////////////////////////////////////// -->
+
+<p-dialog
+  header="Header"
+  [modal]="true"
+  [(visible)]="showReplacmentModal"
+  [closeIcon]="false"
+  [style]="{ width: '55rem' }"
+>
+  <ng-template pTemplate="header">
+    <div class="inline-flex align-items-center justify-content-center gap-2">
+      <span style="font-size: 12px">Feedback</span>
+    </div>
+  </ng-template>
+
+  <form [formGroup]="form2">
+    <div>
+      <div class="grid">
+        <div class="col-12">
+          <div class="flex flex-wrap gap-3">
+            <div *ngFor="let category of statusOptions" class="field-checkbox">
+              <p-radioButton
+                [inputId]="category.key"
+                [value]="category.key"
+                formControlName="statusId"
+                (onClick)="replacementPopupstatusChange($event)"
+              />
+              <label [for]="category.key" class="ml-2">
+                {{ category.name }}
+              </label>
+              <span style="margin-right: 150px"></span>
+            </div>
+          </div>
+          <hr class="header-divider" />
+
+          <div class="grid">
+            <div class="col-6">
+              <div class="flex flex-column gap-2">
+                <label for="oldTerminalId"
+                  >Terminal ID <span class="p-error"> * </span></label
+                >
+                <input
+                  [ngClass]="{
+                    'ng-invalid ng-dirty': f2.oldTerminalId?.errors?.required
+                  }"
+                  pInputText
+                  type="number"
+                  formControlName="oldTerminalId"
+                />
+
+                <div
+                  *ngIf="
+                    f2.oldTerminalId.errors &&
+                    (f2.oldTerminalId.dirty || f2.oldTerminalId.touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f2.oldTerminalId.errors.required"
+                  >
+                    Terminal ID field is required
+                  </div>
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f2.oldTerminalId.errors.pattern"
+                  >
+                    Terminal ID field length must be between(1,30)
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div class="flex flex-column gap-2">
+                <label for="oldPosSerial"
+                  >POS Serial <span class="p-error"> * </span></label
+                >
+                <input
+                  [ngClass]="{
+                    'ng-invalid ng-dirty': f2.oldPosSerial?.errors?.required
+                  }"
+                  pInputText
+                  type="number"
+                  formControlName="oldPosSerial"
+                />
+
+                <div
+                  *ngIf="
+                    f2.oldPosSerial.errors &&
+                    (f2.oldPosSerial.dirty || f2.oldPosSerial.touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f2.oldPosSerial.errors.required"
+                  >
+                    Terminal ID field is required
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- ////////////////////////// -->
+          <div class="grid" *ngIf="form.get('statusId').value == 1">
+            <div class="col-6">
+              <div class="flex flex-column gap-2">
+                <label for="oldIMEI"
+                  >IMEI <span class="p-error"> * </span></label
+                >
+                <input
+                  [ngClass]="{
+                    'ng-invalid ng-dirty': f2.oldIMEI?.errors?.required
+                  }"
+                  pInputText
+                  type="number"
+                  formControlName="oldIMEI"
+                />
+
+                <div
+                  *ngIf="
+                    f2.oldIMEI.errors &&
+                    (f2.oldIMEI.dirty || f2.oldIMEI.touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f2.oldIMEI.errors.required"
+                  >
+                    Terminal ID field is required
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="flex flex-column gap-2">
+                <label for="oldSIMSerial"
+                  >SIM Serial <span class="p-error"> * </span></label
+                >
+                <input
+                  [ngClass]="{
+                    'ng-invalid ng-dirty': f2.oldSIMSerial?.errors?.required
+                  }"
+                  pInputText
+                  type="number"
+                  formControlName="oldSIMSerial"
+                />
+
+                <div
+                  *ngIf="
+                    f2.oldSIMSerial.errors &&
+                    (f2.oldSIMSerial.dirty || f2.oldSIMSerial.touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f2.oldSIMSerial.errors.required"
+                  >
+                    Sim Serial ID field is required
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="flex flex-column gap-2">
+                <label for="oldReceiptModelTypeId"
+                  >Receipt <span class="p-error"> * </span>
+                </label>
+                <p-dropdown
+                  [options]="cancellationRecipts"
+                  formControlName="oldReceiptModelTypeId"
+                  [optionValue]="'id'"
+                  optionLabel="nameEn"
+                  filter="true"
+                />
+                <div
+                  *ngIf="
+                    f2.oldReceiptModelTypeId.errors &&
+                    (f2.oldReceiptModelTypeId.dirty ||
+                      f2.oldReceiptModelTypeId.touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f2.oldReceiptModelTypeId.errors.required"
+                  >
+                    Receipt field is required
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr class="header-divider" />
+          <div class="grid">
+            <div class="col-12">
+              <h5 style="margin-top: 0; margin-bottom: 0">Attach Files</h5>
+            </div>
+          </div>
+          <div class="grid">
+            <div class="col-6">
+              <div>
+                <div class="upload-container file-header">
+                  <label for="file-upload" class="upload-label">
+                    <div class="upload-content">
+                      <!-- <i class="pi pi-cloud-upload"></i> -->
+                      <oc-icon
+                        [icon]="'upload-icon'"
+                        [width]="'25px'"
+                        [height]="'25px'"
+                      ></oc-icon>
+                      <div
+                        class="flex flex-row file-upload-text"
+                        style="width: 100%"
+                      >
+                        <span>Upload new file</span>
+
+                        <span
+                          style="margin-left: auto; color: #005ce8"
+                          class="browse-file"
+                          >Browse file</span
+                        >
+                      </div>
+                    </div>
+                  </label>
+                  <input
+                    id="file-upload"
+                    type="file"
+                    accept="*"
+                    (change)="onFileSelectedNationalId($event, true)"
+                    hidden
+                  />
+                </div>
+              </div>
+            </div>
+            <div *ngFor="let file of oldFiles" class="col-6">
+              <div
+                *ngIf="fileName"
+                class="file-info"
+                style="cursor: pointer; margin-top: 0"
+              >
+                <oc-icon
+                  [icon]="'files-icon'"
+                  [width]="'25px'"
+                  [height]="'25px'"
+                ></oc-icon>
+                <span class="file-info-text">
+                  {{ file?.name }}
+                </span>
+
+                <span (click)="deleteFromOldFiles(file)" class="delete-button">
+                  X
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="grid mt-1">
+            <div class="col-12">
+              <h5 style="margin-top: 0; margin-bottom: 0">Images</h5>
+            </div>
+          </div>
+
+          <div class="grid">
+            <div class="col-1">
+              <div (click)="fileInput.click()" class="image-icon">
+                <oc-icon
+                  style="margin: auto"
+                  [icon]="'plus-icon'"
+                  [width]="'20px'"
+                  [height]="'20px'"
+                  [scale]="1.1"
+                ></oc-icon>
+
+                <input
+                  type="file"
+                  #fileInput
+                  (change)="onFileSelected($event, true)"
+                  accept="image/*"
+                  hidden
+                />
+              </div>
+            </div>
+            <div
+              *ngFor="let item of oldImages"
+              class="col-1"
+              style="display: flex"
+            >
+              <img
+                style="width: 40px; height: 40px"
+                [src]="item?.data"
+                alt="Base64 Image"
+              />
+              <button
+                (click)="removeFromOldImages(item)"
+                class="small-rounded-button"
+              >
+                X
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="flex justify-content-end gap-2">
+    <p-button
+      size="small"
+      [style]="{ width: '200px' }"
+      [disabled]="
+        !(
+          form2.get('oldTerminalId').valid &&
+          form2.get('oldPosSerial').valid &&
+          form2.get('oldIMEI').valid &&
+          form2.get('oldSIMSerial').valid &&
+          form2.get('oldReceiptModelTypeId').valid
+        )
+      "
+      (click)="next()"
+      label="Next"
       [raised]="true"
     />
   </div>

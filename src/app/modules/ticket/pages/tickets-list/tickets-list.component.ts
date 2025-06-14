@@ -256,6 +256,10 @@ export class TicketsListComponent implements OnInit, OnDestroy {
       header: 'Assignee',
     },
     {
+      field: 'taskSuccessName',
+      header: 'Task Success',
+    },
+    {
       field: 'statusEn',
       header: 'Status',
       // customCell: 'multiLabel',
