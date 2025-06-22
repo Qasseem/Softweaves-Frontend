@@ -437,7 +437,11 @@
                         <div
                           class="view-container--cards--details-card--info--container--left--item--text"
                         >
-                          {{ panel?.poS_Serial }}
+                          {{
+                            curr == 2
+                              ? panel?.oldSerialNumber
+                              : panel?.poS_Serial
+                          }}
                         </div>
                       </div>
 
