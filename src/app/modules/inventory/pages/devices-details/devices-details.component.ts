@@ -57,7 +57,7 @@ export class DevicesDetailsComponent implements OnInit {
       [
         { type: '', label: 'Merchant Name', value: this.details?.merchantName },
         { type: '', label: 'Merchant ID', value: this.details?.merchantId },
-        { type: '', label: 'Terminal ID', value: this.details?.terminalId },
+        { type: '', label: 'Terminal ID', value: this.details?.terminalNumber },
         { type: '', label: 'Ticket ID', value: this.details?.ticketId },
         { type: '', label: 'Region', value: this.details?.region },
         { type: '', label: 'City', value: this.details?.city },

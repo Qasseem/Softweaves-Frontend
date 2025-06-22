@@ -249,6 +249,11 @@ export class DevicesListComponent implements OnInit {
       propValueName: 'id',
       header: '0',
     },
+    {
+      type: SearchInputTypes.text,
+      field: 'shipmentId',
+      isFixed: true,
+    },
     /////////
   ];
 
