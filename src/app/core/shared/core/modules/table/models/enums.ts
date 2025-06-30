@@ -89,3 +89,10 @@ export enum TicketCategoryEnum {
   AfterSales = 4,
   Replacement = 5,
 }
+
+export enum PublishConfigEnum {
+  TestConfig = 'TestConfig',
+  EGConfig = 'EGConfig',
+  UAEConfig = 'UAEConfig',
+  LocalConfig = 'LocalConfig',
+}

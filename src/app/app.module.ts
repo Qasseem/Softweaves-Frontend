@@ -20,6 +20,9 @@ import { LoginGuard } from './core/guards/login.guard';
 import { ErrorHandlingInterceptor } from './core/interceptors/error-handling.interceptor';
 import { TokenInterceptor } from './core/interceptors/token.interceptor';
 import { RouterModule } from '@angular/router';
+
+import * as configData from '../app-config.json';
+
 import {
   MsalModule,
   MsalInterceptor,
@@ -57,11 +60,13 @@ export function loggerCallback(logLevel: LogLevel, message: string) {
 export function MSALInstanceFactory(): PublicClientApplication {
   return new PublicClientApplication({
     auth: {
-      clientId: environment.adConfig.clientId,
-      authority: `https://login.microsoftonline.com/${environment.adConfig.tenantId}`,
+      clientId: environment[configData?.config].clientId,
+      authority: `https://login.microsoftonline.com/${
+        environment[configData?.config].tenantId
+      }`,
       knownAuthorities: [`login.microsoftonline.com`],
-      redirectUri: 'http://localhost:4200',
-      postLogoutRedirectUri: 'http://localhost:4200',
+      redirectUri: environment[configData?.config].redirectUri,
+      postLogoutRedirectUri: environment[configData?.config].redirectUri,
     },
     cache: {
       cacheLocation: BrowserCacheLocation.LocalStorage,

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ConfigService } from 'src/app/config.service';
+import { environment } from 'src/environments/environment';
 // import { ConfigService } from 'src/app/config-service';
 
 @Injectable({
@@ -23,8 +24,8 @@ export class HttpService {
 
   constructor(private http: HttpClient, private configService: ConfigService) {
     this.config = this.configService.readConfig();
-    this.baseUrl = this.config.api;
-    this.country = this.config.country;
+    this.baseUrl = environment[this.config.config]?.apiEndpointUrl;
+    this.country = environment[this.config.config]?.country || 'EG';
   }
 
   /**
