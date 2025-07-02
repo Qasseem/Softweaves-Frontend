@@ -236,6 +236,8 @@ export class CompletetTicketComponent implements OnInit {
     this.router.navigate(['main/ticket/list']);
   }
   compeletTask() {
+    const formStatusId = this.form.controls.statusId.value;
+
     let obj = this.form.value;
     obj = { ...obj, ...this.form2.value };
 
@@ -247,6 +249,9 @@ export class CompletetTicketComponent implements OnInit {
 
     obj.ticketId = +this.id;
     obj.errandTypeId = this.selectedItem.errandTypeId;
+    if (obj?.failReasonId && formStatusId == 2) {
+      obj.statusId = formStatusId;
+    }
     this.service
       .CompleteTicket(obj)
       .pipe(take(1))
