@@ -87,8 +87,8 @@ export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
   const protectedResourceMap = new Map<string, Array<string>>();
   //have this set if more microservice used or requires different scope for different controllers
   protectedResourceMap.set(
-    environment.adConfig.apiEndpointUrl, // This is for all controllers
-    environment.adConfig.scopeUrls
+    environment[configData?.config]?.apiEndpointUrl, // This is for all controllers
+    environment[configData?.config]?.scopeUrls
   );
   return {
     interactionType: InteractionType.Redirect,
@@ -100,7 +100,7 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
   return {
     interactionType: InteractionType.Redirect,
     authRequest: {
-      scopes: [...environment.adConfig.scopeUrls],
+      scopes: [...environment[configData?.config]?.scopeUrls],
     },
     loginFailedRoute: '/login-failed',
   };

@@ -8,7 +8,7 @@ import { MsalService } from '@azure/msal-angular';
 import { SpinnerVisibilityService } from 'ng-http-loader';
 
 import { environment } from 'src/environments/environment';
-
+import * as configData from '../app-config.json';
 @Component({
   selector: 'oc-root',
   templateUrl: './app.component.html',
@@ -45,7 +45,7 @@ export class AppComponent implements OnInit {
   getSilentToken() {
     this.msalSerivce.instance.initialize().then(() => {
       const tokenRequest = {
-        scopes: [...environment.adConfig.scopeUrls],
+        scopes: [...environment[configData?.config]?.scopeUrls],
         account: this.msalSerivce.instance.getAllAccounts()[0],
       };
 
