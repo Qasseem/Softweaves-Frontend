@@ -111,17 +111,17 @@ export class CompletetTicketComponent implements OnInit {
   }
 
   private setValidatorsForDeployment(): void {
-    this.form.get('receiptModelTypeId')?.setValidators([Validators.required]);
-    this.form.get('cableModelTypeId')?.setValidators([Validators.required]);
-    this.form.get('paperRollModelTypeId')?.setValidators([Validators.required]);
+    // this.form.get('receiptModelTypeId')?.setValidators([Validators.required]);
+    // this.form.get('cableModelTypeId')?.setValidators([Validators.required]);
+    // this.form.get('paperRollModelTypeId')?.setValidators([Validators.required]);
   }
 
   private setValidatorsForCancellation(): void {
-    this.form.get('receiptModelTypeId')?.setValidators([Validators.required]);
+    // this.form.get('receiptModelTypeId')?.setValidators([Validators.required]);
   }
 
   private setValidatorsForReplacement(): void {
-    this.form.get('receiptModelTypeId')?.setValidators([Validators.required]);
+    // this.form.get('receiptModelTypeId')?.setValidators([Validators.required]);
   }
   setTaskType() {
     if (
@@ -129,9 +129,9 @@ export class CompletetTicketComponent implements OnInit {
       this.details?.categoryId == TicketCategoryEnum.Replacement
     ) {
       this.showSimcardProviderInput = true;
-      this.form.controls.simCardModelTypeId.setValidators([
-        Validators.required,
-      ]);
+      // this.form.controls.simCardModelTypeId.setValidators([
+      //   Validators.required,
+      // ]);
     }
     if (
       this.details?.categoryId == TicketCategoryEnum.Visit ||
@@ -184,7 +184,7 @@ export class CompletetTicketComponent implements OnInit {
       oldSIMSerial: [null, Validators.required],
       oldImages: [[], Validators.required],
       oldFiles: [[], Validators.required],
-      oldReceiptModelTypeId: [null, Validators.required],
+      oldReceiptModelTypeId: [null],
       statusId: [1, Validators.required],
     });
   }
