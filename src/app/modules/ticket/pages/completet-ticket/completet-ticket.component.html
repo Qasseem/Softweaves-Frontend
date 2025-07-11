@@ -220,7 +220,7 @@
                     'ng-invalid ng-dirty': f.terminalId?.errors?.required
                   }"
                   pInputText
-                  type="number"
+                  numbersOnly
                   formControlName="terminalId"
                 />
 
@@ -257,7 +257,7 @@
                     'ng-invalid ng-dirty': f.posSerial?.errors?.required
                   }"
                   pInputText
-                  type="number"
+                  numbersOnly
                   formControlName="posSerial"
                 />
 
@@ -288,7 +288,7 @@
                     'ng-invalid ng-dirty': f.imei?.errors?.required
                   }"
                   pInputText
-                  type="number"
+                  numbersOnly
                   formControlName="imei"
                 />
 
@@ -312,7 +312,7 @@
                     'ng-invalid ng-dirty': f.simSerial?.errors?.required
                   }"
                   pInputText
-                  type="number"
+                  numbersOnly
                   formControlName="simSerial"
                 />
 
@@ -343,7 +343,7 @@
                     'ng-invalid ng-dirty': f.deliveredQuantity?.errors?.required
                   }"
                   pInputText
-                  type="number"
+                  numbersOnly
                   formControlName="deliveredQuantity"
                 />
 
@@ -363,7 +363,7 @@
                 </div>
               </div>
             </div>
-            <div *ngIf="showSimcardProviderInput" class="col-6">
+            <!-- <div *ngIf="showSimcardProviderInput" class="col-6">
               <div class="flex flex-column gap-2">
                 <label for="simCardModelTypeId"
                   >Simcard Provider <span class="p-error"> * </span>
@@ -390,11 +390,11 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
 
             <!-- ///////////////////// -->
 
-            <div
+            <!-- <div
               *ngIf="
                 ticketCategory == TicketCategoryEnum.Deployment ||
                 ticketCategory == TicketCategoryEnum.Replacement
@@ -427,9 +427,9 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
 
-            <div
+            <!-- <div
               *ngIf="
                 ticketCategory == TicketCategoryEnum.Deployment ||
                 ticketCategory == TicketCategoryEnum.Cancellation ||
@@ -467,8 +467,8 @@
                   </div>
                 </div>
               </div>
-            </div>
-
+            </div> -->
+            <!--
             <div
               *ngIf="
                 ticketCategory == TicketCategoryEnum.Deployment ||
@@ -503,7 +503,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
             <!-- /////////////////////// -->
           </div>
           <hr class="header-divider" />
@@ -692,7 +692,7 @@
                     'ng-invalid ng-dirty': f2.oldTerminalId?.errors?.required
                   }"
                   pInputText
-                  type="number"
+                  numbersOnly
                   formControlName="oldTerminalId"
                 />
 
@@ -729,7 +729,7 @@
                     'ng-invalid ng-dirty': f2.oldPosSerial?.errors?.required
                   }"
                   pInputText
-                  type="number"
+                  numbersOnly
                   formControlName="oldPosSerial"
                 />
 
@@ -762,7 +762,7 @@
                     'ng-invalid ng-dirty': f2.oldIMEI?.errors?.required
                   }"
                   pInputText
-                  type="number"
+                  numbersOnly
                   formControlName="oldIMEI"
                 />
 
@@ -792,7 +792,7 @@
                     'ng-invalid ng-dirty': f2.oldSIMSerial?.errors?.required
                   }"
                   pInputText
-                  type="number"
+                  numbersOnly
                   formControlName="oldSIMSerial"
                 />
 
@@ -812,7 +812,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-6">
+            <!-- <div class="col-6">
               <div class="flex flex-column gap-2">
                 <label for="oldReceiptModelTypeId"
                   >Receipt <span class="p-error"> * </span>
@@ -840,7 +840,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
           <hr class="header-divider" />
           <div class="grid">
