@@ -60,8 +60,8 @@ export function MSALInstanceFactory(): PublicClientApplication {
       clientId: environment.adConfig.clientId,
       authority: `https://login.microsoftonline.com/${environment.adConfig.tenantId}`,
       knownAuthorities: [`login.microsoftonline.com`],
-      redirectUri: 'http://localhost:4200',
-      postLogoutRedirectUri: 'http://localhost:4200',
+      redirectUri: 'https://oc.softwaves.co/',
+      postLogoutRedirectUri: 'https://oc.softwaves.co/',
     },
     cache: {
       cacheLocation: BrowserCacheLocation.LocalStorage,
