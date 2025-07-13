@@ -907,13 +907,13 @@
           </div>
           <div class="grid mt-1">
             <div class="col-12">
-              <h5 style="margin-top: 0; margin-bottom: 0">Images</h5>
+              <h5 style="margin-top: 0; margin-bottom: 0">Images Old</h5>
             </div>
           </div>
 
           <div class="grid">
             <div class="col-1">
-              <div (click)="fileInput.click()" class="image-icon">
+              <div (click)="fileInputOld.click()" class="image-icon">
                 <oc-icon
                   style="margin: auto"
                   [icon]="'plus-icon'"
@@ -924,7 +924,7 @@
 
                 <input
                   type="file"
-                  #fileInput
+                  #fileInputOld
                   (change)="onFileSelected($event, true)"
                   accept="image/*"
                   hidden
