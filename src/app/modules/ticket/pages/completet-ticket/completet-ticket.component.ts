@@ -261,8 +261,17 @@ export class CompletetTicketComponent implements OnInit {
           this.visible = false;
           this.showDeliveredQtyInput = false;
           this.showSimcardProviderInput = false;
+          this.form.reset();
+          this.form2.reset();
+          this.cleanFilesArray();
         }
       });
+  }
+  cleanFilesArray() {
+    this.files = [];
+    this.images = [];
+    this.oldFiles = [];
+    this.oldImages = [];
   }
   setChartData() {
     var data = [
