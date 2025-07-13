@@ -261,13 +261,16 @@ export class CompletetTicketComponent implements OnInit {
           this.visible = false;
           this.showDeliveredQtyInput = false;
           this.showSimcardProviderInput = false;
-          this.form.reset();
-          this.form2.reset();
-          this.cleanFilesArray();
+
+          this.cleanFilesArrayAndResetFrom();
         }
       });
   }
-  cleanFilesArray() {
+  cleanFilesArrayAndResetFrom() {
+    this.form.reset();
+    this.form.controls.statusId.setValue(1);
+    this.form2.reset();
+    this.form2.controls.statusId.setValue(1);
     this.files = [];
     this.images = [];
     this.oldFiles = [];
