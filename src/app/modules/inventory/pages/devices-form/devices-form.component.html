@@ -36,7 +36,7 @@
       <div class="grid d-flex inputs-div">
         <div class="col-12 p-0">
           <div class="p-20 flex flex-wrap">
-            <div class="col-6">
+            <div class="col-4">
               <div class="flex flex-column gap-2">
                 <label for="modelCategoryId"
                   >Model Category <span class="p-error"> * </span>
@@ -66,7 +66,7 @@
               </div>
             </div>
 
-            <div class="col-6">
+            <div class="col-4">
               <div class="flex flex-column gap-2">
                 <label for="shipmentId">Shipment ID </label>
                 <input
@@ -99,7 +99,7 @@
               </div>
             </div>
 
-            <div class="col-6">
+            <div class="col-4">
               <div class="flex flex-column gap-2">
                 <label for="modelTypeId"
                   >Model Type <span class="p-error"> * </span>
@@ -128,7 +128,7 @@
               </div>
             </div>
 
-            <div class="col-6">
+            <div class="col-4">
               <div class="flex flex-column gap-2">
                 <label for="serialNumber"
                   >Device Serial<span class="p-error"> * </span>
@@ -163,7 +163,7 @@
               </div>
             </div>
 
-            <div class="col-6">
+            <div class="col-4">
               <div class="flex flex-column gap-2">
                 <label for="conditionId"
                   >Device Condition <span class="p-error"> * </span>
@@ -192,7 +192,7 @@
               </div>
             </div>
 
-            <div class="col-6">
+            <div class="col-4">
               <div class="flex flex-column gap-2">
                 <label for="imei"
                   >Device IMEI<span class="p-error"> * </span>
@@ -223,7 +223,7 @@
               </div>
             </div>
 
-            <div class="col-6">
+            <!-- <div class="col-4">
               <div class="flex flex-column gap-2">
                 <label for="errandChannelId"
                   >Errand Channel <span class="p-error"> * </span>
@@ -250,9 +250,9 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
 
-            <div class="col-6">
+            <div class="col-4">
               <div class="flex flex-column gap-2">
                 <label for="simSerial"
                   >Sim Serial<span class="p-error"> </span>
@@ -287,7 +287,7 @@
               </div>
             </div>
 
-            <div class="col-6">
+            <div class="col-4">
               <div class="flex flex-column gap-2">
                 <label for="warehouseId"
                   >Warehouse <span class="p-error"> * </span>
@@ -312,6 +312,153 @@
                   >
                     Warehouse field is required
                   </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-4">
+              <div class="flex flex-column gap-2">
+                <label for="bankId"
+                  >Bank <span class="p-error"> * </span>
+                </label>
+                <p-dropdown
+                  [options]="deviceConditionList"
+                  formControlName="bankId"
+                  [optionValue]="'id'"
+                  optionLabel="nameEn"
+                  filter="true"
+                />
+                <div
+                  *ngIf="
+                    f.bankId.errors && (f.bankId.dirty || f.bankId.touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div class="fs-10 color-red" *ngIf="f.bankId.errors.required">
+                    Bank field is required
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-4">
+              <div class="flex flex-column gap-2">
+                <label for="countryId"
+                  >Country <span class="p-error"> * </span>
+                </label>
+                <p-dropdown
+                  [options]="deviceConditionList"
+                  formControlName="countryId"
+                  [optionValue]="'id'"
+                  optionLabel="nameEn"
+                  filter="true"
+                />
+                <div
+                  *ngIf="
+                    f.countryId.errors &&
+                    (f.countryId.dirty || f.countryId.touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.countryId.errors.required"
+                  >
+                    Country field is required
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-4">
+              <div class="flex flex-column gap-2">
+                <label for="assignedLocationId"
+                  >Assigned Location <span class="p-error"> * </span>
+                </label>
+                <p-dropdown
+                  [options]="deviceConditionList"
+                  formControlName="assignedLocationId"
+                  [optionValue]="'id'"
+                  optionLabel="nameEn"
+                  filter="true"
+                />
+                <div
+                  *ngIf="
+                    f.assignedLocationId.errors &&
+                    (f.assignedLocationId.dirty || f.assignedLocationId.touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.assignedLocationId.errors.required"
+                  >
+                    Assigned location field is required
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="flex flex-column gap-2">
+                <label for="failReasonId">Note</label>
+                <textarea
+                  rows="3"
+                  cols="30"
+                  pInputTextarea
+                  formControlName="notes"
+                  style="height: 80px"
+                >
+                </textarea>
+              </div>
+            </div>
+          </div>
+          <div class="pl-4 pr-4 pb-2">
+            <div class="grid">
+              <div class="col-12">
+                <span class="upload-file-header">Upload Files</span>
+                <span style="color: #cecece; font-size: 10px">(Optional)</span>
+              </div>
+            </div>
+
+            <div class="grid">
+              <div class="col-1">
+                <div (click)="fileInput.click()" class="image-icon">
+                  <oc-icon
+                    style="margin: auto"
+                    [icon]="'plus-icon'"
+                    [width]="'20px'"
+                    [height]="'20px'"
+                    [scale]="1.1"
+                  ></oc-icon>
+
+                  <input
+                    type="file"
+                    #fileInput
+                    (change)="onFileSelected($event)"
+                    accept="*"
+                    hidden
+                  />
+                </div>
+              </div>
+              <div *ngFor="let item of files" class="col-1 file-container">
+                <button
+                  (click)="removeImage(item)"
+                  class="small-rounded-button"
+                >
+                  X
+                </button>
+                <img
+                  *ngIf="item?.isImage"
+                  style="width: 50px; height: 50px"
+                  [src]="item?.data"
+                  alt="Base64 Image"
+                />
+                <div class="image-icon" *ngIf="!item?.isImage">
+                  <i class="pi pi-file" style="margin: auto"></i>
+                </div>
+
+                <div>
+                  <span>{{ item?.name?.slice(-20) }}</span>
                 </div>
               </div>
             </div>

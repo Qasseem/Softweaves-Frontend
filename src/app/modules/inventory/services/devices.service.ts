@@ -5,6 +5,15 @@ import { HttpService } from 'src/app/core/http/http.service';
   providedIn: 'root',
 })
 export class DevicesService {
+  getLoactionsList() {
+    return this.http.getReq(this.controllerName + '/GetConditionDropDown');
+  }
+  getCountriesList() {
+    return this.http.getReq(this.controllerName + '/GetConditionDropDown');
+  }
+  getBanksList() {
+    return this.http.getReq(this.controllerName + '/GetConditionDropDown');
+  }
   controllerName = '/Device';
   getAllModelCategories() {
     return this.http.getReq(this.controllerName + '/GetById');

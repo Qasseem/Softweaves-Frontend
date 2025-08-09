@@ -7,6 +7,7 @@ import { ModeltypesService } from '../../services/modeltypes.service';
 import { WarehousesService } from '../../services/warehouses.service';
 import { ErrandChannelService } from 'src/app/modules/admin-activities/services/errand-channel.service';
 import { TerminalService } from 'src/app/modules/terminal/services/terminal.service';
+import { ToastService } from 'src/app/core/services/toaster.service';
 
 @Component({
   selector: 'app-devices-form',
@@ -23,6 +24,11 @@ export class DevicesFormComponent implements OnInit {
   errandChanelsList = [];
   warehousesList = [];
   deviceConditionList = [];
+  fileName: any;
+  files = [];
+  banksList = [];
+  countriesList = [];
+  locationsList = [];
   constructor(
     private fb: FormBuilder,
     private service: DevicesService,
@@ -30,7 +36,8 @@ export class DevicesFormComponent implements OnInit {
     private route: ActivatedRoute,
     private modeltypesService: ModeltypesService,
     private warehousesService: WarehousesService,
-    private terminalService: TerminalService
+    private terminalService: TerminalService,
+    private toaster: ToastService
   ) {
     this.formType = this.route.snapshot.data.type;
   }
@@ -46,11 +53,16 @@ export class DevicesFormComponent implements OnInit {
       modelCategoryId: ['', [Validators.required]],
       modelTypeId: [null, [Validators.required]],
       conditionId: [null, [Validators.required]],
-      errandChannelId: [null, [Validators.required]],
+      errandChannelId: [null],
       shipmentId: [null],
       warehouseId: [null, [Validators.required]],
       serialNumber: [null, [Validators.required]],
       imei: [null, [Validators.required]],
+      bankId: [null, [Validators.required]],
+      countryId: [null, [Validators.required]],
+      assignedLocationId: [null, [Validators.required]],
+      notes: [null, [Validators.maxLength(500)]],
+
       simSerial: [null, []],
       id: [null],
     });
@@ -128,6 +140,39 @@ export class DevicesFormComponent implements OnInit {
       });
   }
 
+  getBanksList() {
+    this.service
+      .getBanksList()
+      .pipe(take(1))
+      .subscribe((resp) => {
+        if (resp.success) {
+          this.banksList = resp.data;
+        }
+      });
+  }
+
+  getCountriesList() {
+    this.service
+      .getCountriesList()
+      .pipe(take(1))
+      .subscribe((resp) => {
+        if (resp.success) {
+          this.countriesList = resp.data;
+        }
+      });
+  }
+
+  getLoactionsList() {
+    this.service
+      .getLoactionsList()
+      .pipe(take(1))
+      .subscribe((resp) => {
+        if (resp.success) {
+          this.locationsList = resp.data;
+        }
+      });
+  }
+
   getItemDetails() {
     this.service
       .getDetailsById(this.id)
@@ -176,6 +221,32 @@ export class DevicesFormComponent implements OnInit {
         });
     }
   }
+
+  onFileSelected(event) {
+    if (this.files.length >= 5) {
+      this.toaster.showError('max 5 files allowed');
+    }
+    const file = event.target.files[0];
+    if (file) {
+      this.fileName = file.name;
+      const reader = new FileReader();
+      reader.onload = () => {
+        let toSaveFile = {
+          name: this.fileName,
+          data: reader.result,
+          type: file.type,
+          isImage: file.type.match('image.*'),
+        };
+        this.files.push(toSaveFile);
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  removeImage(item) {
+    this.files.splice(this.files.indexOf(item), 1);
+  }
+
   backToList() {
     this.router.navigate(['main/inventory/devices/list']);
   }
