@@ -5,21 +5,44 @@ import { HttpService } from 'src/app/core/http/http.service';
   providedIn: 'root',
 })
 export class DevicesService {
+  controllerName = '/Device';
+
   getLoactionsList() {
-    return this.http.getReq(this.controllerName + '/GetConditionDropDown');
+    return this.http.getReq(this.controllerName + '/GetLocationDropDown');
   }
   getCountriesList() {
-    return this.http.getReq(this.controllerName + '/GetConditionDropDown');
+    return this.http.getReq(this.controllerName + '/GetCountryDropDown');
   }
   getBanksList() {
-    return this.http.getReq(this.controllerName + '/GetConditionDropDown');
+    return this.http.getReq(this.controllerName + '/GetBankDropDown');
   }
-  controllerName = '/Device';
+  getTeamDropDown() {
+    return this.http.getReq(this.controllerName + '/GetTeamDropDown');
+  }
+  getPaymentStatusDropDown() {
+    return this.http.getReq(this.controllerName + '/GetPaymentStatusDropDown');
+  }
+
+  getPaymentMethodDropDown() {
+    return this.http.getReq(this.controllerName + '/GetPaymentMethodDropDown');
+  }
+
+  getSubscriptionTypeDropDown() {
+    return this.http.getReq(
+      this.controllerName + '/GetSubscriptionTypeDropDown'
+    );
+  }
+
+  getCurrencyDropDown() {
+    return this.http.getReq(this.controllerName + '/GetCurrencyDropDown');
+  }
+
   getAllModelCategories() {
     return this.http.getReq(this.controllerName + '/GetById');
   }
   constructor(private http: HttpService) {}
   add(data) {
+    data.id = 0; // Ensure id is set to 0 for new entries
     return this.http.postReq(this.controllerName + '/Add', data);
   }
 

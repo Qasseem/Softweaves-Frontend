@@ -26,6 +26,7 @@ import { ItemsWithoutSerialEmployeeComponent } from './pages/items-without-seria
 import { DeviceHistoryComponent } from './pages/device-history/device-history.component';
 import { ItemsWithoutSerialEmployeeHistoryComponent } from './pages/items-without-serial-employee-history/items-without-serial-employee-history.component';
 import { ItemsWithoutSerialWarehouseHistoryComponent } from './pages/items-without-serial-warehouse-history/items-without-serial-warehouse-history.component';
+import { DeviceDeploymentComponent } from './pages/device-deployment/device-deployment.component';
 
 const routes: Routes = [
   {
@@ -62,6 +63,10 @@ const routes: Routes = [
       {
         path: 'devices/history/:id/:serial',
         component: DeviceHistoryComponent,
+      },
+      {
+        path: 'devices/deploy/:id',
+        component: DeviceDeploymentComponent,
       },
       //Items Without Serial--------------------------------
       {

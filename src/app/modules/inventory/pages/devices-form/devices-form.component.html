@@ -322,7 +322,7 @@
                   >Bank <span class="p-error"> * </span>
                 </label>
                 <p-dropdown
-                  [options]="deviceConditionList"
+                  [options]="banksList"
                   formControlName="bankId"
                   [optionValue]="'id'"
                   optionLabel="nameEn"
@@ -347,7 +347,7 @@
                   >Country <span class="p-error"> * </span>
                 </label>
                 <p-dropdown
-                  [options]="deviceConditionList"
+                  [options]="countriesList"
                   formControlName="countryId"
                   [optionValue]="'id'"
                   optionLabel="nameEn"
@@ -372,26 +372,26 @@
 
             <div class="col-4">
               <div class="flex flex-column gap-2">
-                <label for="assignedLocationId"
+                <label for="locationId"
                   >Assigned Location <span class="p-error"> * </span>
                 </label>
                 <p-dropdown
-                  [options]="deviceConditionList"
-                  formControlName="assignedLocationId"
+                  [options]="locationsList"
+                  formControlName="locationId"
                   [optionValue]="'id'"
                   optionLabel="nameEn"
                   filter="true"
                 />
                 <div
                   *ngIf="
-                    f.assignedLocationId.errors &&
-                    (f.assignedLocationId.dirty || f.assignedLocationId.touched)
+                    f.locationId.errors &&
+                    (f.locationId.dirty || f.locationId.touched)
                   "
                   class="invalid-feedback"
                 >
                   <div
                     class="fs-10 color-red"
-                    *ngIf="f.assignedLocationId.errors.required"
+                    *ngIf="f.locationId.errors.required"
                   >
                     Assigned location field is required
                   </div>
@@ -448,9 +448,15 @@
                   X
                 </button>
                 <img
-                  *ngIf="item?.isImage"
+                  *ngIf="item?.isImage && !item.url"
                   style="width: 50px; height: 50px"
                   [src]="item?.data"
+                  alt="Base64 Image"
+                />
+                <img
+                  *ngIf="item?.isImage && item.url"
+                  style="width: 50px; height: 50px"
+                  [src]="item?.url"
                   alt="Base64 Image"
                 />
                 <div class="image-icon" *ngIf="!item?.isImage">

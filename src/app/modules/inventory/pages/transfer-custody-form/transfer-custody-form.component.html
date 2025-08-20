@@ -41,7 +41,7 @@
         <div class="col-12 p-0">
           <div class="p-20 flex flex-wrap">
             <div
-              *ngFor="let ctrl of custodySourceFormControlsList"
+              *ngFor="let ctrl of filteredCustodySourceFormControlsList"
               class="col-6"
             >
               <div *ngIf="ctrl?.showCtrl" class="flex flex-column gap-2">
@@ -67,7 +67,7 @@
                     class="fs-10 color-red"
                     *ngIf="f[ctrl?.name]?.errors?.required"
                   >
-                    {{ ctrl?.header }} Date field is required
+                    {{ ctrl?.header }} field is required
                   </div>
                 </div>
               </div>

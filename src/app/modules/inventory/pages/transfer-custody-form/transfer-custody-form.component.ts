@@ -30,6 +30,10 @@ export class TransferCustodyFormComponent implements OnInit {
   familiesList = [];
   modeltypeList = [];
   modeltypesFormList = [];
+  userTypesList = [];
+  teamsList = [];
+  countriesList = [];
+
   itemsFormControlsList = [
     {
       name: 'familyId',
@@ -72,6 +76,25 @@ export class TransferCustodyFormComponent implements OnInit {
       header: 'Source',
       data: [],
       showCtrl: true,
+    },
+
+    {
+      name: 'userTypeId',
+      header: 'User Type',
+      data: [],
+      showCtrl: false,
+    },
+    {
+      name: 'teamId',
+      header: 'Team',
+      data: [],
+      showCtrl: false,
+    },
+    {
+      name: 'countryId',
+      header: 'Country',
+      data: [],
+      showCtrl: false,
     },
     {
       name: 'toId',
@@ -139,6 +162,9 @@ export class TransferCustodyFormComponent implements OnInit {
       isToWarehouse: [null],
       fromId: [null, [Validators.required]],
       toId: [null, [Validators.required]],
+      userTypeId: [null, [Validators.required]],
+      teamId: [null, [Validators.required]],
+      countryId: [null, [Validators.required]],
       notes: [null],
       id: [null],
     });
@@ -153,9 +179,14 @@ export class TransferCustodyFormComponent implements OnInit {
     });
     this.getLookupsDropdowns();
   }
+  get filteredCustodySourceFormControlsList() {
+    return this.custodySourceFormControlsList.filter((c) => c.showCtrl);
+  }
   getLookupsDropdowns() {
     this.callApisSequentially();
     this.getFamilyDropDown();
+    this.getCountriesList();
+    this.getUserTypes();
   }
   getDetails() {
     if (this.formType == 'edit') {
@@ -165,6 +196,29 @@ export class TransferCustodyFormComponent implements OnInit {
       }
     }
   }
+
+  getUserTypes() {
+    this.service
+      .getUserTypes()
+      .pipe(take(1))
+      .subscribe((resp) => {
+        if (resp.success) {
+          this.usersList = resp.data;
+        }
+      });
+  }
+
+  getCountriesList() {
+    this.service
+      .getCountriesList()
+      .pipe(take(1))
+      .subscribe((resp) => {
+        if (resp.success) {
+          this.countriesList = resp.data;
+        }
+      });
+  }
+
   callApisSequentially() {
     this.warehousesService
       .getAgentWarehouseDropDown()
@@ -314,6 +368,7 @@ export class TransferCustodyFormComponent implements OnInit {
 
   custodySourcesChanged(selectedOption: any, controlName: DDLControlType) {
     if (!selectedOption) return;
+
     switch (controlName) {
       case DDLControlType.Source:
         this.form.controls.fromId.setValue(null);
@@ -332,17 +387,25 @@ export class TransferCustodyFormComponent implements OnInit {
         break;
       case DDLControlType.Destination:
         this.form.controls.toId.setValue(null);
+        this.showOrHideEmployeeInfoConrolos(false);
+
         if (selectedOption?.value == DDLControlType.Warehouse) {
           this.form.controls.isToWarehouse.setValue(true);
-          this.custodySourceFormControlsList[3].data = [...this.warehousesList];
-          this.custodySourceFormControlsList[3].header = 'Warehouse';
+          this.custodySourceFormControlsList[6].data = [...this.warehousesList];
+          this.custodySourceFormControlsList[6].header = 'Warehouse';
         } else if (selectedOption?.value == DDLControlType.Employee) {
           this.form.controls.isToWarehouse.setValue(false);
-          this.custodySourceFormControlsList[3].data = [...this.usersList];
-          this.custodySourceFormControlsList[3].header = 'Employee';
+          this.custodySourceFormControlsList[6].data = [...this.usersList];
+          this.custodySourceFormControlsList[6].header = 'Employee';
+          this.showOrHideEmployeeInfoConrolos(true);
         }
         break;
     }
+  }
+  showOrHideEmployeeInfoConrolos(show = false) {
+    this.custodySourceFormControlsList[3].showCtrl = show;
+    this.custodySourceFormControlsList[4].showCtrl = show;
+    this.custodySourceFormControlsList[5].showCtrl = show;
   }
   resetForm() {
     this.modeltypesFormList = [];
