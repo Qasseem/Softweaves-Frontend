@@ -60,6 +60,9 @@ export class DevicesService {
   Deploy(data) {
     return this.http.postReq(this.controllerName + '/Deploy', data);
   }
+  Replace(data) {
+    return this.http.postReq(this.controllerName + '/Replace', data);
+  }
   Cancel(data) {
     return this.http.postReq(this.controllerName + '/Cancel', data);
   }

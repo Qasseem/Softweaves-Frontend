@@ -8,7 +8,7 @@
         >Devices</span
       >
       <span class="mt-2 ml-2 mr-2 header-left">></span>
-      <span class="mt-2 header-left">Deploy Device</span>
+      <span class="mt-2 header-left">Replace Device</span>
       <p-button
         class="mr-3 cancel-button"
         label="Cancel"
@@ -40,344 +40,14 @@
         </div>
         <div style="margin-top: -40px" class="col-12 p-0">
           <div class="p-20 flex flex-wrap">
-            <!-- receiptModelTypeId -->
+            <!-- replacementDate (Input) -->
             <div class="col-4">
               <div class="flex flex-column gap-2">
-                <label for="receiptModelTypeId"
-                  >Receipt Model <span class="p-error">*</span></label
-                >
-                <p-dropdown
-                  [options]="receiptModels"
-                  formControlName="receiptModelTypeId"
-                  [optionValue]="'id'"
-                  optionLabel="nameEn"
-                  filter="true"
-                >
-                </p-dropdown>
-                <div
-                  *ngIf="
-                    f.receiptModelTypeId.errors &&
-                    (f.receiptModelTypeId.touched || f.receiptModelTypeId.dirty)
-                  "
-                  class="invalid-feedback"
-                >
-                  <div
-                    class="fs-10 color-red"
-                    *ngIf="f.receiptModelTypeId.errors.required"
-                  >
-                    Receipt Model is required
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- cableModelTypeId -->
-            <div class="col-4">
-              <div class="flex flex-column gap-2">
-                <label for="cableModelTypeId"
-                  >Cable Model <span class="p-error">*</span></label
-                >
-                <p-dropdown
-                  [options]="cableModels"
-                  formControlName="cableModelTypeId"
-                  [optionValue]="'id'"
-                  optionLabel="nameEn"
-                  filter="true"
-                >
-                </p-dropdown>
-                <div
-                  *ngIf="
-                    f.cableModelTypeId.errors &&
-                    (f.cableModelTypeId.touched || f.cableModelTypeId.dirty)
-                  "
-                  class="invalid-feedback"
-                >
-                  <div
-                    class="fs-10 color-red"
-                    *ngIf="f.cableModelTypeId.errors.required"
-                  >
-                    Cable Model is required
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- posChargerModelTypeId -->
-            <div class="col-4">
-              <div class="flex flex-column gap-2">
-                <label for="posChargerModelTypeId"
-                  >POS Charger <span class="p-error">*</span></label
-                >
-                <p-dropdown
-                  [options]="posChargerModels"
-                  formControlName="posChargerModelTypeId"
-                  [optionValue]="'id'"
-                  optionLabel="nameEn"
-                  filter="true"
-                >
-                </p-dropdown>
-                <div
-                  *ngIf="
-                    f.posChargerModelTypeId.errors &&
-                    (f.posChargerModelTypeId.touched ||
-                      f.posChargerModelTypeId.dirty)
-                  "
-                  class="invalid-feedback"
-                >
-                  <div
-                    class="fs-10 color-red"
-                    *ngIf="f.posChargerModelTypeId.errors.required"
-                  >
-                    POS Charger is required
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- simCardModelTypeId -->
-            <div class="col-4">
-              <div class="flex flex-column gap-2">
-                <label for="simCardModelTypeId"
-                  >SIM Card <span class="p-error">*</span></label
-                >
-                <p-dropdown
-                  [options]="simCardModels"
-                  formControlName="simCardModelTypeId"
-                  [optionValue]="'id'"
-                  optionLabel="nameEn"
-                  filter="true"
-                >
-                </p-dropdown>
-                <div
-                  *ngIf="
-                    f.simCardModelTypeId.errors &&
-                    (f.simCardModelTypeId.touched || f.simCardModelTypeId.dirty)
-                  "
-                  class="invalid-feedback"
-                >
-                  <div
-                    class="fs-10 color-red"
-                    *ngIf="f.simCardModelTypeId.errors.required"
-                  >
-                    SIM Card is required
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- paperRollModelTypeId -->
-            <div class="col-4">
-              <div class="flex flex-column gap-2">
-                <label for="paperRollModelTypeId"
-                  >Paper Roll <span class="p-error">*</span></label
-                >
-                <p-dropdown
-                  [options]="paperRollModels"
-                  formControlName="paperRollModelTypeId"
-                  [optionValue]="'id'"
-                  optionLabel="nameEn"
-                  filter="true"
-                >
-                </p-dropdown>
-                <div
-                  *ngIf="
-                    f.paperRollModelTypeId.errors &&
-                    (f.paperRollModelTypeId.touched ||
-                      f.paperRollModelTypeId.dirty)
-                  "
-                  class="invalid-feedback"
-                >
-                  <div
-                    class="fs-10 color-red"
-                    *ngIf="f.paperRollModelTypeId.errors.required"
-                  >
-                    Paper Roll is required
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="grid d-flex inputs-div mt-3">
-        <div class="col-12 pt-3 pr-3 pl-3">
-          <div class="header">
-            <span>New Device Details</span>
-          </div>
-          <p-divider></p-divider>
-        </div>
-        <div style="margin-top: -40px" class="col-12 p-0">
-          <div class="p-20 flex flex-wrap">
-            <!-- receiptModelTypeId -->
-            <div class="col-4">
-              <div class="flex flex-column gap-2">
-                <label for="receiptModelTypeId"
-                  >Receipt Model <span class="p-error">*</span></label
-                >
-                <p-dropdown
-                  [options]="receiptModels"
-                  formControlName="receiptModelTypeId"
-                  [optionValue]="'id'"
-                  optionLabel="nameEn"
-                  filter="true"
-                >
-                </p-dropdown>
-                <div
-                  *ngIf="
-                    f.receiptModelTypeId.errors &&
-                    (f.receiptModelTypeId.touched || f.receiptModelTypeId.dirty)
-                  "
-                  class="invalid-feedback"
-                >
-                  <div
-                    class="fs-10 color-red"
-                    *ngIf="f.receiptModelTypeId.errors.required"
-                  >
-                    Receipt Model is required
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- cableModelTypeId -->
-            <div class="col-4">
-              <div class="flex flex-column gap-2">
-                <label for="cableModelTypeId"
-                  >Cable Model <span class="p-error">*</span></label
-                >
-                <p-dropdown
-                  [options]="cableModels"
-                  formControlName="cableModelTypeId"
-                  [optionValue]="'id'"
-                  optionLabel="nameEn"
-                  filter="true"
-                >
-                </p-dropdown>
-                <div
-                  *ngIf="
-                    f.cableModelTypeId.errors &&
-                    (f.cableModelTypeId.touched || f.cableModelTypeId.dirty)
-                  "
-                  class="invalid-feedback"
-                >
-                  <div
-                    class="fs-10 color-red"
-                    *ngIf="f.cableModelTypeId.errors.required"
-                  >
-                    Cable Model is required
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- posChargerModelTypeId -->
-            <div class="col-4">
-              <div class="flex flex-column gap-2">
-                <label for="posChargerModelTypeId"
-                  >POS Charger <span class="p-error">*</span></label
-                >
-                <p-dropdown
-                  [options]="posChargerModels"
-                  formControlName="posChargerModelTypeId"
-                  [optionValue]="'id'"
-                  optionLabel="nameEn"
-                  filter="true"
-                >
-                </p-dropdown>
-                <div
-                  *ngIf="
-                    f.posChargerModelTypeId.errors &&
-                    (f.posChargerModelTypeId.touched ||
-                      f.posChargerModelTypeId.dirty)
-                  "
-                  class="invalid-feedback"
-                >
-                  <div
-                    class="fs-10 color-red"
-                    *ngIf="f.posChargerModelTypeId.errors.required"
-                  >
-                    POS Charger is required
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- simCardModelTypeId -->
-            <div class="col-4">
-              <div class="flex flex-column gap-2">
-                <label for="simCardModelTypeId"
-                  >SIM Card <span class="p-error">*</span></label
-                >
-                <p-dropdown
-                  [options]="simCardModels"
-                  formControlName="simCardModelTypeId"
-                  [optionValue]="'id'"
-                  optionLabel="nameEn"
-                  filter="true"
-                >
-                </p-dropdown>
-                <div
-                  *ngIf="
-                    f.simCardModelTypeId.errors &&
-                    (f.simCardModelTypeId.touched || f.simCardModelTypeId.dirty)
-                  "
-                  class="invalid-feedback"
-                >
-                  <div
-                    class="fs-10 color-red"
-                    *ngIf="f.simCardModelTypeId.errors.required"
-                  >
-                    SIM Card is required
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- paperRollModelTypeId -->
-            <div class="col-4">
-              <div class="flex flex-column gap-2">
-                <label for="paperRollModelTypeId"
-                  >Paper Roll <span class="p-error">*</span></label
-                >
-                <p-dropdown
-                  [options]="paperRollModels"
-                  formControlName="paperRollModelTypeId"
-                  [optionValue]="'id'"
-                  optionLabel="nameEn"
-                  filter="true"
-                >
-                </p-dropdown>
-                <div
-                  *ngIf="
-                    f.paperRollModelTypeId.errors &&
-                    (f.paperRollModelTypeId.touched ||
-                      f.paperRollModelTypeId.dirty)
-                  "
-                  class="invalid-feedback"
-                >
-                  <div
-                    class="fs-10 color-red"
-                    *ngIf="f.paperRollModelTypeId.errors.required"
-                  >
-                    Paper Roll is required
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="grid d-flex inputs-div mt-3">
-        <div class="col-12 pt-3 pr-3 pl-3">
-          <div class="header">
-            <span>Deployment Details</span>
-          </div>
-          <p-divider></p-divider>
-        </div>
-        <div style="margin-top: -40px" class="col-12 p-0">
-          <div class="p-20 flex flex-wrap">
-            <!-- cancellationDate (Input) -->
-            <div class="col-4">
-              <div class="flex flex-column gap-2">
-                <label for="cancellationDate"
-                  >Cancellation Date <span class="p-error">*</span></label
+                <label for="replacementDate"
+                  >Replacment Date <span class="p-error">*</span></label
                 >
                 <p-calendar
-                  formControlName="cancellationDate"
+                  formControlName="replacementDate"
                   [iconDisplay]="'input'"
                   [showIcon]="true"
                   inputId="icondisplay"
@@ -385,21 +55,20 @@
 
                 <div
                   *ngIf="
-                    f.cancellationDate.errors &&
-                    (f.cancellationDate.touched || f.cancellationDate.dirty)
+                    f.replacementDate.errors &&
+                    (f.replacementDate.touched || f.replacementDate.dirty)
                   "
                   class="invalid-feedback"
                 >
                   <div
                     class="fs-10 color-red"
-                    *ngIf="f.cancellationDate.errors.required"
+                    *ngIf="f.replacementDate.errors.required"
                   >
-                    Cancellation Date is required
+                    Replacment Date is required
                   </div>
                 </div>
               </div>
             </div>
-
             <!-- warehouseId (Dropdown) -->
             <div class="col-4">
               <div class="flex flex-column gap-2">
@@ -430,13 +99,102 @@
                 </div>
               </div>
             </div>
+            <div class="col-4">
+              <div class="flex flex-column gap-2">
+                <label for="oldMerchantName"
+                  >Old Merchant Name <span class="p-error">*</span></label
+                >
+                <input
+                  pInputText
+                  formControlName="oldMerchantName"
+                  [ngClass]="{
+                    'ng-invalid ng-dirty': f.oldMerchantName?.errors?.required
+                  }"
+                />
+                <div
+                  *ngIf="
+                    f.oldMerchantName.errors &&
+                    (f.oldMerchantName.touched || f.oldMerchantName.dirty)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.oldMerchantName.errors.required"
+                  >
+                    Merchant Name is required
+                  </div>
+                </div>
+              </div>
+            </div>
 
-            <div class="col-4"></div>
-            <!-- merchantName (Input) -->
+            <!-- mId (Input) -->
+            <div class="col-4">
+              <div class="flex flex-column gap-2">
+                <label for="oldMId"
+                  >Old MId <span class="p-error">*</span></label
+                >
+                <input
+                  pInputText
+                  formControlName="oldMId"
+                  [ngClass]="{
+                    'ng-invalid ng-dirty': f.oldMId?.errors?.required
+                  }"
+                />
+                <div
+                  *ngIf="
+                    f.oldMId.errors && (f.oldMId.touched || f.oldMId.dirty)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div class="fs-10 color-red" *ngIf="f.oldMId.errors.required">
+                    Old MId is required
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- oldTID (Input) -->
+            <div class="col-4">
+              <div class="flex flex-column gap-2">
+                <label for="oldTID"
+                  >Old TID <span class="p-error">*</span></label
+                >
+                <input
+                  pInputText
+                  formControlName="oldTID"
+                  [ngClass]="{
+                    'ng-invalid ng-dirty': f.oldTID?.errors?.required
+                  }"
+                />
+                <div
+                  *ngIf="
+                    f.oldTID.errors && (f.oldTID.touched || f.oldTID.dirty)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div class="fs-10 color-red" *ngIf="f.oldTID.errors.required">
+                    Old TID is required
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="grid d-flex inputs-div mt-3">
+        <div class="col-12 pt-3 pr-3 pl-3">
+          <div class="header">
+            <span>New Device Details</span>
+          </div>
+          <p-divider></p-divider>
+        </div>
+        <div style="margin-top: -40px" class="col-12 p-0">
+          <div class="p-20 flex flex-wrap">
             <div class="col-4">
               <div class="flex flex-column gap-2">
                 <label for="merchantName"
-                  >Merchant Name <span class="p-error">*</span></label
+                  >New Merchant Name <span class="p-error">*</span></label
                 >
                 <input
                   pInputText
@@ -465,7 +223,7 @@
             <!-- mId (Input) -->
             <div class="col-4">
               <div class="flex flex-column gap-2">
-                <label for="mId">MID <span class="p-error">*</span></label>
+                <label for="mId">New MID <span class="p-error">*</span></label>
                 <input
                   pInputText
                   formControlName="mId"
@@ -476,7 +234,7 @@
                   class="invalid-feedback"
                 >
                   <div class="fs-10 color-red" *ngIf="f.mId.errors.required">
-                    MID is required
+                    New MID is required
                   </div>
                 </div>
               </div>
@@ -485,7 +243,7 @@
             <!-- tid (Input) -->
             <div class="col-4">
               <div class="flex flex-column gap-2">
-                <label for="tid">TID <span class="p-error">*</span></label>
+                <label for="tid"> New TID <span class="p-error">*</span></label>
                 <input
                   pInputText
                   formControlName="tid"
@@ -496,11 +254,76 @@
                   class="invalid-feedback"
                 >
                   <div class="fs-10 color-red" *ngIf="f.tid.errors.required">
-                    TID is required
+                    New TID is required
                   </div>
                 </div>
               </div>
             </div>
+
+            <!-- serialNumber (Input) -->
+            <div class="col-4">
+              <div class="flex flex-column gap-2">
+                <label for="serialNumber"
+                  >New Serial <span class="p-error">*</span></label
+                >
+                <input
+                  pInputText
+                  formControlName="serialNumber"
+                  [ngClass]="{
+                    'ng-invalid ng-dirty': f.serialNumber?.errors?.required
+                  }"
+                />
+                <div
+                  *ngIf="
+                    f.serialNumber.errors &&
+                    (f.serialNumber.touched || f.serialNumber.dirty)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.serialNumber.errors.required"
+                  >
+                    New Serial is required
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- imei (Input) -->
+            <div class="col-4">
+              <div class="flex flex-column gap-2">
+                <label for="imei"
+                  >New IMEI <span class="p-error">*</span></label
+                >
+                <input
+                  pInputText
+                  formControlName="imei"
+                  [ngClass]="{
+                    'ng-invalid ng-dirty': f.imei?.errors?.required
+                  }"
+                />
+                <div
+                  *ngIf="f.imei.errors && (f.imei.touched || f.imei.dirty)"
+                  class="invalid-feedback"
+                >
+                  <div class="fs-10 color-red" *ngIf="f.imei.errors.required">
+                    New IMEI is required
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="grid d-flex inputs-div mt-3">
+        <div class="col-12 pt-3 pr-3 pl-3">
+          <div class="header">
+            <span>Replacment Details</span>
+          </div>
+          <p-divider></p-divider>
+        </div>
+        <div style="margin-top: -40px" class="col-12 p-0">
+          <div class="p-20 flex flex-wrap">
             <!-- cancellationFee (Input) -->
             <div class="col-4">
               <div class="flex flex-column gap-2">
@@ -617,7 +440,7 @@
             <div class="col-4">
               <div class="flex flex-column gap-2">
                 <label for="clrearanceReceiptSigned"
-                  >Clearance Receipt Signed
+                  >Replacement Receipt Signed
                   <span class="p-error">*</span></label
                 >
                 <p-dropdown
@@ -650,7 +473,7 @@
             <div class="col-4">
               <div class="flex flex-column gap-2">
                 <label for="deployedTeamId"
-                  >Cancellation Team <span class="p-error">*</span></label
+                  >Replacement Team <span class="p-error">*</span></label
                 >
                 <p-dropdown
                   [options]="teams"
@@ -672,7 +495,7 @@
                     class="fs-10 color-red"
                     *ngIf="f.deployedTeamId.errors.required"
                   >
-                    Cancellation Team is required
+                    Replacement Team is required
                   </div>
                 </div>
               </div>
@@ -682,7 +505,7 @@
             <div class="col-4">
               <div class="flex flex-column gap-2">
                 <label for="cancelledById"
-                  >Cancelled By <span class="p-error">*</span></label
+                  >Replaced By <span class="p-error">*</span></label
                 >
                 <p-dropdown
                   [options]="users"
@@ -933,17 +756,48 @@
       <div class="grid d-flex inputs-div mt-3">
         <div class="col-12 pt-3 pr-3 pl-3">
           <div class="header">
-            <span>Deployment Addons</span>
+            <span>Replacement Addons</span>
           </div>
           <p-divider></p-divider>
         </div>
         <div style="margin-top: -40px" class="col-12 p-0">
           <div class="p-20 flex flex-wrap">
-            <!-- receiptModelTypeId -->
+            <!-- cancelReceiptModelTypeId -->
+            <div class="col-4">
+              <div class="flex flex-column gap-2">
+                <label for="cancelReceiptModelTypeId"
+                  >Cancellation Receipt <span class="p-error">*</span></label
+                >
+                <p-dropdown
+                  [options]="cancellationReceiptModels"
+                  formControlName="cancelReceiptModelTypeId"
+                  [optionValue]="'id'"
+                  optionLabel="nameEn"
+                  filter="true"
+                >
+                </p-dropdown>
+                <div
+                  *ngIf="
+                    f.cancelReceiptModelTypeId.errors &&
+                    (f.cancelReceiptModelTypeId.touched ||
+                      f.cancelReceiptModelTypeId.dirty)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.cancelReceiptModelTypeId.errors.required"
+                  >
+                    Cancellation Receipt is required
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div class="col-4">
               <div class="flex flex-column gap-2">
                 <label for="receiptModelTypeId"
-                  >Receipt Model <span class="p-error">*</span></label
+                  >Deployment Receipt <span class="p-error">*</span></label
                 >
                 <p-dropdown
                   [options]="receiptModels"
@@ -964,7 +818,7 @@
                     class="fs-10 color-red"
                     *ngIf="f.receiptModelTypeId.errors.required"
                   >
-                    Receipt Model is required
+                    Deployment Receipt is required
                   </div>
                 </div>
               </div>

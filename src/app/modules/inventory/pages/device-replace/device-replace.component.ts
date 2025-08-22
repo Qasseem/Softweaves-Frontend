@@ -38,6 +38,7 @@ export class DeviceReplaceComponent implements OnInit {
   users = [];
   currencies = [];
   teams = [];
+  cancellationReceiptModels = [];
   countryId: any;
   reciptSignedOptions = [
     { id: true, nameEn: 'Yes' },
@@ -63,11 +64,16 @@ export class DeviceReplaceComponent implements OnInit {
 
     this.form = this.fb.group({
       deviceId: [0, Validators.required],
-      cancellationDate: ['', Validators.required],
+      replacementDate: ['', Validators.required],
       warehouseId: [null, Validators.required],
+      oldMerchantName: ['', [Validators.required, Validators.maxLength(50)]],
+      oldMId: ['', [Validators.required, Validators.maxLength(50)]],
+      oldTID: ['', [Validators.required, Validators.maxLength(50)]],
       merchantName: ['', [Validators.required, Validators.maxLength(50)]],
       mId: ['', [Validators.required, Validators.maxLength(50)]],
       tid: ['', [Validators.required, Validators.maxLength(50)]],
+      serialNumber: ['', [Validators.required, Validators.maxLength(50)]],
+      imei: ['', [Validators.required, Validators.maxLength(50)]],
       cancellationFee: ['', [Validators.required, Validators.maxLength(10)]],
       currencyId: [0, Validators.required],
       paymentMethodId: [0, Validators.required],
@@ -80,18 +86,13 @@ export class DeviceReplaceComponent implements OnInit {
       needRepair: [null, Validators.required],
       needBranding: [null, Validators.required],
       conditionId: [null, Validators.required],
-
       simCardModelTypeId: [null, Validators.required],
       cableModelTypeId: [null, Validators.required],
       receiptModelTypeId: [null, Validators.required],
+      cancelReceiptModelTypeId: [null, Validators.required],
       paperRollModelTypeId: [null, Validators.required],
       posChargerModelTypeId: [null, Validators.required],
-      address: ['', [Validators.maxLength(50)]],
       notes: ['', [Validators.maxLength(500)]],
-      merchantPhoneNumber: [
-        '',
-        [Validators.required, Validators.maxLength(50)],
-      ],
       attachmentsBase64: [[]],
     });
     this.loadAllLookups();
@@ -107,6 +108,8 @@ export class DeviceReplaceComponent implements OnInit {
       condition: this.service.getConditionDropDown(),
       paperRoll: this.ticketService.GetPaperRollModelTypes(),
       deployReceipt: this.ticketService.GetDeployReceiptModelTypes(),
+      cancellationReceipt:
+        this.ticketService.GetCancellationReceiptModelTypes(),
       simcardProvider: this.ticketService.getSIMCardProviders(this.countryId),
       posCharger: this.ticketService.getPOSChargerModelTypes(),
       cables: this.ticketService.GetCableModelTypes(),
@@ -125,6 +128,7 @@ export class DeviceReplaceComponent implements OnInit {
       this.cableModels = results.cables.data;
       this.conditions = results.condition.data;
       this.warehouses = results.warehouse.data;
+      this.cancellationReceiptModels = results.cancellationReceipt.data;
     });
   }
 
@@ -162,7 +166,7 @@ export class DeviceReplaceComponent implements OnInit {
     obj.deviceId = this.id;
     this.addAttachmentsToFormAsBase64(obj);
     this.service
-      .Deploy(obj)
+      .Replace(obj)
       .pipe(take(1))
       .subscribe({
         next: (resp) => {
