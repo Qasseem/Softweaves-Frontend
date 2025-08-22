@@ -50,3 +50,7 @@
   color: #798693;
   font-size: 12px;
 }
+
+::ng-deep .p-calendar {
+  width: 100%;
+}

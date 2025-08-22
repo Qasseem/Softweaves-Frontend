@@ -1,0 +1,648 @@
+<div [formGroup]="form">
+  <div class="p-grid ml-2 m-2">
+    <div class="p-col" style="text-align: right">
+      <span
+        (click)="backToList()"
+        class="mt-2 ml-3 header-left"
+        style="color: #0080f9; cursor: pointer"
+        >Devices</span
+      >
+      <span class="mt-2 ml-2 mr-2 header-left">></span>
+      <span class="mt-2 header-left">Cancel Device</span>
+      <p-button
+        class="mr-3 cancel-button"
+        label="Cancel"
+        [text]="true"
+        (click)="backToList()"
+        size="small"
+      />
+
+      <p-button
+        (click)="submit()"
+        [disabled]="!form?.valid"
+        label="Save"
+        size="small"
+      >
+      </p-button>
+    </div>
+  </div>
+
+  <hr class="header-divider" />
+
+  <div class="add-form">
+    <form [formGroup]="form">
+      <div class="grid d-flex inputs-div">
+        <div class="col-12 pt-3 pr-3 pl-3">
+          <div class="header">
+            <span>Cancellation Details</span>
+          </div>
+          <p-divider></p-divider>
+        </div>
+        <div style="margin-top: -40px" class="col-12 p-0">
+          <div class="p-20 flex flex-wrap">
+            <!-- cancellationDate (Input) -->
+            <div class="col-4">
+              <div class="flex flex-column gap-2">
+                <label for="cancellationDate"
+                  >Cancellation Date <span class="p-error">*</span></label
+                >
+                <p-calendar
+                  formControlName="cancellationDate"
+                  [iconDisplay]="'input'"
+                  [showIcon]="true"
+                  inputId="icondisplay"
+                />
+
+                <div
+                  *ngIf="
+                    f.cancellationDate.errors &&
+                    (f.cancellationDate.touched || f.cancellationDate.dirty)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.cancellationDate.errors.required"
+                  >
+                    Cancellation Date is required
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- warehouseId (Dropdown) -->
+            <div class="col-4">
+              <div class="flex flex-column gap-2">
+                <label for="warehouseId"
+                  >Warehouse <span class="p-error">*</span></label
+                >
+                <p-dropdown
+                  [options]="warehouses"
+                  formControlName="warehouseId"
+                  [optionValue]="'id'"
+                  optionLabel="nameEn"
+                  filter="true"
+                >
+                </p-dropdown>
+                <div
+                  *ngIf="
+                    f.warehouseId.errors &&
+                    (f.warehouseId.touched || f.warehouseId.dirty)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.warehouseId.errors.required"
+                  >
+                    Warehouse Type is required
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-4"></div>
+            <!-- merchantName (Input) -->
+            <div class="col-4">
+              <div class="flex flex-column gap-2">
+                <label for="merchantName"
+                  >Merchant Name <span class="p-error">*</span></label
+                >
+                <input
+                  pInputText
+                  formControlName="merchantName"
+                  [ngClass]="{
+                    'ng-invalid ng-dirty': f.merchantName?.errors?.required
+                  }"
+                />
+                <div
+                  *ngIf="
+                    f.merchantName.errors &&
+                    (f.merchantName.touched || f.merchantName.dirty)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.merchantName.errors.required"
+                  >
+                    Merchant Name is required
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- mId (Input) -->
+            <div class="col-4">
+              <div class="flex flex-column gap-2">
+                <label for="mId">MID <span class="p-error">*</span></label>
+                <input
+                  pInputText
+                  formControlName="mId"
+                  [ngClass]="{ 'ng-invalid ng-dirty': f.mId?.errors?.required }"
+                />
+                <div
+                  *ngIf="f.mId.errors && (f.mId.touched || f.mId.dirty)"
+                  class="invalid-feedback"
+                >
+                  <div class="fs-10 color-red" *ngIf="f.mId.errors.required">
+                    MID is required
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- tid (Input) -->
+            <div class="col-4">
+              <div class="flex flex-column gap-2">
+                <label for="tid">TID <span class="p-error">*</span></label>
+                <input
+                  pInputText
+                  formControlName="tid"
+                  [ngClass]="{ 'ng-invalid ng-dirty': f.tid?.errors?.required }"
+                />
+                <div
+                  *ngIf="f.tid.errors && (f.tid.touched || f.tid.dirty)"
+                  class="invalid-feedback"
+                >
+                  <div class="fs-10 color-red" *ngIf="f.tid.errors.required">
+                    TID is required
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- cancellationFee (Input) -->
+            <div class="col-4">
+              <div class="flex flex-column gap-2">
+                <label for="cancellationFee"
+                  >Cancellation Fee <span class="p-error">*</span></label
+                >
+                <input
+                  pInputText
+                  type="number"
+                  formControlName="cancellationFee"
+                  [ngClass]="{
+                    'ng-invalid ng-dirty': f.cancellationFee?.errors?.required
+                  }"
+                />
+                <div
+                  *ngIf="
+                    f.cancellationFee.errors &&
+                    (f.cancellationFee.touched || f.cancellationFee.dirty)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.cancellationFee.errors.required"
+                  >
+                    Cancellation Fee Amount is required
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- currencyId -->
+            <div class="col-4">
+              <div class="flex flex-column gap-2">
+                <label for="currencyId"
+                  >Currency <span class="p-error">*</span></label
+                >
+                <p-dropdown
+                  [options]="currencies"
+                  formControlName="currencyId"
+                  [optionValue]="'id'"
+                  optionLabel="nameEn"
+                  filter="true"
+                >
+                </p-dropdown>
+                <div
+                  *ngIf="
+                    f.currencyId.errors &&
+                    (f.currencyId.touched || f.currencyId.dirty)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.currencyId.errors.required"
+                  >
+                    Currency is required
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- paymentMethodId -->
+            <div class="col-4">
+              <div class="flex flex-column gap-2">
+                <label for="paymentMethodId"
+                  >Payment Method <span class="p-error">*</span></label
+                >
+                <p-dropdown
+                  [options]="paymentMethods"
+                  formControlName="paymentMethodId"
+                  [optionValue]="'id'"
+                  optionLabel="nameEn"
+                  filter="true"
+                >
+                </p-dropdown>
+                <div
+                  *ngIf="
+                    f.paymentMethodId.errors &&
+                    (f.paymentMethodId.touched || f.paymentMethodId.dirty)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.paymentMethodId.errors.required"
+                  >
+                    Payment Method is required
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- trx_ID (Input) -->
+            <div class="col-4">
+              <div class="flex flex-column gap-2">
+                <label for="trx_ID"
+                  >TRX_ID <span class="p-error">*</span></label
+                >
+                <input pInputText formControlName="trx_ID" />
+                <div
+                  *ngIf="
+                    f.trx_ID.errors && (f.trx_ID.touched || f.trx_ID.dirty)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div class="fs-10 color-red" *ngIf="f.trx_ID.errors.required">
+                    TRX_ID is required
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-4">
+              <div class="flex flex-column gap-2">
+                <label for="clrearanceReceiptSigned"
+                  >Clearance Receipt Signed
+                  <span class="p-error">*</span></label
+                >
+                <p-dropdown
+                  [options]="reciptSignedOptions"
+                  formControlName="clrearanceReceiptSigned"
+                  [optionValue]="'id'"
+                  optionLabel="nameEn"
+                  filter="true"
+                >
+                </p-dropdown>
+                <div
+                  *ngIf="
+                    f.clrearanceReceiptSigned.errors &&
+                    (f.clrearanceReceiptSigned.touched ||
+                      f.clrearanceReceiptSigned.dirty)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.clrearanceReceiptSigned.errors.required"
+                  >
+                    Clearance Receipt Signed is required
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- deployedTeamId -->
+            <div class="col-4">
+              <div class="flex flex-column gap-2">
+                <label for="deployedTeamId"
+                  >Cancellation Team <span class="p-error">*</span></label
+                >
+                <p-dropdown
+                  [options]="teams"
+                  formControlName="deployedTeamId"
+                  [optionValue]="'id'"
+                  optionLabel="nameEn"
+                  filter="true"
+                  (onChange)="getUserByType($event)"
+                >
+                </p-dropdown>
+                <div
+                  *ngIf="
+                    f.deployedTeamId.errors &&
+                    (f.deployedTeamId.touched || f.deployedTeamId.dirty)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.deployedTeamId.errors.required"
+                  >
+                    Cancellation Team is required
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- cancelledById -->
+            <div class="col-4">
+              <div class="flex flex-column gap-2">
+                <label for="cancelledById"
+                  >Cancelled By <span class="p-error">*</span></label
+                >
+                <p-dropdown
+                  [options]="users"
+                  formControlName="cancelledById"
+                  [optionValue]="'id'"
+                  optionLabel="nameEn"
+                  filter="true"
+                >
+                </p-dropdown>
+                <div
+                  *ngIf="
+                    f.cancelledById.errors &&
+                    (f.cancelledById.touched || f.cancelledById.dirty)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.cancelledById.errors.required"
+                  >
+                    Cancelled By is required
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-4">
+              <div class="flex flex-column gap-2">
+                <label for="gtg"
+                  >GTG, Good To Go <span class="p-error">*</span></label
+                >
+                <p-dropdown
+                  [options]="reciptSignedOptions"
+                  formControlName="gtg"
+                  [optionValue]="'id'"
+                  optionLabel="nameEn"
+                  filter="true"
+                >
+                </p-dropdown>
+                <div
+                  *ngIf="f.gtg.errors && (f.gtg.touched || f.gtg.dirty)"
+                  class="invalid-feedback"
+                >
+                  <div class="fs-10 color-red" *ngIf="f.gtg.errors.required">
+                    GTG is required
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-4">
+              <div class="flex flex-column gap-2">
+                <label for="needRecycling"
+                  >Need Recycling? <span class="p-error">*</span></label
+                >
+                <p-dropdown
+                  [options]="reciptSignedOptions"
+                  formControlName="needRecycling"
+                  [optionValue]="'id'"
+                  optionLabel="nameEn"
+                  filter="true"
+                >
+                </p-dropdown>
+                <div
+                  *ngIf="
+                    f.needRecycling.errors &&
+                    (f.needRecycling.touched || f.needRecycling.dirty)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.needRecycling.errors.required"
+                  >
+                    Need Recycling is required
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-4">
+              <div class="flex flex-column gap-2">
+                <label for="needRepair"
+                  >Need Repair? <span class="p-error">*</span></label
+                >
+                <p-dropdown
+                  [options]="reciptSignedOptions"
+                  formControlName="needRepair"
+                  [optionValue]="'id'"
+                  optionLabel="nameEn"
+                  filter="true"
+                >
+                </p-dropdown>
+                <div
+                  *ngIf="
+                    f.needRepair.errors &&
+                    (f.needRepair.touched || f.needRepair.dirty)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.needRepair.errors.required"
+                  >
+                    Need Repair is required
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-4">
+              <div class="flex flex-column gap-2">
+                <label for="needBranding"
+                  >Need Branding? <span class="p-error">*</span></label
+                >
+                <p-dropdown
+                  [options]="reciptSignedOptions"
+                  formControlName="needBranding"
+                  [optionValue]="'id'"
+                  optionLabel="nameEn"
+                  filter="true"
+                >
+                </p-dropdown>
+                <div
+                  *ngIf="
+                    f.needBranding.errors &&
+                    (f.needBranding.touched || f.needBranding.dirty)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.needBranding.errors.required"
+                  >
+                    Need Branding is required
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- conditionId -->
+            <div class="col-4">
+              <div class="flex flex-column gap-2">
+                <label for="conditionId"
+                  >Current Condition <span class="p-error">*</span></label
+                >
+                <p-dropdown
+                  [options]="conditions"
+                  formControlName="conditionId"
+                  [optionValue]="'id'"
+                  optionLabel="nameEn"
+                  filter="true"
+                >
+                </p-dropdown>
+                <div
+                  *ngIf="
+                    f.conditionId.errors &&
+                    (f.conditionId.touched || f.conditionId.dirty)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.conditionId.errors.required"
+                  >
+                    Current Condition is required
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="flex flex-column gap-2">
+                <label for="failReasonId">Note</label>
+                <textarea
+                  rows="3"
+                  cols="30"
+                  pInputTextarea
+                  formControlName="notes"
+                  style="height: 80px"
+                >
+                </textarea>
+              </div>
+            </div>
+          </div>
+          <div class="pl-4 pr-4 pb-2">
+            <div class="grid">
+              <div class="col-12">
+                <span class="upload-file-header">Upload Files</span>
+                <span style="color: #cecece; font-size: 10px">(Optional)</span>
+              </div>
+            </div>
+
+            <div class="grid">
+              <div class="col-1">
+                <div (click)="fileInput.click()" class="image-icon">
+                  <oc-icon
+                    style="margin: auto"
+                    [icon]="'plus-icon'"
+                    [width]="'20px'"
+                    [height]="'20px'"
+                    [scale]="1.1"
+                  ></oc-icon>
+
+                  <input
+                    type="file"
+                    #fileInput
+                    (change)="onFileSelected($event)"
+                    accept="*"
+                    hidden
+                  />
+                </div>
+              </div>
+              <div
+                *ngFor="let item of files; let i = index"
+                class="col-1 file-container"
+              >
+                <button
+                  (click)="removeImage(item)"
+                  class="small-rounded-button"
+                >
+                  X
+                </button>
+                <img
+                  *ngIf="item?.isImage && !item.url"
+                  style="width: 50px; height: 50px"
+                  [src]="item?.data"
+                  alt="Base64 Image"
+                />
+                <img
+                  *ngIf="item?.isImage && item.url"
+                  style="width: 50px; height: 50px"
+                  [src]="item?.url"
+                  alt="Base64 Image"
+                />
+                <div class="image-icon" *ngIf="!item?.isImage">
+                  <i class="pi pi-file" style="margin: auto"></i>
+                </div>
+
+                <div>
+                  <span>{{ "File " + (i + 1) }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="grid d-flex inputs-div mt-3">
+        <div class="col-12 pt-3 pr-3 pl-3">
+          <div class="header">
+            <span>Cancellation Addons</span>
+          </div>
+          <p-divider></p-divider>
+        </div>
+        <div style="margin-top: -40px" class="col-12 p-0">
+          <div class="p-20 flex flex-wrap">
+            <!-- cancelReceiptModelTypeId -->
+            <div class="col-4">
+              <div class="flex flex-column gap-2">
+                <label for="cancelReceiptModelTypeId"
+                  >Cancel Receipt <span class="p-error">*</span></label
+                >
+                <p-dropdown
+                  [options]="receiptModels"
+                  formControlName="cancelReceiptModelTypeId"
+                  [optionValue]="'id'"
+                  optionLabel="nameEn"
+                  filter="true"
+                >
+                </p-dropdown>
+                <div
+                  *ngIf="
+                    f.cancelReceiptModelTypeId.errors &&
+                    (f.cancelReceiptModelTypeId.touched ||
+                      f.cancelReceiptModelTypeId.dirty)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.cancelReceiptModelTypeId.errors.required"
+                  >
+                    Cancel Receipt is required
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

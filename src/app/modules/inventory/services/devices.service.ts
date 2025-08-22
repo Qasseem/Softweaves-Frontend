@@ -6,11 +6,43 @@ import { HttpService } from 'src/app/core/http/http.service';
 })
 export class DevicesService {
   controllerName = '/Device';
+
+  getLoactionsList() {
+    return this.http.getReq(this.controllerName + '/GetLocationDropDown');
+  }
+  getCountriesList() {
+    return this.http.getReq(this.controllerName + '/GetCountryDropDown');
+  }
+  getBanksList() {
+    return this.http.getReq(this.controllerName + '/GetBankDropDown');
+  }
+  getTeamDropDown() {
+    return this.http.getReq(this.controllerName + '/GetTeamDropDown');
+  }
+  getPaymentStatusDropDown() {
+    return this.http.getReq(this.controllerName + '/GetPaymentStatusDropDown');
+  }
+
+  getPaymentMethodDropDown() {
+    return this.http.getReq(this.controllerName + '/GetPaymentMethodDropDown');
+  }
+
+  getSubscriptionTypeDropDown() {
+    return this.http.getReq(
+      this.controllerName + '/GetSubscriptionTypeDropDown'
+    );
+  }
+
+  getCurrencyDropDown() {
+    return this.http.getReq(this.controllerName + '/GetCurrencyDropDown');
+  }
+
   getAllModelCategories() {
     return this.http.getReq(this.controllerName + '/GetById');
   }
   constructor(private http: HttpService) {}
   add(data) {
+    data.id = 0; // Ensure id is set to 0 for new entries
     return this.http.postReq(this.controllerName + '/Add', data);
   }
 
@@ -25,6 +57,15 @@ export class DevicesService {
     return this.http.postReq(this.controllerName + '/Update', id);
   }
 
+  Deploy(data) {
+    return this.http.postReq(this.controllerName + '/Deploy', data);
+  }
+  Replace(data) {
+    return this.http.postReq(this.controllerName + '/Replace', data);
+  }
+  Cancel(data) {
+    return this.http.postReq(this.controllerName + '/Cancel', data);
+  }
   Block(data) {
     return this.http.postReq(this.controllerName + '/Block', data);
   }
