@@ -57,6 +57,12 @@ export class DevicesService {
     return this.http.postReq(this.controllerName + '/Update', id);
   }
 
+  Deploy(data) {
+    return this.http.postReq(this.controllerName + '/Deploy', data);
+  }
+  Cancel(data) {
+    return this.http.postReq(this.controllerName + '/Cancel', data);
+  }
   Block(data) {
     return this.http.postReq(this.controllerName + '/Block', data);
   }

@@ -7,13 +7,14 @@ import { ToastService } from 'src/app/core/services/toaster.service';
 import { TicketService } from 'src/app/modules/ticket/services/ticket.service';
 import { HttpService } from 'src/app/core/http/http.service';
 import { UserService } from 'src/app/modules/user-management/services/user.service';
+import { WarehousesService } from '../../services/warehouses.service';
 
 @Component({
-  selector: 'app-device-deployment',
-  templateUrl: './device-deployment.component.html',
-  styleUrls: ['./device-deployment.component.css'],
+  selector: 'app-device-replace',
+  templateUrl: './device-replace.component.html',
+  styleUrls: ['./device-replace.component.css'],
 })
-export class DeviceDeploymentComponent implements OnInit {
+export class DeviceReplaceComponent implements OnInit {
   form: FormGroup;
   details: any;
   id;
@@ -32,6 +33,7 @@ export class DeviceDeploymentComponent implements OnInit {
   paperRollModels = [];
   paymentMethods = [];
   paymentStatuses = [];
+  warehouses = [];
   conditions = [];
   users = [];
   currencies = [];
@@ -49,7 +51,8 @@ export class DeviceDeploymentComponent implements OnInit {
     private toaster: ToastService,
     private ticketService: TicketService,
     private httpService: HttpService,
-    private userService: UserService
+    private userService: UserService,
+    private warehouseService: WarehousesService
   ) {
     this.countryId = httpService.country;
   }
@@ -60,21 +63,24 @@ export class DeviceDeploymentComponent implements OnInit {
 
     this.form = this.fb.group({
       deviceId: [0, Validators.required],
-      deploymentDate: ['', Validators.required],
+      cancellationDate: ['', Validators.required],
+      warehouseId: [null, Validators.required],
       merchantName: ['', [Validators.required, Validators.maxLength(50)]],
       mId: ['', [Validators.required, Validators.maxLength(50)]],
       tid: ['', [Validators.required, Validators.maxLength(50)]],
-      setupAmount: ['', [Validators.required, Validators.maxLength(10)]],
-      subscriptionAmount: ['', [Validators.required, Validators.maxLength(10)]],
-      subscriptionTypeId: [0, Validators.required],
+      cancellationFee: ['', [Validators.required, Validators.maxLength(10)]],
       currencyId: [0, Validators.required],
       paymentMethodId: [0, Validators.required],
-      paymentStatusId: [0, Validators.required],
       trx_ID: ['', Validators.required],
-      deploymentReceiptSigned: [null, Validators.required],
+      clrearanceReceiptSigned: [null, Validators.required],
       deployedTeamId: [null, Validators.required],
-      deployedById: [null, Validators.required],
+      cancelledById: [null, Validators.required],
+      gtg: [null, Validators.required],
+      needRecycling: [null, Validators.required],
+      needRepair: [null, Validators.required],
+      needBranding: [null, Validators.required],
       conditionId: [null, Validators.required],
+
       simCardModelTypeId: [null, Validators.required],
       cableModelTypeId: [null, Validators.required],
       receiptModelTypeId: [null, Validators.required],
@@ -104,6 +110,7 @@ export class DeviceDeploymentComponent implements OnInit {
       simcardProvider: this.ticketService.getSIMCardProviders(this.countryId),
       posCharger: this.ticketService.getPOSChargerModelTypes(),
       cables: this.ticketService.GetCableModelTypes(),
+      warehouse: this.warehouseService.getAgentWarehouseDropDown(),
       // add remaining lookups
     }).subscribe((results) => {
       this.currencies = results.currency.data;
@@ -117,6 +124,7 @@ export class DeviceDeploymentComponent implements OnInit {
       this.posChargerModels = results.posCharger.data;
       this.cableModels = results.cables.data;
       this.conditions = results.condition.data;
+      this.warehouses = results.warehouse.data;
     });
   }
 
@@ -134,6 +142,16 @@ export class DeviceDeploymentComponent implements OnInit {
     } else {
       this.users = [];
     }
+  }
+  getItemDetails() {
+    this.service
+      .getDetailsById(this.id)
+      .pipe(take(1))
+      .subscribe((resp) => {
+        if (resp.success) {
+          this.details = resp.data;
+        }
+      });
   }
 
   get f() {

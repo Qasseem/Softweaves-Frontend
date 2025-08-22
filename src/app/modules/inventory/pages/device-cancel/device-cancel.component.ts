@@ -7,13 +7,14 @@ import { ToastService } from 'src/app/core/services/toaster.service';
 import { TicketService } from 'src/app/modules/ticket/services/ticket.service';
 import { HttpService } from 'src/app/core/http/http.service';
 import { UserService } from 'src/app/modules/user-management/services/user.service';
+import { WarehousesService } from '../../services/warehouses.service';
 
 @Component({
-  selector: 'app-device-deployment',
-  templateUrl: './device-deployment.component.html',
-  styleUrls: ['./device-deployment.component.css'],
+  selector: 'app-device-cancel',
+  templateUrl: './device-cancel.component.html',
+  styleUrls: ['./device-cancel.component.css'],
 })
-export class DeviceDeploymentComponent implements OnInit {
+export class DeviceCancelComponent implements OnInit {
   form: FormGroup;
   details: any;
   id;
@@ -36,6 +37,7 @@ export class DeviceDeploymentComponent implements OnInit {
   users = [];
   currencies = [];
   teams = [];
+  warehouses = [];
   countryId: any;
   reciptSignedOptions = [
     { id: true, nameEn: 'Yes' },
@@ -49,7 +51,8 @@ export class DeviceDeploymentComponent implements OnInit {
     private toaster: ToastService,
     private ticketService: TicketService,
     private httpService: HttpService,
-    private userService: UserService
+    private userService: UserService,
+    private warehouseService: WarehousesService
   ) {
     this.countryId = httpService.country;
   }
@@ -58,34 +61,51 @@ export class DeviceDeploymentComponent implements OnInit {
     // this.getItemDetails();
     this.id = this.route.snapshot.params.id || null;
 
+    let ss = {
+      deviceId: 0,
+      cancellationDate: '2025-08-22T17:09:30.046Z',
+      warehouseId: 0,
+      merchantName: 'string',
+      mId: 'string',
+      tid: 'string',
+      cancellationFee: 'string',
+      currencyId: 0,
+      paymentMethodId: 0,
+      paymentStatusId: 0,
+      trx_ID: 'string',
+      clrearanceReceiptSigned: true,
+      cancelledById: 0,
+      gtg: true,
+      needRecycling: true,
+      needRepair: true,
+      needBranding: true,
+      conditionId: 0,
+      cancelReceiptModelTypeId: 0,
+      notes: 'string',
+      attachmentsBase64: ['string'],
+    };
+
     this.form = this.fb.group({
       deviceId: [0, Validators.required],
-      deploymentDate: ['', Validators.required],
+      cancellationDate: ['', Validators.required],
+      warehouseId: [null, Validators.required],
       merchantName: ['', [Validators.required, Validators.maxLength(50)]],
       mId: ['', [Validators.required, Validators.maxLength(50)]],
       tid: ['', [Validators.required, Validators.maxLength(50)]],
-      setupAmount: ['', [Validators.required, Validators.maxLength(10)]],
-      subscriptionAmount: ['', [Validators.required, Validators.maxLength(10)]],
-      subscriptionTypeId: [0, Validators.required],
+      cancellationFee: ['', [Validators.required, Validators.maxLength(10)]],
       currencyId: [0, Validators.required],
       paymentMethodId: [0, Validators.required],
-      paymentStatusId: [0, Validators.required],
       trx_ID: ['', Validators.required],
-      deploymentReceiptSigned: [null, Validators.required],
+      clrearanceReceiptSigned: [null, Validators.required],
       deployedTeamId: [null, Validators.required],
-      deployedById: [null, Validators.required],
+      cancelledById: [null, Validators.required],
+      gtg: [null, Validators.required],
+      needRecycling: [null, Validators.required],
+      needRepair: [null, Validators.required],
+      needBranding: [null, Validators.required],
       conditionId: [null, Validators.required],
-      simCardModelTypeId: [null, Validators.required],
-      cableModelTypeId: [null, Validators.required],
-      receiptModelTypeId: [null, Validators.required],
-      paperRollModelTypeId: [null, Validators.required],
-      posChargerModelTypeId: [null, Validators.required],
-      address: ['', [Validators.maxLength(50)]],
+      cancelReceiptModelTypeId: [null, Validators.required],
       notes: ['', [Validators.maxLength(500)]],
-      merchantPhoneNumber: [
-        '',
-        [Validators.required, Validators.maxLength(50)],
-      ],
       attachmentsBase64: [[]],
     });
     this.loadAllLookups();
@@ -94,29 +114,19 @@ export class DeviceDeploymentComponent implements OnInit {
   loadAllLookups() {
     forkJoin({
       currency: this.service.getCurrencyDropDown(),
-      subscriptionTypes: this.service.getSubscriptionTypeDropDown(),
       paymentMethod: this.service.getPaymentMethodDropDown(),
-      paymentStatus: this.service.getPaymentStatusDropDown(),
       team: this.service.getTeamDropDown(),
       condition: this.service.getConditionDropDown(),
-      paperRoll: this.ticketService.GetPaperRollModelTypes(),
-      deployReceipt: this.ticketService.GetDeployReceiptModelTypes(),
-      simcardProvider: this.ticketService.getSIMCardProviders(this.countryId),
-      posCharger: this.ticketService.getPOSChargerModelTypes(),
-      cables: this.ticketService.GetCableModelTypes(),
+      deployReceipt: this.ticketService.GetCancellationReceiptModelTypes(),
+      warehouse: this.warehouseService.getAgentWarehouseDropDown(),
       // add remaining lookups
     }).subscribe((results) => {
       this.currencies = results.currency.data;
       this.paymentMethods = results.paymentMethod.data;
-      this.paymentStatuses = results.paymentStatus.data;
-      this.subscriptionTypes = results.subscriptionTypes.data;
       this.teams = results.team.data;
-      this.paperRollModels = results.paperRoll.data;
       this.receiptModels = results.deployReceipt.data;
-      this.simCardModels = results.simcardProvider.data;
-      this.posChargerModels = results.posCharger.data;
-      this.cableModels = results.cables.data;
       this.conditions = results.condition.data;
+      this.warehouses = results.warehouse.data;
     });
   }
 
@@ -143,8 +153,9 @@ export class DeviceDeploymentComponent implements OnInit {
     let obj = this.form.value;
     obj.deviceId = this.id;
     this.addAttachmentsToFormAsBase64(obj);
+
     this.service
-      .Deploy(obj)
+      .Cancel(obj)
       .pipe(take(1))
       .subscribe({
         next: (resp) => {

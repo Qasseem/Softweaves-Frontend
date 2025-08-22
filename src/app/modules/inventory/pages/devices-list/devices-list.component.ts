@@ -36,6 +36,7 @@ export class DevicesListComponent implements OnInit {
   canReturn = true;
   canDeploy = true;
   canCancel = true;
+  canReplace = true;
   canReviewDelivery = true;
   showreturnToWarehouseDialog = false;
   constructor(
@@ -86,7 +87,9 @@ export class DevicesListComponent implements OnInit {
     if (!this.authService.hasPermission('inventory-devices-edit')) {
       this.canCancel = false;
     }
-
+    if (!this.authService.hasPermission('inventory-devices-edit')) {
+      this.canReplace = false;
+    }
     this.getConditionDropDown();
     this.getWarehouseDropDown();
   }
@@ -395,6 +398,12 @@ export class DevicesListComponent implements OnInit {
       call: (row: any) => this.goToCancelPage(row, true),
       customPermission: (row: any) => this.canCancel,
     },
+    {
+      name: 'Replace',
+      icon: 'pi pi-minus-circle',
+      call: (row: any) => this.goToReplacePage(row, true),
+      customPermission: (row: any) => this.canReplace,
+    },
   ];
   public gridActionsList: ActionsInterface[] = [
     {
@@ -562,6 +571,10 @@ export class DevicesListComponent implements OnInit {
   }
   goToDeployPage(row: any, arg1: boolean): any {
     const URL = `main/inventory/devices/deploy/${row?.id}`;
+    this.router.navigate([URL]);
+  }
+  goToReplacePage(row: any, arg1: boolean): any {
+    const URL = `main/inventory/devices/replace/${row?.id}`;
     this.router.navigate([URL]);
   }
 }

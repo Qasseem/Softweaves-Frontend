@@ -27,6 +27,8 @@ import { DeviceHistoryComponent } from './pages/device-history/device-history.co
 import { ItemsWithoutSerialEmployeeHistoryComponent } from './pages/items-without-serial-employee-history/items-without-serial-employee-history.component';
 import { ItemsWithoutSerialWarehouseHistoryComponent } from './pages/items-without-serial-warehouse-history/items-without-serial-warehouse-history.component';
 import { DeviceDeploymentComponent } from './pages/device-deployment/device-deployment.component';
+import { DeviceCancelComponent } from './pages/device-cancel/device-cancel.component';
+import { DeviceReplaceComponent } from './pages/device-replace/device-replace.component';
 
 const routes: Routes = [
   {
@@ -67,6 +69,14 @@ const routes: Routes = [
       {
         path: 'devices/deploy/:id',
         component: DeviceDeploymentComponent,
+      },
+      {
+        path: 'devices/replace/:id',
+        component: DeviceReplaceComponent,
+      },
+      {
+        path: 'devices/cancel/:id',
+        component: DeviceCancelComponent,
       },
       //Items Without Serial--------------------------------
       {
