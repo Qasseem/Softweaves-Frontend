@@ -312,7 +312,7 @@ export class TransferCustodyFormComponent implements OnInit {
         tap((data2) => (this.warehousesList = data2.data)),
         concatMap(() => this.userService.getAllServiceAgents()),
         tap((data3) => {
-          this.usersList = [...data3.data];
+          // this.usersList = [...data3.data];
           this.getDetails();
         })
       )
@@ -539,13 +539,12 @@ export class TransferCustodyFormComponent implements OnInit {
           .pipe(take(1))
           .subscribe((resp) => {
             if (resp.success) {
-              this.usersList = resp.data;
               if (
                 this.form.controls.destination.value == DDLControlType.Employee
               ) {
                 this.custodySourceFormControlsList.find(
                   (x) => x.name == 'cityId'
-                ).data = [...this.usersList];
+                ).data = [...resp.data];
               }
             }
           });
@@ -561,7 +560,7 @@ export class TransferCustodyFormComponent implements OnInit {
     if (controlName == DDLControlType.UserType) {
       if (selectedOption?.value) {
         this.userService
-          .getUsersByUserType(selectedOption?.value)
+          .getUsersByTypeIdDropDown(selectedOption?.value)
           .pipe(take(1))
           .subscribe((resp) => {
             if (resp.success) {

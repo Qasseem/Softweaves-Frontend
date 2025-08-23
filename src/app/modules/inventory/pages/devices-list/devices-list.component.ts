@@ -72,23 +72,20 @@ export class DevicesListComponent implements OnInit {
       this.canReviewCancellation = false;
     }
 
-    if (
-      !this.authService.hasPermission('inventory-devices-returntowarehouse')
-    ) {
-      this.canReturn = false;
-    }
-
     if (!this.authService.hasPermission('inventory-devices-reviewdelivery')) {
       this.canReviewDelivery = false;
     }
-    if (!this.authService.hasPermission('inventory-devices-edit')) {
+    if (!this.authService.hasPermission('inventory-devices-managedevices')) {
       this.canDeploy = false;
     }
-    if (!this.authService.hasPermission('inventory-devices-edit')) {
+    if (!this.authService.hasPermission('inventory-devices-managedevices')) {
       this.canCancel = false;
     }
-    if (!this.authService.hasPermission('inventory-devices-edit')) {
+    if (!this.authService.hasPermission('inventory-devices-managedevices')) {
       this.canReplace = false;
+    }
+    if (!this.authService.hasPermission('inventory-devices-managedevices')) {
+      this.canReturn = false;
     }
     this.getConditionDropDown();
     this.getWarehouseDropDown();
@@ -371,15 +368,7 @@ export class DevicesListComponent implements OnInit {
         row.statusId == DeviceStatusEnum.InCancellationPhase &&
         this.canReviewCancellation,
     },
-    {
-      name: 'Return to Warehouse',
-      icon: 'pi pi-undo',
-      call: (row: any) => this.returnToWarehouseDialoge(row),
-      customPermission: (row: any) =>
-        (row.statusId == DeviceStatusEnum.SpareWithAgent ||
-          row.statusId == DeviceStatusEnum.InDeliveryPhase) &&
-        this.canReturn,
-    },
+
     {
       name: 'History',
       icon: 'pi pi-history',
@@ -403,6 +392,12 @@ export class DevicesListComponent implements OnInit {
       icon: 'pi pi-arrow-right-arrow-left',
       call: (row: any) => this.goToReplacePage(row, true),
       customPermission: (row: any) => this.canReplace,
+    },
+    {
+      name: 'Return to Warehouse',
+      icon: 'pi pi-undo',
+      call: (row: any) => this.returnToWarehouseDialoge(row),
+      customPermission: (row: any) => this.canReturn,
     },
     {
       name: 'Actions History',
