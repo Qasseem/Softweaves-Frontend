@@ -45,3 +45,57 @@
     </div>
   </div>
 </div>
+
+<div class="add-form container-card">
+  <div>
+    <div class="grid">
+      <div class="col-12">
+        <div>Additional Info</div>
+        <div class="divider"></div>
+      </div>
+    </div>
+    <div class="grid">
+      <div *ngFor="let section of addonSections" class="col-4">
+        <div *ngFor="let field of section">
+          <div *ngIf="field.showField" class="grid mt-2">
+            <div class="col-6 label-primary">{{ field.label }}</div>
+            <div *ngIf="field.type == ''" class="col-6">{{ field.value }}</div>
+            <div *ngIf="field.type == 'date'" class="col-6">
+              {{ field.value | date : "dd/MM/yyyy HH:mm" }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p-divider></p-divider>
+    <div class="grid">
+      <!-- note section -->
+      <div class="pl-2">Notes</div>
+      <div class="note-container">
+        {{ details?.notes }}
+      </div>
+    </div>
+    <p-divider></p-divider>
+    <div class="">Attached Files</div>
+    <div class="grid mt-1">
+      <div
+        class="col-6"
+        *ngFor="let file of details?.attachments; let i = index"
+      >
+        <div
+          class="file-container flex align-items-center justify-content-between p-3"
+        >
+          <div class="flex align-items-center">
+            <i class="pi pi-file mr-2" style="color: #0080f9"></i>
+            <span class="file-name">{{ "File" + (i + 1) }}</span>
+          </div>
+          <i
+            class="pi pi-download cursor-pointer"
+            style="color: black"
+            (click)="downloadFile(file?.attachmentUrl)"
+          ></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
