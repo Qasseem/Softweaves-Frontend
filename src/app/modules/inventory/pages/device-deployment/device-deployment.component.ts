@@ -104,6 +104,7 @@ export class DeviceDeploymentComponent implements OnInit {
       simcardProvider: this.ticketService.getSIMCardProviders(this.countryId),
       posCharger: this.ticketService.getPOSChargerModelTypes(),
       cables: this.ticketService.GetCableModelTypes(),
+      users: this.userService.getAllUsers(),
       // add remaining lookups
     }).subscribe((results) => {
       this.currencies = results.currency.data;
@@ -117,23 +118,8 @@ export class DeviceDeploymentComponent implements OnInit {
       this.posChargerModels = results.posCharger.data;
       this.cableModels = results.cables.data;
       this.conditions = results.condition.data;
+      this.users = results.users.data;
     });
-  }
-
-  getUserByType(event) {
-    if (event && event.value) {
-      var userType = event.value;
-      this.userService
-        .getUsersByUserType(userType)
-        .pipe(take(1))
-        .subscribe((resp) => {
-          if (resp.success) {
-            this.users = resp.data;
-          }
-        });
-    } else {
-      this.users = [];
-    }
   }
 
   get f() {

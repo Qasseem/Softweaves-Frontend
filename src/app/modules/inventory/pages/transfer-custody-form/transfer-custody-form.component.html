@@ -42,7 +42,7 @@
           <div class="p-20 flex flex-wrap">
             <div
               *ngFor="let ctrl of filteredCustodySourceFormControlsList"
-              class="col-6"
+              [ngClass]="ctrl?.class ? ctrl?.class : 'col-6'"
             >
               <div *ngIf="ctrl?.showCtrl" class="flex flex-column gap-2">
                 <label [for]="ctrl?.name"
@@ -69,6 +69,79 @@
                   >
                     {{ ctrl?.header }} field is required
                   </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="flex flex-column gap-2">
+                <label for="failReasonId">Note</label>
+                <textarea
+                  rows="3"
+                  cols="30"
+                  pInputTextarea
+                  formControlName="notes"
+                  style="height: 80px"
+                >
+                </textarea>
+              </div>
+            </div>
+          </div>
+          <div class="pl-4 pr-4 pb-2">
+            <div class="grid">
+              <div class="col-12">
+                <span class="upload-file-header">Upload Files</span>
+                <span style="color: #cecece; font-size: 10px">(Optional)</span>
+              </div>
+            </div>
+
+            <div class="grid">
+              <div class="col-1">
+                <div (click)="fileInput.click()" class="image-icon">
+                  <oc-icon
+                    style="margin: auto"
+                    [icon]="'plus-icon'"
+                    [width]="'20px'"
+                    [height]="'20px'"
+                    [scale]="1.1"
+                  ></oc-icon>
+
+                  <input
+                    type="file"
+                    #fileInput
+                    (change)="onFileSelected($event)"
+                    accept="*"
+                    hidden
+                  />
+                </div>
+              </div>
+              <div
+                *ngFor="let item of files; let i = index"
+                class="col-1 file-container"
+              >
+                <button
+                  (click)="removeImage(item)"
+                  class="small-rounded-button"
+                >
+                  X
+                </button>
+                <img
+                  *ngIf="item?.isImage && !item.url"
+                  style="width: 50px; height: 50px"
+                  [src]="item?.data"
+                  alt="Base64 Image"
+                />
+                <img
+                  *ngIf="item?.isImage && item.url"
+                  style="width: 50px; height: 50px"
+                  [src]="item?.url"
+                  alt="Base64 Image"
+                />
+                <div class="image-icon" *ngIf="!item?.isImage">
+                  <i class="pi pi-file" style="margin: auto"></i>
+                </div>
+
+                <div>
+                  <span>{{ "File " + (i + 1) }}</span>
                 </div>
               </div>
             </div>

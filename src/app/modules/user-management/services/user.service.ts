@@ -74,4 +74,8 @@ export class UserService {
   ) {
     return this.dialogService.confirm(msg, title, ok, cancel, params, params2);
   }
+
+  getUsersByTypeIdDropDown(id) {
+    return this.http.getReq('/User/GetUsersByTypeIdDropDown/' + id);
+  }
 }

@@ -114,6 +114,7 @@ export class DeviceReplaceComponent implements OnInit {
       posCharger: this.ticketService.getPOSChargerModelTypes(),
       cables: this.ticketService.GetCableModelTypes(),
       warehouse: this.warehouseService.getAgentWarehouseDropDown(),
+      users: this.userService.getAllUsers(),
       // add remaining lookups
     }).subscribe((results) => {
       this.currencies = results.currency.data;
@@ -129,24 +130,10 @@ export class DeviceReplaceComponent implements OnInit {
       this.conditions = results.condition.data;
       this.warehouses = results.warehouse.data;
       this.cancellationReceiptModels = results.cancellationReceipt.data;
+      this.users = results.users.data;
     });
   }
 
-  getUserByType(event) {
-    if (event && event.value) {
-      var userType = event.value;
-      this.userService
-        .getUsersByUserType(userType)
-        .pipe(take(1))
-        .subscribe((resp) => {
-          if (resp.success) {
-            this.users = resp.data;
-          }
-        });
-    } else {
-      this.users = [];
-    }
-  }
   getItemDetails() {
     this.service
       .getDetailsById(this.id)

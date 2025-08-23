@@ -17,3 +17,40 @@
 ::ng-deep thead {
   height: 40px !important;
 }
+
+.file-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: -0.6rem;
+}
+
+.upload-file-header {
+  margin-top: 0;
+  margin-bottom: 0;
+  color: #798693;
+  font-size: 12px;
+}
+
+.image-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+  border: 1px solid #d9d9d9;
+  display: flex;
+  align-items: center;
+}
+
+.small-rounded-button {
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 50px; /* Fully rounded edges */
+  padding: 3px 5px; /* Adjust button size */
+  font-size: 11px; /* Small text size */
+  cursor: pointer;
+  transition: background-color 0.3s;
+  height: 18px;
+  margin-top: -0.5rem;
+  margin-left: 3.4rem;
+}

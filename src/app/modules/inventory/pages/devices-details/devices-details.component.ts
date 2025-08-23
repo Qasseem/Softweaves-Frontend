@@ -13,6 +13,12 @@ export class DevicesDetailsComponent implements OnInit {
   details;
   cards = [];
   detailsSections: { type: string; label: string; value: any }[][];
+  addonSections: {
+    showField: boolean;
+    type: string;
+    label: string;
+    value: any;
+  }[][];
 
   constructor(
     private service: DevicesService,
@@ -80,6 +86,29 @@ export class DevicesDetailsComponent implements OnInit {
         },
       ],
     ];
+
+    this.addonSections = [
+      [
+        {
+          showField: true,
+          type: '',
+          label: 'Bank',
+          value: this.details?.bankName,
+        },
+        {
+          showField: true,
+          type: '',
+          label: 'Country',
+          value: this.details?.countryName,
+        },
+        {
+          showField: true,
+          type: '',
+          label: 'Assigned Location',
+          value: this.details?.locationName,
+        },
+      ],
+    ];
   }
   prepareCardsData() {
     this.cards.push({
@@ -107,5 +136,8 @@ export class DevicesDetailsComponent implements OnInit {
   }
   backToList() {
     this.router.navigate(['main/inventory/devices/list']);
+  }
+  downloadFile(url: string): void {
+    window.open(url, '_blank');
   }
 }
