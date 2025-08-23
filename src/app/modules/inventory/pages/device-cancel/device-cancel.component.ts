@@ -119,6 +119,7 @@ export class DeviceCancelComponent implements OnInit {
       condition: this.service.getConditionDropDown(),
       deployReceipt: this.ticketService.GetCancellationReceiptModelTypes(),
       warehouse: this.warehouseService.getAgentWarehouseDropDown(),
+      users: this.userService.getAllUsers(),
       // add remaining lookups
     }).subscribe((results) => {
       this.currencies = results.currency.data;
@@ -127,23 +128,8 @@ export class DeviceCancelComponent implements OnInit {
       this.receiptModels = results.deployReceipt.data;
       this.conditions = results.condition.data;
       this.warehouses = results.warehouse.data;
+      this.users = results.users.data;
     });
-  }
-
-  getUserByType(event) {
-    if (event && event.value) {
-      var userType = event.value;
-      this.userService
-        .getUsersByUserType(userType)
-        .pipe(take(1))
-        .subscribe((resp) => {
-          if (resp.success) {
-            this.users = resp.data;
-          }
-        });
-    } else {
-      this.users = [];
-    }
   }
 
   get f() {
