@@ -400,8 +400,14 @@ export class DevicesListComponent implements OnInit {
     },
     {
       name: 'Replace',
-      icon: 'pi pi-minus-circle',
+      icon: 'pi pi-arrow-right-arrow-left',
       call: (row: any) => this.goToReplacePage(row, true),
+      customPermission: (row: any) => this.canReplace,
+    },
+    {
+      name: 'Actions History',
+      icon: 'pi pi-history',
+      call: (row: any) => this.goToActionsHistoryPage(row, true),
       customPermission: (row: any) => this.canReplace,
     },
   ];
@@ -575,6 +581,11 @@ export class DevicesListComponent implements OnInit {
   }
   goToReplacePage(row: any, arg1: boolean): any {
     const URL = `main/inventory/devices/replace/${row?.id}`;
+    this.router.navigate([URL]);
+  }
+
+  goToActionsHistoryPage(row: any, arg1: boolean): any {
+    const URL = `main/inventory/devices/actionshistory/${row?.id}`;
     this.router.navigate([URL]);
   }
 }

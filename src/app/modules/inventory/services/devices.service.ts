@@ -89,4 +89,15 @@ export class DevicesService {
   returnToWarehouse(data) {
     return this.http.postReq(this.controllerName + '/ReturnToWarehouse', data);
   }
+
+  GetHistoryLog(id) {
+    return this.http.getHeaderReq(this.controllerName + '/GetHistoryLog', id);
+  }
+
+  GetHistoryLogDetails(id) {
+    return this.http.getHeaderReq(
+      this.controllerName + '/GetHistoryLogDetails',
+      id
+    );
+  }
 }

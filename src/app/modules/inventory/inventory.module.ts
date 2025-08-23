@@ -31,6 +31,8 @@ import { ItemsWithoutSerialWarehouseHistoryComponent } from './pages/items-witho
 import { DeviceDeploymentComponent } from './pages/device-deployment/device-deployment.component';
 import { DeviceReplaceComponent } from './pages/device-replace/device-replace.component';
 import { DeviceCancelComponent } from './pages/device-cancel/device-cancel.component';
+import { DeviceActionsDetailsComponent } from './pages/device-actions-details/device-actions-details.component';
+import { DeviceActionsHistoryComponent } from './pages/device-actions-history/device-actions-history.component';
 
 @NgModule({
   imports: [
@@ -68,6 +70,8 @@ import { DeviceCancelComponent } from './pages/device-cancel/device-cancel.compo
     DeviceDeploymentComponent,
     DeviceCancelComponent,
     DeviceReplaceComponent,
+    DeviceActionsDetailsComponent,
+    DeviceActionsHistoryComponent,
   ],
 })
 export class InventoryModule {}
