@@ -440,7 +440,10 @@
                   />
                 </div>
               </div>
-              <div *ngFor="let item of files" class="col-1 file-container">
+              <div
+                *ngFor="let item of files; let i = index"
+                class="col-1 file-container"
+              >
                 <button
                   (click)="removeImage(item)"
                   class="small-rounded-button"
