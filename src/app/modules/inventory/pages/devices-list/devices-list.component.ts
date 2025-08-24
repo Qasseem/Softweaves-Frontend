@@ -561,6 +561,12 @@ export class DevicesListComponent implements OnInit {
           this.rowData.statusName = 'In Warehouse';
           this.rowData.statusId = DeviceStatusEnum.InWarehouse;
           this.showreturnToWarehouseDialog = false;
+          const condition = this.allConditions.find(
+            (x) => x.id == this.conditionId
+          );
+          if (condition) {
+            this.rowData.conditionName = condition.nameEn;
+          }
           this.warehouseId = null;
           this.conditionId = null;
         }

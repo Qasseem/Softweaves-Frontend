@@ -53,11 +53,7 @@ export class DevicesDetailsComponent implements OnInit {
         { type: '', label: 'Device Serial', value: this.details?.serialNumber },
         { type: '', label: 'SIM Serial', value: this.details?.simCardSerial },
         { type: '', label: 'Status', value: this.details?.statusName },
-        {
-          type: '',
-          label: 'Errand Channel',
-          value: this.details?.errandChannel,
-        },
+
         { type: '', label: 'Warehouse', value: this.details?.warehouse },
       ],
       [

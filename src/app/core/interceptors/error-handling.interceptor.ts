@@ -52,7 +52,7 @@ export class ErrorHandlingInterceptor implements HttpInterceptor {
               event.body.status !== 401 &&
               event.body.status !== 403 &&
               !request.url.includes('lon=')
-            )
+            ) {
               if (event.body.message)
                 this.toaster.showError(event.body.message);
               else if (event.body.status === 403) {
@@ -62,6 +62,13 @@ export class ErrorHandlingInterceptor implements HttpInterceptor {
               else if (event.body.status === 401) this.clearStorage();
               else if (event.body.message)
                 this.toaster.showSuccess(event.body.message);
+            } else if (
+              event.body.message &&
+              event.body.status !== 401 &&
+              event.body.status !== 403
+            ) {
+              this.toaster.showSuccess(event.body.message);
+            }
           }
         },
         (error: any) => {
