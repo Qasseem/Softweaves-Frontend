@@ -432,6 +432,42 @@ export class DevicesListComponent implements OnInit {
       },
     },
     {
+      name: 'Bulk Deploy',
+      icon: 'pi pi-table',
+      permission: 'inventory-devices-managedevices',
+      call: (row: any) => this.bulkAdd(row),
+      type: ActionsTypeEnum.File,
+      uploadFileData: {
+        url: '/Device/ImportToDeploy',
+        header: 'Bulk Deploy',
+        templateName: 'Import Deploy Device.xlsx',
+      },
+    },
+    {
+      name: 'Bulk Cancel',
+      icon: 'pi pi-minus-circle',
+      permission: 'inventory-devices-managedevices',
+      call: (row: any) => this.bulkAdd(row),
+      type: ActionsTypeEnum.File,
+      uploadFileData: {
+        url: '/Device/ImportToCancel',
+        header: 'Bulk Cancel',
+        templateName: 'Import Cancel Device.xlsx',
+      },
+    },
+    {
+      name: 'Bulk Replace',
+      icon: 'pi pi-arrow-right-arrow-left',
+      permission: 'inventory-devices-managedevices',
+      call: (row: any) => this.bulkAdd(row),
+      type: ActionsTypeEnum.File,
+      uploadFileData: {
+        url: '/Device/ImportToReplace',
+        header: 'Bulk Replace',
+        templateName: 'Import Replace Device.xlsx',
+      },
+    },
+    {
       name: 'Import to fill data',
       icon: 'pi pi-credit-card',
       permission: 'inventory-devices-add',
