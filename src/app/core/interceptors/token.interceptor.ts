@@ -60,7 +60,7 @@ export class TokenInterceptor implements HttpInterceptor {
       'Content-Type': 'application/json',
     };
     const headerReq =
-      request.url.search('http://ic.afaqy.com/api/ApiEmployeeView/get') === 0
+      request.url.search('http://noapi/get') === 0
         ? headerWithoutToken
         : headerWithToken;
 

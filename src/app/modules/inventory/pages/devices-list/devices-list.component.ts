@@ -34,6 +34,9 @@ export class DevicesListComponent implements OnInit {
   warehousesList = [];
   canReviewCancellation = true;
   canReturn = true;
+  canDeploy = true;
+  canCancel = true;
+  canReplace = true;
   canReviewDelivery = true;
   showreturnToWarehouseDialog = false;
   constructor(
@@ -69,16 +72,21 @@ export class DevicesListComponent implements OnInit {
       this.canReviewCancellation = false;
     }
 
-    if (
-      !this.authService.hasPermission('inventory-devices-returntowarehouse')
-    ) {
-      this.canReturn = false;
-    }
-
     if (!this.authService.hasPermission('inventory-devices-reviewdelivery')) {
       this.canReviewDelivery = false;
     }
-
+    if (!this.authService.hasPermission('inventory-devices-managedevices')) {
+      this.canDeploy = false;
+    }
+    if (!this.authService.hasPermission('inventory-devices-managedevices')) {
+      this.canCancel = false;
+    }
+    if (!this.authService.hasPermission('inventory-devices-managedevices')) {
+      this.canReplace = false;
+    }
+    if (!this.authService.hasPermission('inventory-devices-managedevices')) {
+      this.canReturn = false;
+    }
     this.getConditionDropDown();
     this.getWarehouseDropDown();
   }
@@ -360,20 +368,42 @@ export class DevicesListComponent implements OnInit {
         row.statusId == DeviceStatusEnum.InCancellationPhase &&
         this.canReviewCancellation,
     },
-    {
-      name: 'Return to Warehouse',
-      icon: 'pi pi-undo',
-      call: (row: any) => this.returnToWarehouseDialoge(row),
-      customPermission: (row: any) =>
-        (row.statusId == DeviceStatusEnum.SpareWithAgent ||
-          row.statusId == DeviceStatusEnum.InDeliveryPhase) &&
-        this.canReturn,
-    },
+
     {
       name: 'History',
       icon: 'pi pi-history',
       call: (row: any) => this.gotoHistory(row),
       customPermission: (row: any) => true,
+    },
+    {
+      name: 'Deploy',
+      icon: 'pi pi-table',
+      call: (row: any) => this.goToDeployPage(row, true),
+      customPermission: (row: any) => this.canDeploy,
+    },
+    {
+      name: 'Cancel',
+      icon: 'pi pi-minus-circle',
+      call: (row: any) => this.goToCancelPage(row, true),
+      customPermission: (row: any) => this.canCancel,
+    },
+    {
+      name: 'Replace',
+      icon: 'pi pi-arrow-right-arrow-left',
+      call: (row: any) => this.goToReplacePage(row, true),
+      customPermission: (row: any) => this.canReplace,
+    },
+    {
+      name: 'Return to Warehouse',
+      icon: 'pi pi-undo',
+      call: (row: any) => this.returnToWarehouseDialoge(row),
+      customPermission: (row: any) => this.canReturn,
+    },
+    {
+      name: 'Actions History',
+      icon: 'pi pi-history',
+      call: (row: any) => this.goToActionsHistoryPage(row, true),
+      customPermission: (row: any) => this.canReplace,
     },
   ];
   public gridActionsList: ActionsInterface[] = [
@@ -399,6 +429,42 @@ export class DevicesListComponent implements OnInit {
         url: '/Device/ImportToUpdate',
         header: 'Update Bulk Devices',
         templateName: 'Import Update Device.xlsx',
+      },
+    },
+    {
+      name: 'Bulk Deploy',
+      icon: 'pi pi-table',
+      permission: 'inventory-devices-managedevices',
+      call: (row: any) => this.bulkAdd(row),
+      type: ActionsTypeEnum.File,
+      uploadFileData: {
+        url: '/Device/ImportToDeploy',
+        header: 'Bulk Deploy',
+        templateName: 'Import Deploy Device.xlsx',
+      },
+    },
+    {
+      name: 'Bulk Cancel',
+      icon: 'pi pi-minus-circle',
+      permission: 'inventory-devices-managedevices',
+      call: (row: any) => this.bulkAdd(row),
+      type: ActionsTypeEnum.File,
+      uploadFileData: {
+        url: '/Device/ImportToCancel',
+        header: 'Bulk Cancel',
+        templateName: 'Import Cancel Device.xlsx',
+      },
+    },
+    {
+      name: 'Bulk Replace',
+      icon: 'pi pi-arrow-right-arrow-left',
+      permission: 'inventory-devices-managedevices',
+      call: (row: any) => this.bulkAdd(row),
+      type: ActionsTypeEnum.File,
+      uploadFileData: {
+        url: '/Device/ImportToReplace',
+        header: 'Bulk Replace',
+        templateName: 'Import Replace Device.xlsx',
       },
     },
     {
@@ -531,9 +597,32 @@ export class DevicesListComponent implements OnInit {
           this.rowData.statusName = 'In Warehouse';
           this.rowData.statusId = DeviceStatusEnum.InWarehouse;
           this.showreturnToWarehouseDialog = false;
+          const condition = this.allConditions.find(
+            (x) => x.id == this.conditionId
+          );
+          if (condition) {
+            this.rowData.conditionName = condition.nameEn;
+          }
           this.warehouseId = null;
           this.conditionId = null;
         }
       });
+  }
+  goToCancelPage(row: any, arg1: boolean): any {
+    const URL = `main/inventory/devices/cancel/${row?.id}`;
+    this.router.navigate([URL]);
+  }
+  goToDeployPage(row: any, arg1: boolean): any {
+    const URL = `main/inventory/devices/deploy/${row?.id}`;
+    this.router.navigate([URL]);
+  }
+  goToReplacePage(row: any, arg1: boolean): any {
+    const URL = `main/inventory/devices/replace/${row?.id}`;
+    this.router.navigate([URL]);
+  }
+
+  goToActionsHistoryPage(row: any, arg1: boolean): any {
+    const URL = `main/inventory/devices/actionshistory/${row?.id}`;
+    this.router.navigate([URL]);
   }
 }

@@ -280,6 +280,7 @@ export class ListComponent implements OnInit, OnDestroy, OnChanges {
       edit: false,
       editURL: null,
       clone: false,
+      viewDetailsPropName: 'id',
       ...this.options,
     };
     this.checkConstAction(this.actions);
@@ -667,7 +668,9 @@ export class ListComponent implements OnInit, OnDestroy, OnChanges {
       if (this.options.viewDetailsURL?.at(-1) != '/') {
         this.options.viewDetailsURL = this.options.viewDetailsURL + '/';
       }
-      this.router.navigate([this.options.viewDetailsURL + rowData?.id]);
+      const url =
+        this.options.viewDetailsURL + rowData[this.options.viewDetailsPropName];
+      this.router.navigate([url]);
     }
   }
   convertToKebabCase(input: string): string {

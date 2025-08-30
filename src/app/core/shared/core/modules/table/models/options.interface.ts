@@ -24,4 +24,5 @@ export interface TableOptionsInterface {
   block?: boolean;
   clone?: boolean;
   cloneURL?: string;
+  viewDetailsPropName?: string;
 }
