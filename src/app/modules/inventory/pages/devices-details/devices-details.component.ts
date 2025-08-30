@@ -13,6 +13,12 @@ export class DevicesDetailsComponent implements OnInit {
   details;
   cards = [];
   detailsSections: { type: string; label: string; value: any }[][];
+  addonSections: {
+    showField: boolean;
+    type: string;
+    label: string;
+    value: any;
+  }[][];
 
   constructor(
     private service: DevicesService,
@@ -47,11 +53,7 @@ export class DevicesDetailsComponent implements OnInit {
         { type: '', label: 'Device Serial', value: this.details?.serialNumber },
         { type: '', label: 'SIM Serial', value: this.details?.simCardSerial },
         { type: '', label: 'Status', value: this.details?.statusName },
-        {
-          type: '',
-          label: 'Errand Channel',
-          value: this.details?.errandChannel,
-        },
+
         { type: '', label: 'Warehouse', value: this.details?.warehouse },
       ],
       [
@@ -77,6 +79,29 @@ export class DevicesDetailsComponent implements OnInit {
           type: 'date',
           label: 'Installed At',
           value: this.details?.installedAt,
+        },
+      ],
+    ];
+
+    this.addonSections = [
+      [
+        {
+          showField: true,
+          type: '',
+          label: 'Bank',
+          value: this.details?.bankName,
+        },
+        {
+          showField: true,
+          type: '',
+          label: 'Country',
+          value: this.details?.countryName,
+        },
+        {
+          showField: true,
+          type: '',
+          label: 'Assigned Location',
+          value: this.details?.locationName,
         },
       ],
     ];
@@ -107,5 +132,8 @@ export class DevicesDetailsComponent implements OnInit {
   }
   backToList() {
     this.router.navigate(['main/inventory/devices/list']);
+  }
+  downloadFile(url: string): void {
+    window.open(url, '_blank');
   }
 }

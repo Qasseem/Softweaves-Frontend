@@ -14,24 +14,6 @@
   height: 40px;
 }
 
-::ng-deep thead {
-  height: 40px !important;
-}
-
-.file-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: -0.6rem;
-}
-
-.upload-file-header {
-  margin-top: 0;
-  margin-bottom: 0;
-  color: #798693;
-  font-size: 12px;
-}
-
 .image-icon {
   width: 50px;
   height: 50px;
@@ -53,4 +35,22 @@
   height: 18px;
   margin-top: -0.5rem;
   margin-left: 3.4rem;
+}
+
+.file-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: -0.6rem;
+}
+
+.upload-file-header {
+  margin-top: 0;
+  margin-bottom: 0;
+  color: #798693;
+  font-size: 12px;
+}
+
+::ng-deep .p-calendar {
+  width: 100%;
 }

@@ -5,6 +5,12 @@ import { HttpService } from 'src/app/core/http/http.service';
   providedIn: 'root',
 })
 export class TransferCustodyService {
+  getCountriesList() {
+    return this.http.getReq(this.controllerName + '/GetModelFamilyDropDown');
+  }
+  getUserTypes() {
+    return this.http.getReq(this.controllerName + '/GetModelFamilyDropDown');
+  }
   controllerName = '/transfer';
   constructor(private http: HttpService) {}
   add(data) {

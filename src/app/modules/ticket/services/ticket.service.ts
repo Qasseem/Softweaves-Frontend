@@ -106,4 +106,8 @@ export class TicketService {
   GetPaperRollModelTypes() {
     return this.http.getReq('/Ticket/GetPaperRollModelTypes');
   }
+
+  getPOSChargerModelTypes() {
+    return this.http.getReq('/Ticket/GetPOSChargerModelTypes');
+  }
 }

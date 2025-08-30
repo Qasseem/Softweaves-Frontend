@@ -26,6 +26,11 @@ import { ItemsWithoutSerialEmployeeComponent } from './pages/items-without-seria
 import { DeviceHistoryComponent } from './pages/device-history/device-history.component';
 import { ItemsWithoutSerialEmployeeHistoryComponent } from './pages/items-without-serial-employee-history/items-without-serial-employee-history.component';
 import { ItemsWithoutSerialWarehouseHistoryComponent } from './pages/items-without-serial-warehouse-history/items-without-serial-warehouse-history.component';
+import { DeviceDeploymentComponent } from './pages/device-deployment/device-deployment.component';
+import { DeviceCancelComponent } from './pages/device-cancel/device-cancel.component';
+import { DeviceReplaceComponent } from './pages/device-replace/device-replace.component';
+import { DeviceActionsHistoryComponent } from './pages/device-actions-history/device-actions-history.component';
+import { DeviceActionsDetailsComponent } from './pages/device-actions-details/device-actions-details.component';
 
 const routes: Routes = [
   {
@@ -62,6 +67,26 @@ const routes: Routes = [
       {
         path: 'devices/history/:id/:serial',
         component: DeviceHistoryComponent,
+      },
+      {
+        path: 'devices/deploy/:id',
+        component: DeviceDeploymentComponent,
+      },
+      {
+        path: 'devices/replace/:id',
+        component: DeviceReplaceComponent,
+      },
+      {
+        path: 'devices/cancel/:id',
+        component: DeviceCancelComponent,
+      },
+      {
+        path: 'devices/actionshistory/:id',
+        component: DeviceActionsHistoryComponent,
+      },
+      {
+        path: 'devices/actiondetails/:id',
+        component: DeviceActionsDetailsComponent,
       },
       //Items Without Serial--------------------------------
       {

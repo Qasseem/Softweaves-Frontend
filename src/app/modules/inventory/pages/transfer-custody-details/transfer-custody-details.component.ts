@@ -116,6 +116,15 @@ export class TransferCustodyDetailsComponent implements OnInit {
         { type: '', label: 'Status', value: this.details?.status },
         { type: 'date', label: 'Created At', value: this.details?.createDate },
       ],
+      [
+        { type: '', label: 'Country', value: this.details?.country },
+        { type: '', label: 'Region', value: this.details?.region },
+        { type: '', label: 'City', value: this.details?.city },
+      ],
+      [
+        { type: '', label: 'User Type', value: this.details?.userType },
+        { type: '', label: 'Team', value: this.details?.team },
+      ],
     ];
   }
   prepareCardsData() {
@@ -154,5 +163,8 @@ export class TransferCustodyDetailsComponent implements OnInit {
       };
     });
     this.exportExcelService.exportAsExcelFile(obj, 'Serilas');
+  }
+  downloadFile(url: string): void {
+    window.open(url, '_blank');
   }
 }
