@@ -201,7 +201,7 @@ export class MainComponent implements OnInit {
       ],
       childs: [
         {
-          label: this.translateService.instant('Deployed Report'),
+          label: this.translateService.instant('Deployment Report'),
           expanded: true,
           routerLink: '/main/reports/deployment',
           active: false,

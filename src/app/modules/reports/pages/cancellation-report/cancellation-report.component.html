@@ -14,11 +14,14 @@
       export: '/CancellationReport/Export',
     }"
     [columns]="columns"
+    [actions]="[]"
+    [id]="'idValue'"
     [buttonsExistance]="tableBtns"
     [options]="{
       check: false,
       hasActionMenu: false,
       viewDetails: viewDetails,
+      viewDetailsPropName: 'idValue',
       viewDetailsURL: '/main/inventory/devices/actiondetails/'
     }"
     [filters]="filters"

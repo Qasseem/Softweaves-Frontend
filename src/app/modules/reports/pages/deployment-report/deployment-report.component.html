@@ -15,10 +15,12 @@
     }"
     [columns]="columns"
     [buttonsExistance]="tableBtns"
+    [actions]="[]"
     [options]="{
       check: false,
       hasActionMenu: false,
       viewDetails: viewDetails,
+      viewDetailsPropName: 'idValue',
       viewDetailsURL: '/main/inventory/devices/actiondetails/'
     }"
     [filters]="filters"
