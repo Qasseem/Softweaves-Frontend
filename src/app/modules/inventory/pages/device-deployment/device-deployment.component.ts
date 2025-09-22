@@ -80,7 +80,7 @@ export class DeviceDeploymentComponent implements OnInit {
       receiptModelTypeId: [null, Validators.required],
       paperRollModelTypeId: [null, Validators.required],
       posChargerModelTypeId: [null, Validators.required],
-      address: ['', [Validators.maxLength(50)]],
+      address: ['', [Validators.maxLength(500)]],
       notes: ['', [Validators.maxLength(500)]],
       merchantPhoneNumber: [
         '',

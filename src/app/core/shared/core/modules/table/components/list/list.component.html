@@ -490,7 +490,7 @@
                 col.field == 'statusEn' ||
                 col.field == 'status' ||
                 col.field == 'statusAr'
-                  ? convertToKebabCase(rowData[col.field].toLowerCase())
+                  ? convertToKebabCase(rowData[col.field]?.toLowerCase())
                   : ''
               "
             >
@@ -503,7 +503,7 @@
                 col.field == 'statusEn' ||
                 col.field == 'status' ||
                 col.field == 'statusAr'
-                  ? convertToKebabCase(rowData[col.field].toLowerCase())
+                  ? convertToKebabCase(rowData[col.field]?.toLowerCase())
                   : ''
               "
             >
