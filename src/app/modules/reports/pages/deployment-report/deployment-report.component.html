@@ -1,0 +1,29 @@
+<div class="p-grid ml-2 m-2">
+  <div class="p-col" style="text-align: right">
+    <span class="mt-2" style="float: left; font-weight: bolder"
+      >Deployment Report</span
+    >
+  </div>
+</div>
+<br *ngIf="authService.hasPermission('tickets-all-tickets-add')" />
+<div class="mt-3">
+  <oc-table
+    [showSearchBar]="true"
+    [url]="{
+      getAll: '/DeploymentReport/GetGrid',
+      export: '/DeploymentReport/Export',
+    }"
+    [columns]="columns"
+    [buttonsExistance]="tableBtns"
+    [actions]="[]"
+    [options]="{
+      check: false,
+      hasActionMenu: false,
+      viewDetails: viewDetails,
+      viewDetailsPropName: 'idValue',
+      viewDetailsURL: '/main/inventory/devices/actiondetails/'
+    }"
+    [filters]="filters"
+  >
+  </oc-table>
+</div>

@@ -189,6 +189,42 @@ export class MainComponent implements OnInit {
       ],
     },
     {
+      label: this.translateService.instant('Reports'),
+      icon: 'feedbacks-empty',
+      expanded: false,
+      routerLink: '/main/reports',
+      active: false,
+      permission: [
+        'reports-deployment-report-view',
+        'reports-replacement-report-view',
+        'reports-cancellation-report-view',
+      ],
+      childs: [
+        {
+          label: this.translateService.instant('Deployment Report'),
+          expanded: true,
+          routerLink: '/main/reports/deployment',
+          active: false,
+          permission: ['reports-deployment-report-view'],
+        },
+        {
+          label: this.translateService.instant('Replacement Report'),
+          expanded: true,
+          routerLink: '/main/reports/replacement',
+          active: false,
+          permission: ['reports-replacement-report-view'],
+        },
+        {
+          label: this.translateService.instant('Cancellation Report'),
+          expanded: true,
+          routerLink: '/main/reports/cancellation',
+          active: false,
+          permission: ['reports-cancellation-report-view'],
+        },
+      ],
+    },
+
+    {
       label: this.translateService.instant('User Management'),
       icon: 'users-management',
       expanded: false,
