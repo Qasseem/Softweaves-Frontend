@@ -79,6 +79,12 @@ const routes: Routes = [
             (m) => m.MerchantTicktetsModule
           ),
       },
+      {
+        path: 'reports',
+        loadChildren: () =>
+          import('../reports/reports.module').then((m) => m.ReportsModule),
+        canActivate: [AuthGuard],
+      },
     ],
   },
   {

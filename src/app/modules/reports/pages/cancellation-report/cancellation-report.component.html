@@ -1,0 +1,27 @@
+<div class="p-grid ml-2 m-2">
+  <div class="p-col" style="text-align: right">
+    <span class="mt-2" style="float: left; font-weight: bolder"
+      >Cancelation Report</span
+    >
+  </div>
+</div>
+<br *ngIf="authService.hasPermission('tickets-all-tickets-add')" />
+<div class="mt-3">
+  <oc-table
+    [showSearchBar]="true"
+    [url]="{
+      getAll: '/CancellationReport/GetGrid',
+      export: '/CancellationReport/Export',
+    }"
+    [columns]="columns"
+    [buttonsExistance]="tableBtns"
+    [options]="{
+      check: false,
+      hasActionMenu: false,
+      viewDetails: viewDetails,
+      viewDetailsURL: '/main/inventory/devices/actiondetails/'
+    }"
+    [filters]="filters"
+  >
+  </oc-table>
+</div>

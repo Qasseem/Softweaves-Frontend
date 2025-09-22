@@ -674,6 +674,7 @@ export class ListComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
   convertToKebabCase(input: string): string {
+    if (!input) return '';
     return input
       .toLowerCase() // Convert the string to lowercase
       .replace(/&/g, 'and') // Replace '&' with 'and' if needed
