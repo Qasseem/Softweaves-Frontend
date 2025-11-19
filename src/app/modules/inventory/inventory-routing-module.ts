@@ -88,6 +88,10 @@ const routes: Routes = [
         path: 'devices/actiondetails/:id',
         component: DeviceActionsDetailsComponent,
       },
+      {
+        path: 'devices/actiondetails/:id/:actionId',
+        component: DeviceActionsDetailsComponent,
+      },
       //Items Without Serial--------------------------------
       {
         path: 'itemswithoutserial/list',

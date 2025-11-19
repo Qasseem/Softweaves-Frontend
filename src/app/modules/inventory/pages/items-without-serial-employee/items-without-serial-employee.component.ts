@@ -69,7 +69,7 @@ export class ItemsWithoutSerialEmployeeComponent implements OnInit {
   public tableBtns: TableButtonsExistanceInterface = {
     showAllButtons: true,
     showAdd: false,
-    showExport: false,
+    showExport: true,
     showFilter: false,
     showImport: false,
   };

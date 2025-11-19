@@ -100,4 +100,22 @@ export class DevicesService {
       id
     );
   }
+
+  GetDeploymentHistoryLogDetails(id) {
+    return this.http.getHeaderReq('/DeploymentReport/GetHistoryLogDetails', id);
+  }
+
+  GetCancellationHistoryLogDetails(id) {
+    return this.http.getHeaderReq(
+      '/ReplacementReport/GetHistoryLogDetails',
+      id
+    );
+  }
+
+  GetReplacementHistoryLogDetails(id) {
+    return this.http.getHeaderReq(
+      '/CancellationReport/GetHistoryLogDetails',
+      id
+    );
+  }
 }

@@ -17,6 +17,7 @@ export interface TableOptionsInterface {
   historyDetails?: boolean;
   viewDetails?: boolean;
   viewDetailsURL?: string;
+  secondUrlParam?: string;
   hasActionMenu?: boolean;
   edit?: boolean;
   editURL?: string;

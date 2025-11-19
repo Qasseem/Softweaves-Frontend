@@ -16,7 +16,7 @@ export class TableCoreService {
     searchKey: '',
     isSearchFilter: false,
   };
-  refId: number;
+  public refId: number;
   refScope = '';
   public search: string;
   public searchNew: {};
@@ -141,6 +141,7 @@ export class TableCoreService {
   exportTable(url: string): Observable<any> {
     let options = this.getRequestObject();
     options = this.getSearchHistory(options);
+    options = { ...options, id: this.refId };
     return this.http.postReq(url, options).pipe(
       take(1),
       map(({ success, data }) => !success || (window.location.href = data))
@@ -186,6 +187,7 @@ export class TableCoreService {
       refId: 0,
       merchantId: 0,
       terminalId: 0,
+      id: 0,
     };
   }
 
