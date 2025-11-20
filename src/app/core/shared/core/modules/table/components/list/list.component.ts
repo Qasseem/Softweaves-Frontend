@@ -668,8 +668,12 @@ export class ListComponent implements OnInit, OnDestroy, OnChanges {
       if (this.options.viewDetailsURL?.at(-1) != '/') {
         this.options.viewDetailsURL = this.options.viewDetailsURL + '/';
       }
-      const url =
+      let url =
         this.options.viewDetailsURL + rowData[this.options.viewDetailsPropName];
+      if (this.options.secondUrlParam) {
+        url += `/${this.options.secondUrlParam}`;
+      }
+
       this.router.navigate([url]);
     }
   }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DevicesService } from '../../services/devices.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { take } from 'rxjs';
+import { Observable, take } from 'rxjs';
 
 @Component({
   selector: 'app-device-actions-details',
@@ -40,6 +40,7 @@ export class DeviceActionsDetailsComponent implements OnInit {
   isDeployment = false;
   isCancellation = false;
   isReplacement = false;
+  actionFrom: any;
 
   constructor(
     private service: DevicesService,
@@ -49,11 +50,36 @@ export class DeviceActionsDetailsComponent implements OnInit {
 
   ngOnInit() {
     this.id = this.route.snapshot.params.id || null;
+    this.actionFrom = this.route.snapshot.params.actionId || null;
+
     if (this.id) {
       this.getItemDetails();
     }
   }
   getItemDetails() {
+    if (!this.actionFrom) {
+      this.getBasicDetails();
+    } else {
+      let api =
+        this.actionFrom.toLowerCase() == 'deploy'
+          ? this.service.GetDeploymentHistoryLogDetails(this.id)
+          : this.actionFrom.toLowerCase() == 'cancel'
+          ? this.service.GetCancellationHistoryLogDetails(this.id)
+          : this.service.GetReplacementHistoryLogDetails(this.id);
+      this.getReportDetails(api);
+    }
+  }
+  getReportDetails(api: Observable<any>) {
+    api.pipe(take(1)).subscribe((resp) => {
+      if (resp.success) {
+        this.details = resp.data;
+        this.setActionTypeProp();
+        this.prepareCardsData();
+      }
+    });
+  }
+
+  getBasicDetails() {
     this.service
       .GetHistoryLogDetails(this.id)
       .pipe(take(1))
@@ -163,6 +189,18 @@ export class DeviceActionsDetailsComponent implements OnInit {
           type: '',
           label: 'Payment Status',
           value: this.details?.paymentStatusName,
+        },
+        {
+          showField: true,
+          type: '',
+          label: 'Serial Number',
+          value: this.details?.serialNumber,
+        },
+        {
+          showField: true,
+          type: '',
+          label: 'IMEI',
+          value: this.details?.imei,
         },
         {
           showField: this.isCancellation,

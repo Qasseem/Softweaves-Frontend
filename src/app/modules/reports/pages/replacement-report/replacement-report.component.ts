@@ -38,6 +38,14 @@ export class ReplacementReportComponent implements OnInit {
       header: 'TID',
     },
     {
+      field: 'serialNumber',
+      header: 'Serial Number',
+    },
+    {
+      field: 'imei',
+      header: 'IMEI',
+    },
+    {
       field: 'merchantName',
       header: 'Merchant Name',
     },

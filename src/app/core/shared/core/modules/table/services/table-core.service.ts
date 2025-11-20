@@ -16,7 +16,7 @@ export class TableCoreService {
     searchKey: '',
     isSearchFilter: false,
   };
-  refId: number;
+  public refId: number;
   refScope = '';
   public search: string;
   public searchNew: {};
@@ -141,6 +141,7 @@ export class TableCoreService {
   exportTable(url: string): Observable<any> {
     let options = this.getRequestObject();
     options = this.getSearchHistory(options);
+    options = { ...options, id: this.refId };
     return this.http.postReq(url, options).pipe(
       take(1),
       map(({ success, data }) => !success || (window.location.href = data))
@@ -167,12 +168,14 @@ export class TableCoreService {
     ) {
       //check if there is any history if exist assign it to search obj
       if (this.currentRoute && this.gridSearchHistory[this.currentRoute]) {
-        options = this.gridSearchHistory[this.currentRoute];
+        options = Object.assign({}, this.gridSearchHistory[this.currentRoute]);
+        this.gridSearchHistory[this.currentRoute] = null; //clear history after use
       }
     } else {
       //check if the search obj has value then add it to search history
       this.gridSearchHistory[this.currentRoute] = options;
     }
+
     return options;
   }
   getRequestObject() {
@@ -186,6 +189,7 @@ export class TableCoreService {
       refId: 0,
       merchantId: 0,
       terminalId: 0,
+      id: 0,
     };
   }
 

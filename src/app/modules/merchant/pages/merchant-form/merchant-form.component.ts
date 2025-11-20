@@ -47,7 +47,14 @@ export class MerchantFormComponent implements OnInit, OnDestroy {
       id: [null],
       serviceAgentId: [null],
       salesAgentId: [null],
-      phoneNumber: [null],
+      phoneNumber: [
+        null,
+        [
+          Validators.minLength(10),
+          Validators.maxLength(14),
+          Validators.pattern(/^\d{10,14}$/),
+        ],
+      ],
       latitude: [null],
       longitude: [null],
       latitudeInput: [null],
