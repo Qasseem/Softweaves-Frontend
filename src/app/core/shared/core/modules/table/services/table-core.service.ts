@@ -168,12 +168,14 @@ export class TableCoreService {
     ) {
       //check if there is any history if exist assign it to search obj
       if (this.currentRoute && this.gridSearchHistory[this.currentRoute]) {
-        options = this.gridSearchHistory[this.currentRoute];
+        options = Object.assign({}, this.gridSearchHistory[this.currentRoute]);
+        this.gridSearchHistory[this.currentRoute] = null; //clear history after use
       }
     } else {
       //check if the search obj has value then add it to search history
       this.gridSearchHistory[this.currentRoute] = options;
     }
+
     return options;
   }
   getRequestObject() {
