@@ -4,6 +4,7 @@ import { take } from 'rxjs';
 import { ColumnsInterface } from 'src/app/core/shared/models/Interfaces';
 import { ExportExcelService } from 'src/app/modules/shared/Services/export-excel.service';
 import { TransferCustodyService } from '../../services/transfer-custody.service';
+import { DevicesService } from '../../services/devices.service';
 @Component({
   selector: 'app-transfer-custody-details',
   templateUrl: './transfer-custody-details.component.html',
@@ -80,6 +81,7 @@ export class TransferCustodyDetailsComponent implements OnInit {
 
   constructor(
     private service: TransferCustodyService,
+    public deviceService: DevicesService,
     private route: ActivatedRoute,
     private router: Router,
     private exportExcelService: ExportExcelService

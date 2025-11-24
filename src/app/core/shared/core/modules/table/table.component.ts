@@ -31,7 +31,6 @@ import { Subject } from 'rxjs';
 import { SearchInterface } from './models/search-interface';
 import { ListComponent } from './components/list/list.component';
 import { AppTranslateService } from '../../../services/translate.service';
-
 @Component({
   selector: 'oc-table',
   templateUrl: './table.component.html',
@@ -112,6 +111,9 @@ export class TableComponent implements OnInit, OnDestroy {
       globalSearch: false,
       ...this.options,
     };
+    if (this.url.refId) {
+      this.tableCore.refId = parseInt(this.url.refId);
+    }
   }
 
   ngOnDestroy() {

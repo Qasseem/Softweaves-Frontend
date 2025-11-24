@@ -17,6 +17,7 @@ export interface TableOptionsInterface {
   historyDetails?: boolean;
   viewDetails?: boolean;
   viewDetailsURL?: string;
+  secondUrlParam?: string;
   hasActionMenu?: boolean;
   edit?: boolean;
   editURL?: string;
@@ -25,4 +26,5 @@ export interface TableOptionsInterface {
   clone?: boolean;
   cloneURL?: string;
   viewDetailsPropName?: string;
+  singleEdit?: boolean;
 }

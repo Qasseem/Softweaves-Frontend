@@ -103,7 +103,7 @@ export class ListComponent implements OnInit, OnDestroy, OnChanges {
     private confirmationService: ConfirmationService
   ) {}
   navToFilter() {
-    this.tableCore.filterClick$.next(true);
+    // this.tableCore.filterClick$.next(true);
   }
   reset() {
     this.first = 0;
@@ -668,8 +668,12 @@ export class ListComponent implements OnInit, OnDestroy, OnChanges {
       if (this.options.viewDetailsURL?.at(-1) != '/') {
         this.options.viewDetailsURL = this.options.viewDetailsURL + '/';
       }
-      const url =
+      let url =
         this.options.viewDetailsURL + rowData[this.options.viewDetailsPropName];
+      if (this.options.secondUrlParam) {
+        url += `/${this.options.secondUrlParam}`;
+      }
+
       this.router.navigate([url]);
     }
   }
@@ -835,6 +839,9 @@ export class ListComponent implements OnInit, OnDestroy, OnChanges {
         rejectLabel: 'No, Cancel',
       });
     }
+  }
+  goToSingleEdit(rowData) {
+    this.rowClickedAction.emit({ rowData, action: 'singleEdit' });
   }
   rowActionClicked(rowData, action) {
     this.rowClickedAction.emit({ rowData, action });
