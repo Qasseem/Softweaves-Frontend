@@ -103,7 +103,7 @@ export class ListComponent implements OnInit, OnDestroy, OnChanges {
     private confirmationService: ConfirmationService
   ) {}
   navToFilter() {
-    this.tableCore.filterClick$.next(true);
+    // this.tableCore.filterClick$.next(true);
   }
   reset() {
     this.first = 0;
@@ -839,6 +839,9 @@ export class ListComponent implements OnInit, OnDestroy, OnChanges {
         rejectLabel: 'No, Cancel',
       });
     }
+  }
+  goToSingleEdit(rowData) {
+    this.rowClickedAction.emit({ rowData, action: 'singleEdit' });
   }
   rowActionClicked(rowData, action) {
     this.rowClickedAction.emit({ rowData, action });

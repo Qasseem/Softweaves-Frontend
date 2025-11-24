@@ -5,6 +5,7 @@ import { DevicesService } from '../../services/devices.service';
 import { TableButtonsExistanceInterface } from 'src/app/core/shared/core/modules/table/models/table-url.interface';
 import { ColumnsInterface } from 'src/app/core/shared/models/Interfaces';
 import { ActionsInterface } from 'src/app/core/shared/core/modules/table/models/actions.interface';
+import { DeviceActionTypeEnum } from 'src/app/core/shared/core/modules/table/models/enums';
 
 @Component({
   selector: 'app-device-actions-history',
@@ -18,6 +19,7 @@ export class DeviceActionsHistoryComponent implements OnInit {
   showStockDialog = false;
   row: any;
   data = [];
+  canViewDetails = true;
   constructor(
     private router: Router,
     public authService: AuthService,
@@ -25,6 +27,9 @@ export class DeviceActionsHistoryComponent implements OnInit {
     public service: DevicesService
   ) {
     this.id = this.route.snapshot.params.id || null;
+    if (!this.authService.hasPermission('inventory-devices-viewhistory')) {
+      this.canViewDetails = false;
+    }
   }
 
   ngOnInit() {
@@ -95,5 +100,27 @@ export class DeviceActionsHistoryComponent implements OnInit {
   gotoHistory(row: any): any {
     const URL = `main/inventory/device//${row?.itemId}/${row?.warehouseId}`;
     this.router.navigate([URL]);
+  }
+
+  onRowAction(row) {
+    let actionType = '';
+    if (row.rowData) {
+      actionType =
+        row.rowData?.transactionTypeId == DeviceActionTypeEnum.Deployment
+          ? 'deploy'
+          : row.rowData?.transactionTypeId == DeviceActionTypeEnum.Cancellation
+          ? 'cancel'
+          : row.rowData?.transactionTypeId == DeviceActionTypeEnum.Replacement
+          ? 'replace'
+          : '';
+    }
+    let url =
+      '/main/inventory/devices/' +
+      actionType +
+      '/' +
+      row.rowData?.deviceId +
+      '/' +
+      row.rowData?.id;
+    this.router.navigate([url]);
   }
 }
