@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { HttpService } from 'src/app/core/http/http.service';
 
 @Injectable({
@@ -31,6 +32,26 @@ export class DevicesService {
     return this.http.getReq(
       this.controllerName + '/GetSubscriptionTypeDropDown'
     );
+  }
+
+  GetFile(path: string): Observable<Blob> {
+    return this.http.getReq('/File/Download/' + path, {
+      responseType: 'blob',
+    });
+  }
+
+  public downloadFile(fileName?: string) {
+    this.GetFile(fileName).subscribe((fileBlob: Blob) => {
+      const blob = new Blob([fileBlob]);
+      const downloadURL = window.URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+      link.href = downloadURL;
+      link.download = fileName;
+      link.click();
+
+      URL.revokeObjectURL(downloadURL);
+    });
   }
 
   getCurrencyDropDown() {
@@ -66,6 +87,17 @@ export class DevicesService {
   Cancel(data) {
     return this.http.postReq(this.controllerName + '/Cancel', data);
   }
+
+  UpdateDeploy(data) {
+    return this.http.postReq(this.controllerName + '/UpdateDeploy', data);
+  }
+  UpdateReplace(data) {
+    return this.http.postReq(this.controllerName + '/UpdateReplace', data);
+  }
+  UpdateCancel(data) {
+    return this.http.postReq(this.controllerName + '/UpdateCancel', data);
+  }
+
   Block(data) {
     return this.http.postReq(this.controllerName + '/Block', data);
   }
@@ -97,6 +129,24 @@ export class DevicesService {
   GetHistoryLogDetails(id) {
     return this.http.getHeaderReq(
       this.controllerName + '/GetHistoryLogDetails',
+      id
+    );
+  }
+
+  GetDeploymentHistoryLogDetails(id) {
+    return this.http.getHeaderReq('/DeploymentReport/GetHistoryLogDetails', id);
+  }
+
+  GetCancellationHistoryLogDetails(id) {
+    return this.http.getHeaderReq(
+      '/ReplacementReport/GetHistoryLogDetails',
+      id
+    );
+  }
+
+  GetReplacementHistoryLogDetails(id) {
+    return this.http.getHeaderReq(
+      '/CancellationReport/GetHistoryLogDetails',
       id
     );
   }

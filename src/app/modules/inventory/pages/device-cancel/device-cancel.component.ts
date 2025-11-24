@@ -43,6 +43,7 @@ export class DeviceCancelComponent implements OnInit {
     { id: true, nameEn: 'Yes' },
     { id: false, nameEn: 'No' },
   ];
+  actionId: any;
   constructor(
     private fb: FormBuilder,
     private service: DevicesService,
@@ -60,30 +61,7 @@ export class DeviceCancelComponent implements OnInit {
   ngOnInit() {
     // this.getItemDetails();
     this.id = this.route.snapshot.params.id || null;
-
-    let ss = {
-      deviceId: 0,
-      cancellationDate: '2025-08-22T17:09:30.046Z',
-      warehouseId: 0,
-      merchantName: 'string',
-      mId: 'string',
-      tid: 'string',
-      cancellationFee: 'string',
-      currencyId: 0,
-      paymentMethodId: 0,
-      paymentStatusId: 0,
-      trx_ID: 'string',
-      clrearanceReceiptSigned: true,
-      cancelledById: 0,
-      gtg: true,
-      needRecycling: true,
-      needRepair: true,
-      needBranding: true,
-      conditionId: 0,
-      cancelReceiptModelTypeId: 0,
-      notes: 'string',
-      attachmentsBase64: ['string'],
-    };
+    this.actionId = this.route.snapshot.params.actionId || null;
 
     this.form = this.fb.group({
       deviceId: [0, Validators.required],
@@ -109,8 +87,46 @@ export class DeviceCancelComponent implements OnInit {
       attachmentsBase64: [[]],
     });
     this.loadAllLookups();
+    this.getActionDetails();
   }
-
+  getActionDetails() {
+    if (this.actionId) {
+      this.service.GetHistoryLogDetails(this.actionId).subscribe((res) => {
+        if (res.success) {
+          this.details = res.data;
+          this.prepareFormData();
+        }
+      });
+    }
+  }
+  prepareFormData() {
+    this.form.patchValue({
+      merchantName: this.details.merchantName,
+      mId: this.details.mid,
+      tid: this.details.tid,
+      cancellationFee: this.details.fee,
+      currencyId: this.details.currencyId,
+      deviceId: this.id,
+      paymentMethodId: this.details.paymentMethodId,
+      trx_ID: this.details.trx_ID,
+      deployedTeamId: this.details.teamId,
+      cancelledById: this.details.agentId,
+      conditionId: this.details.conditionId,
+      cancelReceiptModelTypeId: this.details.cancelReceiptModelTypeId,
+      notes: this.details.notes,
+      clrearanceReceiptSigned: this.details.receiptSigned,
+      gtg: this.details.gtg,
+      needRecycling: this.details.needRecycling,
+      needRepair: this.details.needRepair,
+      needBranding: this.details.needBranding,
+      warehouseId: this.details.warehouseId,
+      cancellationDate: new Date(this.details.createDate), // this.details.createDate,
+    });
+    this.form.controls.warehouseId.disable();
+    this.form.controls.cancelledById.disable();
+    this.form.controls.cancelReceiptModelTypeId.disable();
+    this.form.updateValueAndValidity();
+  }
   loadAllLookups() {
     forkJoin({
       currency: this.service.getCurrencyDropDown(),
@@ -137,20 +153,21 @@ export class DeviceCancelComponent implements OnInit {
   }
   submit() {
     let obj = this.form.value;
+    obj.actionId = this.actionId;
+    let targtApi = this.actionId
+      ? this.service.UpdateCancel(obj)
+      : this.service.Cancel(obj);
     obj.deviceId = this.id;
     this.addAttachmentsToFormAsBase64(obj);
-
-    this.service
-      .Cancel(obj)
-      .pipe(take(1))
-      .subscribe({
-        next: (resp) => {
-          if (resp.success) {
-            this.backToList();
-          }
-        },
-      });
+    targtApi.pipe(take(1)).subscribe({
+      next: (resp) => {
+        if (resp.success) {
+          this.backToList();
+        }
+      },
+    });
   }
+
   addAttachmentsToFormAsBase64(obj: any) {
     if (this.files.length > 0) {
       obj.attachmentsBase64 = this.files.map((file) => {

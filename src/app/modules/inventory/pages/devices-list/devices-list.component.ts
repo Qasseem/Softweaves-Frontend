@@ -37,6 +37,7 @@ export class DevicesListComponent implements OnInit {
   canDeploy = true;
   canCancel = true;
   canReplace = true;
+  canSeeHistory = true;
   canReviewDelivery = true;
   showreturnToWarehouseDialog = false;
   constructor(
@@ -83,6 +84,9 @@ export class DevicesListComponent implements OnInit {
     }
     if (!this.authService.hasPermission('inventory-devices-managedevices')) {
       this.canReplace = false;
+    }
+    if (!this.authService.hasPermission('inventory-devices-viewhistory')) {
+      this.canSeeHistory = false;
     }
     if (!this.authService.hasPermission('inventory-devices-managedevices')) {
       this.canReturn = false;
@@ -400,10 +404,10 @@ export class DevicesListComponent implements OnInit {
       customPermission: (row: any) => this.canReturn,
     },
     {
-      name: 'Actions History',
+      name: 'Transaction',
       icon: 'pi pi-history',
       call: (row: any) => this.goToActionsHistoryPage(row, true),
-      customPermission: (row: any) => this.canReplace,
+      customPermission: (row: any) => this.canSeeHistory,
     },
   ];
   public gridActionsList: ActionsInterface[] = [

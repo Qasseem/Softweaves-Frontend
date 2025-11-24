@@ -287,12 +287,12 @@ button.active {
     font-weight: 500;
     color: #667085;
   }
-  .p-paginator .p-paginator-first,
-  .p-paginator .p-paginator-prev,
-  .p-paginator .p-paginator-next,
-  .p-paginator .p-paginator-last {
-    display: none;
-  }
+  // .p-paginator .p-paginator-first,
+  // .p-paginator .p-paginator-prev,
+  // .p-paginator .p-paginator-next,
+  // .p-paginator .p-paginator-last {
+  //   display: none;
+  // }
 
   button {
     &:focus {

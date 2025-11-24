@@ -125,20 +125,20 @@ label {
   color: #1f2937;
 }
 
-.p-paginator-bottom {
-  // border-radius: 0px 0px 10px 10px !important;
-  border: unset;
-  .p-paginator-first,
-  .p-paginator-last {
-    display: none;
-  }
+// .p-paginator-bottom {
+//   // border-radius: 0px 0px 10px 10px !important;
+//   border: unset;
+//   .p-paginator-first,
+//   .p-paginator-last {
+//     display: none;
+//   }
 
-  .p-paginator-pages {
-    button {
-      border-radius: 8px !important;
-    }
-  }
-}
+//   .p-paginator-pages {
+//     button {
+//       border-radius: 8px !important;
+//     }
+//   }
+// }
 
 p-confirmDialog {
   .p-confirm-dialog {

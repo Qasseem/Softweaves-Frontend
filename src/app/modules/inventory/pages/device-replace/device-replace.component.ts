@@ -44,6 +44,7 @@ export class DeviceReplaceComponent implements OnInit {
     { id: true, nameEn: 'Yes' },
     { id: false, nameEn: 'No' },
   ];
+  actionId: any;
   constructor(
     private fb: FormBuilder,
     private service: DevicesService,
@@ -61,7 +62,7 @@ export class DeviceReplaceComponent implements OnInit {
   ngOnInit() {
     // this.getItemDetails();
     this.id = this.route.snapshot.params.id || null;
-
+    this.actionId = this.route.snapshot.params.actionId || null;
     this.form = this.fb.group({
       deviceId: [0, Validators.required],
       replacementDate: ['', Validators.required],
@@ -96,6 +97,66 @@ export class DeviceReplaceComponent implements OnInit {
       attachmentsBase64: [[]],
     });
     this.loadAllLookups();
+
+    this.getActionDetails();
+  }
+  getActionDetails() {
+    if (this.actionId) {
+      this.service.GetHistoryLogDetails(this.actionId).subscribe((res) => {
+        if (res.success) {
+          this.details = res.data;
+          this.prepareFormData();
+        }
+      });
+    }
+  }
+  prepareFormData() {
+    let data = this.details;
+    this.form.patchValue({
+      deviceId: data.deviceId,
+      replacementDate: new Date(data.createDate), // mapped
+      warehouseId: data.warehouseId,
+      oldMerchantName: data.oldMerchantName,
+      oldMId: data.oldMID,
+      oldTID: data.oldTID,
+      merchantName: data.merchantName,
+      mId: data.mid,
+      tid: data.tid,
+      serialNumber: data.serialNumber,
+      imei: data.imei,
+      cancellationFee: data.fee, // mapped from "fee"
+      currencyId: data.currencyId,
+      paymentMethodId: data.paymentMethodId,
+      trx_ID: data.trx_ID,
+      clrearanceReceiptSigned: data.receiptSigned, // mapped
+      deployedTeamId: data.teamId,
+      cancelledById: data.agentId,
+      gtg: data.gtg,
+      needRecycling: data.needRecycling,
+      needRepair: data.needRepair,
+      needBranding: data.needBranding,
+      conditionId: data.conditionId,
+      simCardModelTypeId: data.simCardModelTypeId,
+      cableModelTypeId: data.cableModelTypeId,
+      receiptModelTypeId: data.deploymentReceiptModelTypeId, // mapped
+      cancelReceiptModelTypeId: data.cancelReceiptModelTypeId,
+      paperRollModelTypeId: data.paperRollModelTypeId,
+      posChargerModelTypeId: data.chargerModelTypeId, // mapped
+      notes: data.notes,
+      attachmentsBase64: [], // empty since response has files separate
+    });
+    this.form.controls.warehouseId.disable();
+    this.form.controls.cancelledById.disable();
+    this.form.controls.cancelReceiptModelTypeId.disable();
+    this.form.controls.serialNumber.disable();
+    this.form.controls.imei.disable();
+    this.form.controls.simCardModelTypeId.disable();
+    this.form.controls.cableModelTypeId.disable();
+    this.form.controls.receiptModelTypeId.disable();
+    this.form.controls.cancelReceiptModelTypeId.disable();
+    this.form.controls.paperRollModelTypeId.disable();
+    this.form.controls.posChargerModelTypeId.disable();
+    this.form.updateValueAndValidity();
   }
 
   loadAllLookups() {
@@ -150,18 +211,19 @@ export class DeviceReplaceComponent implements OnInit {
   }
   submit() {
     let obj = this.form.value;
+    obj.actionId = this.actionId;
+    let targtApi = this.actionId
+      ? this.service.UpdateReplace(obj)
+      : this.service.Replace(obj);
     obj.deviceId = this.id;
     this.addAttachmentsToFormAsBase64(obj);
-    this.service
-      .Replace(obj)
-      .pipe(take(1))
-      .subscribe({
-        next: (resp) => {
-          if (resp.success) {
-            this.backToList();
-          }
-        },
-      });
+    targtApi.pipe(take(1)).subscribe({
+      next: (resp) => {
+        if (resp.success) {
+          this.backToList();
+        }
+      },
+    });
   }
   addAttachmentsToFormAsBase64(obj: any) {
     if (this.files.length > 0) {
