@@ -20,12 +20,15 @@
       [columnsI]="columns"
       [options]="{
               check: false,
-              viewDetails: true,
+              viewDetails: canViewDetails,
               viewDetailsURL: '/main/inventory/devices/actiondetails/',
               viewDetailsPropName: 'id',
+
+          singleEdit: canViewDetails,
             }"
       [actions]="[1]"
       [modulePageName]="'Shipments'"
+      (rowClickedAction)="onRowAction($event)"
     >
     </oc-list>
   </div>

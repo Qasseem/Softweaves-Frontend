@@ -8,7 +8,9 @@
         >Devices</span
       >
       <span class="mt-2 ml-2 mr-2 header-left">></span>
-      <span class="mt-2 header-left">Deploy Device</span>
+      <span class="mt-2 header-left">
+        <span *ngIf="actionId">Update {{ " " }}</span> Deploy Device</span
+      >
       <p-button
         class="mr-3 cancel-button"
         label="Cancel"
@@ -20,7 +22,7 @@
       <p-button
         (click)="submit()"
         [disabled]="!form?.valid"
-        label="Save"
+        [label]="actionId ? 'Update' : 'Save'"
         size="small"
       >
       </p-button>

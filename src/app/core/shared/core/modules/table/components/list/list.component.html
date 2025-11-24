@@ -37,7 +37,13 @@
 
       <th
         *ngIf="actions"
-        style="color: #969696; font-size: 14px; line-height: 7px; width: 125px"
+        style="
+          color: #969696;
+          font-size: 14px;
+          line-height: 7px;
+          width: 125px;
+          text-align: left !important;
+        "
       >
         <div
           class="header-wrap d-flex justify-content-between align-items-center"
@@ -197,7 +203,12 @@
       <th *ngIf="actions"></th>
     </tr>
   </ng-template>
-  <ng-template pTemplate="body" let-rowData let-columns="columns">
+  <ng-template
+    pTemplate="body"
+    let-rowData
+    let-columns="columns"
+    let-rowIndex="rowIndex"
+  >
     <tr [pSelectableRow]="rowData">
       <td *ngIf="options.check">
         <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
@@ -547,10 +558,11 @@
           options?.details ||
           options?.block ||
           options?.edit ||
+          options?.singleEdit ||
           option?.favourite ||
           option?.clone
         "
-        style="width: 100px"
+        style="width: 100px; text-align: left !important"
       >
         <div class="actions-wrap d-flex">
           <div class="btn-group" dropdown container="body">
@@ -616,6 +628,16 @@
               type="button"
               class="menu-btn mb-0"
               (click)="goToEdit(rowData)"
+            >
+              <!-- <i style="font-size: 1.5rem" class="pi pi-eye"></i> -->
+              <oc-icon [icon]="'edit'" width="25px" height="25px"></oc-icon>
+            </button>
+            <button
+              *ngIf="options?.singleEdit && rowIndex === 0"
+              style="cursor: pointer; margin-bottom: 7px"
+              type="button"
+              class="menu-btn mb-0"
+              (click)="goToSingleEdit(rowData)"
             >
               <!-- <i style="font-size: 1.5rem" class="pi pi-eye"></i> -->
               <oc-icon [icon]="'edit'" width="25px" height="25px"></oc-icon>

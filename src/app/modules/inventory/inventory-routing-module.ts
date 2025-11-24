@@ -81,6 +81,18 @@ const routes: Routes = [
         component: DeviceCancelComponent,
       },
       {
+        path: 'devices/deploy/:id/:actionId',
+        component: DeviceDeploymentComponent,
+      },
+      {
+        path: 'devices/replace/:id/:actionId',
+        component: DeviceReplaceComponent,
+      },
+      {
+        path: 'devices/cancel/:id/:actionId',
+        component: DeviceCancelComponent,
+      },
+      {
         path: 'devices/actionshistory/:id',
         component: DeviceActionsHistoryComponent,
       },

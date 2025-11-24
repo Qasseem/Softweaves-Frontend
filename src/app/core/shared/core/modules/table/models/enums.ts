@@ -89,3 +89,9 @@ export enum TicketCategoryEnum {
   AfterSales = 4,
   Replacement = 5,
 }
+
+export enum DeviceActionTypeEnum {
+  Deployment = 1,
+  Cancellation = 2,
+  Replacement = 3,
+}

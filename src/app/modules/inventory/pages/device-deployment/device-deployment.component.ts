@@ -41,6 +41,7 @@ export class DeviceDeploymentComponent implements OnInit {
     { id: true, nameEn: 'Yes' },
     { id: false, nameEn: 'No' },
   ];
+  actionId: any;
   constructor(
     private fb: FormBuilder,
     private service: DevicesService,
@@ -57,6 +58,7 @@ export class DeviceDeploymentComponent implements OnInit {
   ngOnInit() {
     // this.getItemDetails();
     this.id = this.route.snapshot.params.id || null;
+    this.actionId = this.route.snapshot.params.actionId || null;
 
     this.form = this.fb.group({
       deviceId: [0, Validators.required],
@@ -89,8 +91,57 @@ export class DeviceDeploymentComponent implements OnInit {
       attachmentsBase64: [[]],
     });
     this.loadAllLookups();
+    this.getActionDetails();
   }
+  getActionDetails() {
+    if (this.actionId) {
+      this.service.GetHistoryLogDetails(this.actionId).subscribe((res) => {
+        if (res.success) {
+          this.details = res.data;
+          this.prepareFormData();
+        }
+      });
+    }
+  }
+  prepareFormData() {
+    let data = this.details;
 
+    this.form.patchValue({
+      deviceId: data.deviceId,
+      deploymentDate: new Date(data.actionDate), // data.actionDate,        // actionDate = deployment date
+      merchantName: data.merchantName,
+      mId: data.mid,
+      tid: data.tid,
+      setupAmount: data.setupAmount,
+      subscriptionAmount: data.subscriptionAmount,
+      subscriptionTypeId: data.subscriptionId,
+      currencyId: data.currencyId,
+      paymentMethodId: data.paymentMethodId,
+      paymentStatusId: data.paymentStatusId,
+      trx_ID: data.trx_ID,
+      deploymentReceiptSigned: data.receiptSigned,
+      deployedTeamId: data.teamId,
+      deployedById: data.agentId,
+      conditionId: data.conditionId,
+      simCardModelTypeId: data.simCardModelTypeId,
+      cableModelTypeId: data.cableModelTypeId,
+      receiptModelTypeId: data.deploymentReceiptModelTypeId,
+      paperRollModelTypeId: data.paperRollModelTypeId,
+      posChargerModelTypeId: data.chargerModelTypeId,
+      address: data.address,
+      notes: data.notes,
+      merchantPhoneNumber: data.merchantPhoneNumber,
+      attachmentsBase64: data.attachments ?? [],
+    });
+
+    this.form.controls.deployedById.disable();
+    this.form.controls.simCardModelTypeId.disable();
+    this.form.controls.cableModelTypeId.disable();
+    this.form.controls.receiptModelTypeId.disable();
+    this.form.controls.paperRollModelTypeId.disable();
+    this.form.controls.posChargerModelTypeId.disable();
+    this.form.updateValueAndValidity();
+  }
   loadAllLookups() {
     forkJoin({
       currency: this.service.getCurrencyDropDown(),
@@ -127,18 +178,19 @@ export class DeviceDeploymentComponent implements OnInit {
   }
   submit() {
     let obj = this.form.value;
+    obj.actionId = this.actionId;
+    let targtApi = this.actionId
+      ? this.service.UpdateDeploy(obj)
+      : this.service.Deploy(obj);
     obj.deviceId = this.id;
     this.addAttachmentsToFormAsBase64(obj);
-    this.service
-      .Deploy(obj)
-      .pipe(take(1))
-      .subscribe({
-        next: (resp) => {
-          if (resp.success) {
-            this.backToList();
-          }
-        },
-      });
+    targtApi.pipe(take(1)).subscribe({
+      next: (resp) => {
+        if (resp.success) {
+          this.backToList();
+        }
+      },
+    });
   }
   addAttachmentsToFormAsBase64(obj: any) {
     if (this.files.length > 0) {
