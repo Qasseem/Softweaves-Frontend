@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { HttpService } from 'src/app/core/http/http.service';
 
 @Injectable({
@@ -31,6 +32,26 @@ export class DevicesService {
     return this.http.getReq(
       this.controllerName + '/GetSubscriptionTypeDropDown'
     );
+  }
+
+  GetFile(path: string): Observable<Blob> {
+    return this.http.getReq('/File/Download/' + path, {
+      responseType: 'blob',
+    });
+  }
+
+  public downloadFile(fileName?: string) {
+    this.GetFile(fileName).subscribe((fileBlob: Blob) => {
+      const blob = new Blob([fileBlob]);
+      const downloadURL = window.URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+      link.href = downloadURL;
+      link.download = fileName;
+      link.click();
+
+      URL.revokeObjectURL(downloadURL);
+    });
   }
 
   getCurrencyDropDown() {
