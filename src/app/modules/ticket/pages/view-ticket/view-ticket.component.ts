@@ -7,6 +7,7 @@ import {
   TicketCategoryEnum,
   TicketStatusEnum,
 } from 'src/app/core/shared/core/modules/table/models/enums';
+import { DevicesService } from 'src/app/modules/inventory/services/devices.service';
 
 @Component({
   selector: 'oc-view-ticket',
@@ -25,7 +26,8 @@ export class ViewTicketComponent implements OnInit {
     private route: ActivatedRoute,
     private terminalService: TerminalService,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    public deviceService: DevicesService
   ) {
     this.id = this.route.snapshot.params.id;
   }

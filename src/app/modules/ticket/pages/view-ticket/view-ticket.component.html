@@ -329,9 +329,7 @@
               </div>
               <div
                 class="view-container--cards--details-card--info--attachments--items--item--download"
-                (click)="
-                  downloadImage(item?.attachmentUrl, 'Example File ' + (i + 1))
-                "
+                (click)="deviceService.downloadFile(item?.attachmentUrl)"
               >
                 <oc-icon
                   [icon]="'download-icon'"
