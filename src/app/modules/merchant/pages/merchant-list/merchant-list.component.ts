@@ -248,7 +248,7 @@ export class MerchantListComponent implements OnInit {
       type: ActionsTypeEnum.File,
       uploadFileData: {
         url: '/Merchant/ImportToUpdate',
-        header: 'Update Bulk Mwerchants',
+        header: 'Update Bulk Merchants',
         templateName: 'ImportMerchantSample.xlsx',
       },
     },

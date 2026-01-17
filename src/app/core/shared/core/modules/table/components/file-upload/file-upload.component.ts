@@ -1,17 +1,38 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
+import { DevicesService } from 'src/app/modules/inventory/services/devices.service';
 
 @Component({
   selector: 'oc-file-upload',
   templateUrl: './file-upload.component.html',
   styleUrls: ['./file-upload.component.css'],
 })
-export class FileUploadComponent implements OnInit {
+export class FileUploadComponent implements OnInit, OnChanges {
   files: FileList | null = null;
   @Output() filesSelectedEvent = new EventEmitter();
   @Input() sampleName = '';
+  @Input() fileUploadResponse;
+  errorRecordsCount = 0;
+  showFailedItemsSection = false;
   fileName: string;
-  constructor() {}
+  failItemsFilePsth: any;
+  constructor(private deviceService: DevicesService) {}
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes?.fileUploadResponse?.currentValue) {
+      this.errorRecordsCount =
+        changes?.fileUploadResponse.currentValue?.failCount;
+      this.failItemsFilePsth =
+        changes?.fileUploadResponse.currentValue?.failFilePath;
+      this.showFailedItemsSection = this.errorRecordsCount > 0;
+    }
+  }
 
   ngOnInit(): void {}
 
@@ -38,4 +59,9 @@ export class FileUploadComponent implements OnInit {
   }
 
   downloadSample() {}
+
+  downloadFailedItemsFile() {
+    this.deviceService.downloadFile(this.failItemsFilePsth);
+    // window.open(this.failItemsFilePsth, '_blank');
+  }
 }
