@@ -90,6 +90,7 @@ export class SearchBarComponent implements OnInit, OnChanges, AfterViewInit {
   fileToUpload: any;
 
   clickedAction: ActionsInterface;
+  fileUploadResponse: any;
 
   openFileDialog(action: ActionsInterface) {
     this.clickedAction = action;
@@ -572,12 +573,20 @@ export class SearchBarComponent implements OnInit, OnChanges, AfterViewInit {
     }
   }
   importFromFile() {
+    this.fileUploadResponse = {
+      failCount: 0,
+      failFilePath: '',
+    };
     const formData = new FormData();
     formData.append('file', this.fileToUpload);
     this.tableCoreService
       .import(this.url.import, formData)
       .subscribe((resp) => {
         if (resp.success) {
+          if (resp.data?.failCount > 0) {
+            this.fileUploadResponse = resp.data;
+            return;
+          }
           this.visible = false;
           // location.reload();
           const message = 'Import Completed Successfully';

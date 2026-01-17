@@ -33,3 +33,36 @@
   color: black;
   font-size: 13px;
 }
+
+.download-info {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+.warning-icon {
+  color: #e53935; /* red */
+  font-size: 1.1rem;
+}
+
+.info-text {
+  color: #000;
+  font-size: 14px;
+}
+
+.download-link {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-left: 6px;
+  color: #2e7d32; /* green */
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.download-link:hover {
+  opacity: 0.8;
+}

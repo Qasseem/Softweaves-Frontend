@@ -87,6 +87,20 @@ export class TransferCustodyFormComponent implements OnInit {
       showCtrl: false,
     },
     {
+      name: 'regionId',
+      header: 'Region',
+      data: [],
+      showCtrl: false,
+      class: 'col-6',
+    },
+    {
+      name: 'cityId',
+      header: 'City',
+      data: [],
+      showCtrl: false,
+      class: 'col-6',
+    },
+    {
       name: 'toId',
       header: 'Destination',
       data: [],
@@ -106,20 +120,6 @@ export class TransferCustodyFormComponent implements OnInit {
       showCtrl: false,
       class: 'col-3',
     },
-    {
-      name: 'regionId',
-      header: 'Region',
-      data: [],
-      showCtrl: false,
-      class: 'col-3',
-    },
-    {
-      name: 'cityId',
-      header: 'City',
-      data: [],
-      showCtrl: false,
-      class: 'col-3',
-    },
   ];
   selectedModelType: any;
   selectedFamily: any;
@@ -129,6 +129,7 @@ export class TransferCustodyFormComponent implements OnInit {
   userId: string;
   files = [];
   fileName: any;
+  orignalUsersList = [];
   constructor(
     private fb: FormBuilder,
     private service: TransferCustodyService,
@@ -480,6 +481,8 @@ export class TransferCustodyFormComponent implements OnInit {
   }
 
   custodySourcesChanged(selectedOption: any, controlName: DDLControlType) {
+    this.getCityEmployeeList(selectedOption, controlName);
+
     this.getUsersByType(selectedOption, controlName);
     this.cityByRegion(selectedOption, controlName);
     if (!selectedOption) return;
@@ -531,6 +534,17 @@ export class TransferCustodyFormComponent implements OnInit {
         break;
     }
   }
+  getCityEmployeeList(selectedOption: any, controlName: DDLControlType) {
+    if (controlName == DDLControlType.City && selectedOption?.value) {
+      // selectedOption?.value  //replace with 0
+      let filteredData = this.orignalUsersList.filter(
+        (x) => x.cityId == selectedOption?.value
+      );
+      this.custodySourceFormControlsList.find((x) => x.name == 'toId').data = [
+        ...filteredData,
+      ];
+    }
+  }
   cityByRegion(selectedOption: any, controlName: DDLControlType) {
     if (controlName == DDLControlType.Region) {
       if (selectedOption?.value) {
@@ -565,12 +579,14 @@ export class TransferCustodyFormComponent implements OnInit {
           .subscribe((resp) => {
             if (resp.success) {
               this.usersList = resp.data;
+              this.orignalUsersList = Object.assign([], resp.data);
               if (
                 this.form.controls.destination.value == DDLControlType.Employee
               ) {
-                this.custodySourceFormControlsList.find(
-                  (x) => x.name == 'toId'
-                ).data = [...this.usersList];
+                this.getCityEmployeeList(
+                  this.form.controls.cityId.value,
+                  DDLControlType.City
+                );
               }
             }
           });
@@ -788,4 +804,5 @@ export enum DDLControlType {
   Custody = 3,
   UserType = 'userTypeId',
   Region = 'regionId',
+  City = 'cityId',
 }

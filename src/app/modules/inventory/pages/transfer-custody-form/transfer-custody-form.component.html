@@ -55,6 +55,7 @@
                   optionLabel="nameEn"
                   (onChange)="custodySourcesChanged($event, ctrl?.name)"
                   filter="true"
+                  [filterFields]="['id', 'nameEn', 'username', 'nameAr']"
                 />
                 <div
                   *ngIf="

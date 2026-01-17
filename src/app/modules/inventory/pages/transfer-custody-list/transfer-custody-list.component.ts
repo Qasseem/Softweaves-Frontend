@@ -168,6 +168,16 @@ export class TransferCustodyListComponent implements OnInit {
       method: HTTPMethods.getReq,
       propValueName: 'id',
     },
+    {
+      isMultiple: false,
+      type: SearchInputTypes.selectValue,
+      field: 'hasAttachments',
+      ddlData: [
+        { nameEn: 'Yes', id: true },
+        { nameEn: 'No', id: false },
+      ],
+      isFixed: true,
+    },
   ];
 
   public columns: ColumnsInterface[] = [
@@ -208,7 +218,10 @@ export class TransferCustodyListComponent implements OnInit {
       name: 'Edit',
       icon: 'pi pi-file-edit',
       call: (row: any) => this.editItem(row),
-      customPermission: (row: any) => this.showEdit && row.allowToEdit,
+      customPermission: (row: any) =>
+        this.showEdit &&
+        (row.statusId != TransferStatusEnum.Draft ||
+          row.statusId != TransferStatusEnum.InProgress),
     },
     {
       name: 'Block',
