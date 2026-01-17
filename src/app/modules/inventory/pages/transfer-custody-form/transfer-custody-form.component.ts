@@ -454,6 +454,8 @@ export class TransferCustodyFormComponent implements OnInit {
     this.form.controls.fromId.disable();
     this.form.controls.toId.disable();
     this.form.controls.userTypeId.disable();
+    this.form.controls.regionId.disable();
+    this.form.controls.cityId.disable();
   }
 
   onSelectOption(selectedOption: any, controlName: DDLControlType) {
@@ -584,16 +586,19 @@ export class TransferCustodyFormComponent implements OnInit {
                 this.form.controls.destination.value == DDLControlType.Employee
               ) {
                 this.getCityEmployeeList(
-                  this.form.controls.cityId.value,
+                  { value: this.form.controls.cityId.value },
                   DDLControlType.City
                 );
               }
             }
           });
       } else {
+        if (!this.details?.isToWarehouse) {
+          this.custodySourceFormControlsList.find(
+            (x) => x.name == 'toId'
+          ).data = [];
+        }
         this.usersList = [];
-        this.custodySourceFormControlsList.find((x) => x.name == 'toId').data =
-          [];
       }
     }
   }
