@@ -130,6 +130,7 @@ export class TransferCustodyFormComponent implements OnInit {
   files = [];
   fileName: any;
   orignalUsersList = [];
+  editedItem: any;
   constructor(
     private fb: FormBuilder,
     private service: TransferCustodyService,
@@ -678,13 +679,25 @@ export class TransferCustodyFormComponent implements OnInit {
       return;
     }
     this.modeltypesFormList.push({
-      modelFamily: this.selectedFamily?.nameEn,
-      modelCategory: this.selectedCategory?.nameEn,
-      modelType: this.selectedModelType?.nameEn,
+      modelFamily: this.selectedFamily?.nameEn
+        ? this.selectedFamily?.nameEn
+        : this.editedItem?.modelFamily,
+      modelCategory: this.selectedCategory?.nameEn
+        ? this.selectedCategory?.nameEn
+        : this.editedItem?.modelCategory,
+      modelType: this.selectedModelType?.nameEn
+        ? this.selectedModelType?.nameEn
+        : this.editedItem?.modelType,
       quantity: this.modelsForm.get('quantity').value,
-      familyId: this.selectedFamily?.id,
-      categoryId: this.selectedCategory?.id,
-      modelTypeId: this.selectedModelType?.id,
+      familyId: this.selectedFamily?.id
+        ? this.selectedFamily?.id
+        : this.editedItem?.familyId,
+      categoryId: this.selectedCategory?.id
+        ? this.selectedCategory?.id
+        : this.editedItem?.categoryId,
+      modelTypeId: this.selectedModelType?.id
+        ? this.selectedModelType?.id
+        : this.editedItem?.modelTypeId,
     });
     this.modelsForm.reset();
     this.itemsFormControlsList[1].data = [];
@@ -698,6 +711,8 @@ export class TransferCustodyFormComponent implements OnInit {
   }
   editmodel(model) {}
   async rowClickedAction(event) {
+    this.editedItem = event.rowData;
+
     const index = this.modeltypesFormList.findIndex(
       (item) =>
         item.modelTypeId == event.rowData.modelTypeId &&
