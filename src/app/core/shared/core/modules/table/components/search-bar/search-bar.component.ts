@@ -600,7 +600,9 @@ export class SearchBarComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   downloadFile(url: string): void {
-    window.open(url, '_blank');
+    if (typeof url !== 'object' && url !== null) {
+      window.open(url, '_blank');
+    }
   }
 
   customFilter(value: any, filter: string): boolean {
