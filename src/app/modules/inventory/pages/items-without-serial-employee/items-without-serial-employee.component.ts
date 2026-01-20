@@ -25,7 +25,13 @@ export class ItemsWithoutSerialEmployeeComponent implements OnInit {
   warehouseId: any;
   conditionId: any;
   canReturn: boolean = true;
+  canDeploy: boolean = true;
+  canEdit: boolean = true;
+
   warehousesList: any[] = [];
+  showEditDialog: boolean;
+  showDeployDialog: boolean;
+  merchantName = '';
   constructor(
     private router: Router,
     public authService: AuthService,
@@ -48,6 +54,18 @@ export class ItemsWithoutSerialEmployeeComponent implements OnInit {
       )
     ) {
       this.canReturn = false;
+    }
+    if (
+      !this.authService.hasPermission(
+        'inventory-items-without-serial-adjuststock'
+      )
+    ) {
+      this.canDeploy = false;
+    }
+    if (
+      !this.authService.hasPermission('inventory-items-without-serial-edit')
+    ) {
+      this.canEdit = false;
     }
   }
 
@@ -121,6 +139,18 @@ export class ItemsWithoutSerialEmployeeComponent implements OnInit {
       call: (row: any) => this.returnToWarehouseDialoge(row),
       customPermission: (row: any) => this.canReturn,
     },
+    {
+      name: 'Deploy',
+      icon: 'pi pi-table',
+      call: (row: any) => this.deploy(row),
+      customPermission: (row: any) => this.canDeploy,
+    },
+    {
+      name: 'Edit',
+      icon: 'pi pi-file-edit',
+      call: (row: any) => this.edit(row),
+      customPermission: (row: any) => this.canEdit,
+    },
   ];
   backToList() {
     this.router.navigate(['main/inventory/itemswithoutserial/list']);
@@ -175,5 +205,45 @@ export class ItemsWithoutSerialEmployeeComponent implements OnInit {
           this.quantity = null;
         }
       });
+  }
+
+  edit(row: any): any {
+    this.row = row;
+    this.showEditDialog = !this.showEditDialog;
+    this.quantity = this.row.quantity;
+  }
+  deploy(row: any): any {
+    this.row = row;
+    this.showDeployDialog = !this.showDeployDialog;
+  }
+  deployQty() {
+    let payload = {
+      employeeId: this.row.warehouseId,
+      merchantName: this.merchantName,
+      itemId: +this.id,
+      quantity: this.quantity,
+    };
+    this.service.Deploy(payload).subscribe((res) => {
+      if (res.success) {
+        this.showDeployDialog = false;
+        this.merchantName = '';
+        this.row.quantity = this.row.quantity - +this.quantity;
+        this.quantity = null;
+      }
+    });
+  }
+  editQty() {
+    let payload = {
+      employeeId: this.row.warehouseId,
+      itemId: +this.id,
+      quantity: this.quantity,
+    };
+    this.service.AdjustEmployeeStock(payload).subscribe((res) => {
+      if (res.success) {
+        this.row.quantity = +this.quantity;
+        this.showEditDialog = false;
+        this.quantity = null;
+      }
+    });
   }
 }

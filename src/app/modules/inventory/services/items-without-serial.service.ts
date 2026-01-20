@@ -32,6 +32,17 @@ export class ItemsWithoutSerialService {
       data
     );
   }
+
+  Deploy(data) {
+    return this.http.postReq(this.controllerName + '/Deploy', data);
+  }
+
+  AdjustEmployeeStock(data) {
+    return this.http.postReq(
+      this.controllerName + '/AdjustEmployeeStock',
+      data
+    );
+  }
   getModelTypeDropDown(id) {
     return this.http.getHeaderReq(
       '/ItemWithoutSerial/GetModelTypeDropDown',
