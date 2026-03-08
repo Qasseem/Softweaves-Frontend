@@ -16,11 +16,11 @@ export const environment: EnvironmentConfiguration = {
   },
   adConfig: {
     clientId: 'eca20e31-3c33-4253-88f5-f49666b7956f',
-    readScopeUrl: 'api://b4b8a688-da1b-442d-9930-1d2d8ac59ebb/Read',
-    writeScopeUrl: 'api://b4b8a688-da1b-442d-9930-1d2d8ac59ebb/Write',
+    readScopeUrl: 'api://23c6fe4b-74b4-4022-a501-46b232a466c8/Read',
+    writeScopeUrl: 'api://23c6fe4b-74b4-4022-a501-46b232a466c8/Write',
     scopeUrls: [
-      'api://b4b8a688-da1b-442d-9930-1d2d8ac59ebb/Read',
-      'api://b4b8a688-da1b-442d-9930-1d2d8ac59ebb/Write',
+      'api://23c6fe4b-74b4-4022-a501-46b232a466c8/Read',
+      'api://23c6fe4b-74b4-4022-a501-46b232a466c8/Write',
     ],
     apiEndpointUrl: 'https://uatbe.softwaves.co',
     tenantId: '97c70d5a-2f83-4e2d-9db0-7fe7a46c2898',
