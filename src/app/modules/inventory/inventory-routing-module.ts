@@ -124,7 +124,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'itemswithoutserial/warehouse/:id',
+        path: 'itemswithoutserial/warehouse/:id/:warehousename',
         component: ItemsWithoutSerialWarehouseComponent,
         data: {
           type: 'edit',

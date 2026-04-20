@@ -39,6 +39,7 @@
     [service]="service"
     [modulePageName]="'Item Without Serial'"
     [gridActionsList]="gridActionsList"
+    (FilterTriggered)="onFilterTriggered($event)"
   >
   </oc-table>
 </div>

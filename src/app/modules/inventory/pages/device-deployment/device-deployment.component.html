@@ -71,7 +71,38 @@
                 </div>
               </div>
             </div>
-            <div class="col-8"></div>
+
+            <!-- warehouseId (Dropdown) -->
+            <div class="col-4">
+              <div class="flex flex-column gap-2">
+                <label for="warehouseId"
+                  >Warehouse <span class="p-error">*</span></label
+                >
+                <p-dropdown
+                  [options]="warehouses"
+                  formControlName="warehouseId"
+                  [optionValue]="'id'"
+                  optionLabel="nameEn"
+                  filter="true"
+                >
+                </p-dropdown>
+                <div
+                  *ngIf="
+                    f.warehouseId.errors &&
+                    (f.warehouseId.touched || f.warehouseId.dirty)
+                  "
+                  class="invalid-feedback"
+                >
+                  <div
+                    class="fs-10 color-red"
+                    *ngIf="f.warehouseId.errors.required"
+                  >
+                    Warehouse Type is required
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-4"></div>
             <!-- merchantName (Input) -->
             <div class="col-4">
               <div class="flex flex-column gap-2">

@@ -4,6 +4,7 @@ import { MerchantTicketsListComponent } from './pages/merchant-tickets-list/merc
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MerchantTicketsDetailsComponent } from './pages/merchant-tickets-details/merchant-tickets-details.component';
+import { MerchantTicketHistoryComponent } from './pages/merchant-ticket-history/merchant-ticket-history.component';
 
 const routes: Routes = [
   {
@@ -17,6 +18,10 @@ const routes: Routes = [
       {
         path: 'details/:id',
         component: MerchantTicketsDetailsComponent,
+      },
+      {
+        path: 'history/:id',
+        component: MerchantTicketHistoryComponent,
       },
     ],
   },

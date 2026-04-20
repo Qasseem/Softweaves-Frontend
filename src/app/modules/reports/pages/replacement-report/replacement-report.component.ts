@@ -42,8 +42,8 @@ export class ReplacementReportComponent implements OnInit {
       header: 'Serial Number',
     },
     {
-      field: 'imei',
-      header: 'IMEI',
+      field: 'modeltypeName',
+      header: 'Model Type Name',
     },
     {
       field: 'merchantName',
