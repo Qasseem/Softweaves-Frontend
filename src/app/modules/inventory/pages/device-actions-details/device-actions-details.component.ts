@@ -113,6 +113,12 @@ export class DeviceActionsDetailsComponent implements OnInit {
         {
           showField: true,
           type: '',
+          label: 'Model Type',
+          value: this.details?.modeltypeName,
+        },
+        {
+          showField: true,
+          type: '',
           label: 'Action Type',
           value: this.details?.transactionType,
         },
@@ -276,6 +282,12 @@ export class DeviceActionsDetailsComponent implements OnInit {
           type: '',
           label: 'Device ID',
           value: this.details?.deviceId,
+        },
+        {
+          showField: true,
+          type: '',
+          label: 'Model Type',
+          value: this.details?.modeltypeName,
         },
         {
           showField: true,

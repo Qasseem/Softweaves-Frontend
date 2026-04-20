@@ -21,6 +21,8 @@ export class ItemsWithoutSerialWarehouseComponent implements OnInit {
   shipmentId;
   showStockDialog = false;
   row: any;
+  searchKey = '';
+  warehouseName: any;
   constructor(
     private router: Router,
     public authService: AuthService,
@@ -28,6 +30,13 @@ export class ItemsWithoutSerialWarehouseComponent implements OnInit {
     public service: ItemsWithoutSerialService
   ) {
     this.id = this.route.snapshot.params.id || null;
+    this.warehouseName = this.route.snapshot.params.warehousename || null;
+    this.handleWarehouseNameSearch();
+  }
+  handleWarehouseNameSearch() {
+    if (this.warehouseName != 'none') {
+      this.searchKey = this.warehouseName;
+    }
   }
 
   ngOnInit() {

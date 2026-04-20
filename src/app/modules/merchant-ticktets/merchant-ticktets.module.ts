@@ -6,6 +6,7 @@ import { MerchantTicketsListComponent } from './pages/merchant-tickets-list/merc
 import { FileUploadModule } from 'src/app/core/shared/core/modules/table/components/file-upload/file-upload.module';
 import { SharedModule } from '../shared/shared.module';
 import { MerchantTicketsDetailsComponent } from './pages/merchant-tickets-details/merchant-tickets-details.component';
+import { MerchantTicketHistoryComponent } from './pages/merchant-ticket-history/merchant-ticket-history.component';
 
 @NgModule({
   imports: [
@@ -18,6 +19,7 @@ import { MerchantTicketsDetailsComponent } from './pages/merchant-tickets-detail
     MerchantTicktetsComponent,
     MerchantTicketsListComponent,
     MerchantTicketsDetailsComponent,
+    MerchantTicketHistoryComponent,
   ],
 })
 export class MerchantTicktetsModule {}

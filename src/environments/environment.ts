@@ -15,15 +15,15 @@ export const environment: EnvironmentConfiguration = {
     userProfile: 'user-profiles',
   },
   adConfig: {
-    clientId: '564e7c7a-3ad6-49bf-b757-169a8a999c98',
-    readScopeUrl: 'api://b4b8a688-da1b-442d-9930-1d2d8ac59ebb/Read',
-    writeScopeUrl: 'api://b4b8a688-da1b-442d-9930-1d2d8ac59ebb/Write',
+    clientId: 'eca20e31-3c33-4253-88f5-f49666b7956f',
+    readScopeUrl: 'api://23c6fe4b-74b4-4022-a501-46b232a466c8/Read',
+    writeScopeUrl: 'api://23c6fe4b-74b4-4022-a501-46b232a466c8/Write',
     scopeUrls: [
-      'api://b4b8a688-da1b-442d-9930-1d2d8ac59ebb/Read',
-      'api://b4b8a688-da1b-442d-9930-1d2d8ac59ebb/Write',
+      'api://23c6fe4b-74b4-4022-a501-46b232a466c8/Read',
+      'api://23c6fe4b-74b4-4022-a501-46b232a466c8/Write',
     ],
     apiEndpointUrl: 'https://uatbe.softwaves.co',
-    tenantId: '03933b9c-4747-4902-8d69-82ec17bfc393',
+    tenantId: '97c70d5a-2f83-4e2d-9db0-7fe7a46c2898',
   },
   cacheTimeInMinutes: 15,
 };
