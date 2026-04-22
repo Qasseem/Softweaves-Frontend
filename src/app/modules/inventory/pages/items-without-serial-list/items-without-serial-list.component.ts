@@ -22,6 +22,7 @@ import { WarehousesService } from '../../services/warehouses.service';
 })
 export class ItemsWithoutSerialListComponent implements OnInit {
   row: any;
+  selectedWarehouseName: any;
   bulkAdd(row: any): any {}
   showAdjustStock = true;
   showEmployeeStock = true;
@@ -39,7 +40,9 @@ export class ItemsWithoutSerialListComponent implements OnInit {
     public authService: AuthService,
     public service: ItemsWithoutSerialService,
     private warehouseService: WarehousesService
-  ) {}
+  ) {
+    this.getAllWarehouses();
+  }
 
   ngOnInit(): void {
     this.viewDetails = this.authService.hasPermission(
@@ -239,7 +242,9 @@ export class ItemsWithoutSerialListComponent implements OnInit {
   adjustEmployeeStock(row: any): any {}
   adjustWarehouseStock(row: any) {
     this.router.navigate([
-      `main/inventory/itemswithoutserial/warehouse/${row?.id}`,
+      `main/inventory/itemswithoutserial/warehouse/${row?.id}/${
+        this.selectedWarehouseName || 'none'
+      }`,
     ]);
   }
 
@@ -247,5 +252,13 @@ export class ItemsWithoutSerialListComponent implements OnInit {
     this.router.navigate([
       `main/inventory/itemswithoutserial/employee/${row?.id}`,
     ]);
+  }
+  onFilterTriggered(event) {
+    this.selectedWarehouseName = null;
+    if (event?.warehouse && event.warehouse[0]) {
+      this.selectedWarehouseName = this.warehouses.find(
+        (w) => w.id == event.warehouse[0]
+      )?.nameEn;
+    }
   }
 }

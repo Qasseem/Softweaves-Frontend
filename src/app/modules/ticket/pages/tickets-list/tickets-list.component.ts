@@ -311,7 +311,11 @@ export class TicketsListComponent implements OnInit, OnDestroy {
       field: 'createDate',
       isFixed: true,
     },
-
+    {
+      type: SearchInputTypes.date,
+      field: 'completeDate',
+      isFixed: true,
+    },
     {
       type: SearchInputTypes.text,
       field: 'ticketId',

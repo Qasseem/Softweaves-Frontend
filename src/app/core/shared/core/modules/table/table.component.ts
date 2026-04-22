@@ -68,7 +68,9 @@ export class TableComponent implements OnInit, OnDestroy {
   @Input() service: any;
   @Input() customFilter: boolean = false;
   @Input() modulePageName = '';
+  @Input() searchKey = '';
   @Input() gridActionsList: ActionsInterface[] = [];
+  @Output() FilterTriggered = new EventEmitter();
 
   first = 0;
 
@@ -169,6 +171,9 @@ export class TableComponent implements OnInit, OnDestroy {
           this.toggle = true;
         });
     }
+  }
+  emitSearchFormValue(event) {
+    this.FilterTriggered.emit(event);
   }
   searchFilterTriggered(event) {
     this.child.reset();

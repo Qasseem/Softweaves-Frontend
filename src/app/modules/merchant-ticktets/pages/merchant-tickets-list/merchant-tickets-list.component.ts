@@ -145,6 +145,12 @@ export class MerchantTicketsListComponent implements OnInit {
       permission: 'review',
       call: (row: any) => this.navigateToComplete(row),
     },
+    {
+      name: 'History',
+      icon: 'pi pi-history',
+      call: (row: any) => this.gotoHistory(row),
+      customPermission: (row: any) => true,
+    },
   ];
 
   filters: SearchInterface[] = [
@@ -265,9 +271,8 @@ export class MerchantTicketsListComponent implements OnInit {
   navigateToAdd() {
     this.router.navigate(['main/ticket/add']);
   }
-
-  navigateToHistory(row) {
-    let id = row?.ticketId;
-    this.router.navigate([`main/ticket/history/${id}/${'Tickets'}`]);
+  gotoHistory(row: any): any {
+    const URL = `main/merchanttickets/history/${row?.ticketId}`;
+    this.router.navigate([URL]);
   }
 }
