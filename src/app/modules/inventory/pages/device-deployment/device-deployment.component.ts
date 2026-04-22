@@ -110,7 +110,6 @@ export class DeviceDeploymentComponent implements OnInit {
   }
   prepareFormData() {
     let data = this.details;
-
     this.form.patchValue({
       deviceId: data.deviceId,
       deploymentDate: new Date(data.actionDate), // data.actionDate,        // actionDate = deployment date
@@ -189,6 +188,7 @@ export class DeviceDeploymentComponent implements OnInit {
   }
   submit() {
     let obj = this.form.value;
+    obj.warehouseId = this.details ? this.details.warehouseId : obj.warehouseId;
     obj.actionId = this.actionId;
     let targtApi = this.actionId
       ? this.service.UpdateDeploy(obj)

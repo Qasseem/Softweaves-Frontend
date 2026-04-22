@@ -637,9 +637,10 @@
                     <div
                       class="view-container--cards--details-card--info--attachments--items--item--download"
                       (click)="
-                        downloadImage(
-                          item?.attachmentUrl,
-                          'Example File ' + (i + 1)
+                        deviceService.downloadFile(
+                          curr == 1
+                            ? item?.attachmentUrl
+                            : item?.oldAttachmentUrl
                         )
                       "
                     >
@@ -663,51 +664,28 @@
                   No Files Uploaded!
                 </div>
               </div>
-              <div class="upload-control">
-                <label for="upload">Attached Images</label>
-                <div class="upload-container">
+              <p-divider></p-divider>
+              <div class="">Attached Images</div>
+              <div class="grid mt-1">
+                <div
+                  class="col-6"
+                  *ngFor="
+                    let file of details?.feedbacks[0]?.images;
+                    let i = index
+                  "
+                >
                   <div
-                    class="uploaded-images"
-                    *ngIf="
-                      (panel?.images?.length && curr == 1) ||
-                      (panel?.oldImages?.length && curr == 2)
-                    "
+                    class="file-container flex align-items-center justify-content-between p-3"
                   >
-                    <div
-                      class="uploaded-image"
-                      *ngFor="
-                        let base64String of curr == 1
-                          ? panel?.images
-                          : panel?.oldImages;
-                        let j = index
-                      "
-                      [style.cursor]="'pointer'"
-                      (click)="
-                        downloadImage(img.src, 'Example File ' + (j + 1))
-                      "
-                    >
-                      <img
-                        #img
-                        src="{{ base64String?.attachmentUrl }}"
-                        [pTooltip]="
-                          img?.src?.includes('missing') ? 'Missing Image' : ''
-                        "
-                        alt=""
-                        hideMissing
-                        [errorIconURL]="'assets/iamges/missing-image.svg'"
-                      />
+                    <div class="flex align-items-center">
+                      <i class="pi pi-file mr-2" style="color: #0080f9"></i>
+                      <span class="file-name">{{ "File" + (i + 1) }}</span>
                     </div>
-                  </div>
-                  <div
-                    class="view-container--cards--details-card--info--attachments--items-empty"
-                    *ngIf="
-                      !(
-                        (panel?.images?.length && curr == 1) ||
-                        (panel?.oldImages?.length && curr == 2)
-                      )
-                    "
-                  >
-                    No Images Uploaded!
+                    <i
+                      class="pi pi-download cursor-pointer"
+                      style="color: black"
+                      (click)="deviceService.downloadFile(file?.attachmentUrl)"
+                    ></i>
                   </div>
                 </div>
               </div>
