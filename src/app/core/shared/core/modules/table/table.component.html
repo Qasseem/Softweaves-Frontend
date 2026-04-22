@@ -56,12 +56,14 @@
       (searchFilterTriggered)="searchFilterTriggered($event)"
       (getListData)="getTableDataFromSearchBar()"
       [filtersInput]="filters"
+      (emitFormValue)="emitSearchFormValue($event)"
       [url]="url"
       [placeholderSearch]="placeholderSearch"
       [uploadHeader]="uploadHeader"
       [sampleName]="sampleName"
       [hasCustomFilter]="customFilter"
       [gridActionsList]="gridActionsList"
+      [searchKey]="searchKey"
     ></oc-search-bar>
   </div>
   <div *ngIf="false" style="margin-bottom: 0" #top class="add-header">

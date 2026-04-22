@@ -5,6 +5,9 @@ import { HttpService } from 'src/app/core/http/http.service';
   providedIn: 'root',
 })
 export class MerchantTicketsService {
+  History(id) {
+    return this.http.getHeaderReq(this.controllerName + '/GetHistory', id);
+  }
   controllerName = '/MerchantTicketPortal';
   getAllModelCategories() {
     return this.http.getReq(this.controllerName + '/GetById');

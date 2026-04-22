@@ -7,6 +7,7 @@ import { ToastService } from 'src/app/core/services/toaster.service';
 import { TicketService } from 'src/app/modules/ticket/services/ticket.service';
 import { HttpService } from 'src/app/core/http/http.service';
 import { UserService } from 'src/app/modules/user-management/services/user.service';
+import { WarehousesService } from '../../services/warehouses.service';
 
 @Component({
   selector: 'app-device-deployment',
@@ -36,6 +37,8 @@ export class DeviceDeploymentComponent implements OnInit {
   users = [];
   currencies = [];
   teams = [];
+  warehouses = [];
+
   countryId: any;
   reciptSignedOptions = [
     { id: true, nameEn: 'Yes' },
@@ -50,7 +53,8 @@ export class DeviceDeploymentComponent implements OnInit {
     private toaster: ToastService,
     private ticketService: TicketService,
     private httpService: HttpService,
-    private userService: UserService
+    private userService: UserService,
+    private warehouseService: WarehousesService
   ) {
     this.countryId = httpService.country;
   }
@@ -63,6 +67,7 @@ export class DeviceDeploymentComponent implements OnInit {
     this.form = this.fb.group({
       deviceId: [0, Validators.required],
       deploymentDate: ['', Validators.required],
+      warehouseId: [null, Validators.required],
       merchantName: ['', [Validators.required, Validators.maxLength(50)]],
       mId: ['', [Validators.required, Validators.maxLength(50)]],
       tid: ['', [Validators.required, Validators.maxLength(50)]],
@@ -105,7 +110,6 @@ export class DeviceDeploymentComponent implements OnInit {
   }
   prepareFormData() {
     let data = this.details;
-
     this.form.patchValue({
       deviceId: data.deviceId,
       deploymentDate: new Date(data.actionDate), // data.actionDate,        // actionDate = deployment date
@@ -131,10 +135,13 @@ export class DeviceDeploymentComponent implements OnInit {
       address: data.address,
       notes: data.notes,
       merchantPhoneNumber: data.merchantPhoneNumber,
+      warehouseId: data.warehouseId,
       attachmentsBase64: data.attachments ?? [],
     });
 
     this.form.controls.deployedById.disable();
+    this.form.controls.warehouseId.disable();
+
     this.form.controls.simCardModelTypeId.disable();
     this.form.controls.cableModelTypeId.disable();
     this.form.controls.receiptModelTypeId.disable();
@@ -156,6 +163,8 @@ export class DeviceDeploymentComponent implements OnInit {
       posCharger: this.ticketService.getPOSChargerModelTypes(),
       cables: this.ticketService.GetCableModelTypes(),
       users: this.userService.getAllUsers(),
+      warehouse: this.warehouseService.getAgentWarehouseDropDown(),
+
       // add remaining lookups
     }).subscribe((results) => {
       this.currencies = results.currency.data;
@@ -170,6 +179,7 @@ export class DeviceDeploymentComponent implements OnInit {
       this.cableModels = results.cables.data;
       this.conditions = results.condition.data;
       this.users = results.users.data;
+      this.warehouses = results.warehouse.data;
     });
   }
 
@@ -178,6 +188,7 @@ export class DeviceDeploymentComponent implements OnInit {
   }
   submit() {
     let obj = this.form.value;
+    obj.warehouseId = this.details ? this.details.warehouseId : obj.warehouseId;
     obj.actionId = this.actionId;
     let targtApi = this.actionId
       ? this.service.UpdateDeploy(obj)

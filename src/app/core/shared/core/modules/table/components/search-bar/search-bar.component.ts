@@ -67,6 +67,7 @@ export class SearchBarComponent implements OnInit, OnChanges, AfterViewInit {
   };
   @Input() taskSearchHistoryObj = {};
   @Input() sampleName = '';
+  @Input() searchKey = '';
   @Input() hasCustomFilter: boolean = false;
   @Input() gridActionsList: ActionsInterface[] = [];
 
@@ -130,13 +131,30 @@ export class SearchBarComponent implements OnInit, OnChanges, AfterViewInit {
           changes?.taskSearchHistoryObj.currentValue?.searchKey;
       }
     }
+    this.handleDefaultSearchKey(changes);
+  }
+  handleDefaultSearchKey(changes: SimpleChanges) {
+    if (changes?.searchKey?.currentValue != changes?.searchKey?.previousValue) {
+      this.inputTextHistoryValue = changes?.searchKey?.currentValue;
+      if (this.inputTextHistoryValue) {
+        // Defer emission to ensure searchOnType() subscription is ready
+        // (ngOnChanges fires before ngOnInit on first load)
+        setTimeout(() => {
+          this.InputSearch$.next(this.inputTextHistoryValue);
+        }, 0);
+      }
+    }
   }
   ngOnInit() {
     //check if there is any history for the activated page
-    if (this.tableCoreService.gridSearchHistory[this.router.url]) {
+    if (
+      this.tableCoreService.gridSearchHistory[this.router.url] &&
+      !this.searchKey
+    ) {
       //assign the search ker if exist in history obj
       this.inputTextHistoryValue =
         this.tableCoreService.gridSearchHistory[this.router.url].searchKey;
+
       //check if there is any toolTip data in search history obj
       if (
         this.tableCoreService.gridSearchHistory[this.router.url].search
