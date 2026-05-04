@@ -95,7 +95,7 @@ export class MerchantTicketsListComponent implements OnInit {
       action: (row) => this.goToDetails(row),
     },
     {
-      field: 'terminalId',
+      field: 'terminalNumber',
       header: 'Terminal ID',
     },
     {
@@ -184,7 +184,7 @@ export class MerchantTicketsListComponent implements OnInit {
       type: SearchInputTypes.select,
       field: 'status',
       isFixed: true,
-      url: '/Ticket/GetAllTicketStatus',
+      url: '/MerchantTicketPortal/GetTicketStatus',
       method: HTTPMethods.getReq,
       propValueName: 'id',
     },
